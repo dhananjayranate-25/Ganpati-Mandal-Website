@@ -122,7 +122,14 @@
     const API_URL = '';
     let uploadedPDFsData = [];
     let uploadedPDFsPage = 0;
-    const UPLOADED_PDFS_PER_PAGE = 5;
+
+    function getPDFsPerPage() {
+        return window.innerWidth <= 768 ? 1 : 5;
+    }
+
+    let currentYearEntries = [];
+    let currentYearPage = 1;
+    let currentSelectedYear = '';
 
     function getPDFSettings(year) {
         const defaults = { orgName: '\u0936\u093F\u0935\u0938\u0943\u0937\u094D\u091F\u0940 Boyz', subtitle: '\u0917\u0923\u0947\u0936 \u0909\u0924\u094D\u0938\u0935 \u0915\u0945\u0936\u092C\u0941\u0915', tagline: 'Ganpati Festival Cashbook', headerOrgName: '', headerSubtitle: '' };
@@ -261,44 +268,94 @@
                 return;
             }
 
-            let balance = 0, totalIn = 0, totalOut = 0;
-            let rows = '';
-            entries.forEach((e, i) => {
-                const ci = parseFloat(e.cash_in) || 0;
-                const co = parseFloat(e.cash_out) || 0;
-                balance += ci - co;
-                totalIn += ci;
-                totalOut += co;
-                const modeClass = e.mode === 'Online' ? 'online' : 'cash';
-                rows += '<tr><td>' + (i + 1) + '</td><td class="remark">' + e.name + '</td><td class="date">' + e.date + '</td><td><span class="mode-badge ' + modeClass + '">' + e.mode + '</span></td><td class="cash-in-cell">' + (ci ? '\u20B9' + ci.toFixed(2) : '-') + '</td><td class="cash-out-cell">' + (co ? '\u20B9' + co.toFixed(2) : '-') + '</td><td class="balance-cell">\u20B9' + balance.toFixed(2) + '</td></tr>';
-            });
-
-            let html = '<div class="year-section">';
-            html += '<div class="year-section-header"><h2>' + year + ' - Cashbook</h2><div class="section-actions desktop-only">';
-            html += '<button class="btn btn-pdf-view" onclick="viewPDFYear(\'' + year + '\')">View PDF</button>';
-            html += '<button class="btn btn-pdf-download" onclick="downloadPDFYear(\'' + year + '\')">Download PDF</button>';
-            html += '</div></div>';
-
-            html += '<div class="summary-cards">';
-            html += '<div class="card card-cash-in"><div class="card-glass"><div class="card-header"><div class="card-icon-wrapper icon-green"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><h3>Total Cash In</h3></div><p class="amount">\u20B9' + totalIn.toFixed(2) + '</p></div></div>';
-            html += '<div class="card card-cash-out"><div class="card-glass"><div class="card-header"><div class="card-icon-wrapper icon-red"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><h3>Total Cash Out</h3></div><p class="amount">\u20B9' + totalOut.toFixed(2) + '</p></div></div>';
-            html += '<div class="card card-balance"><div class="card-glass"><div class="card-header"><div class="card-icon-wrapper icon-purple"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><h3>Final Balance</h3></div><p class="amount">\u20B9' + balance.toFixed(2) + '</p></div></div>';
-            html += '</div>';
-
-            html += '<div class="section-actions mobile-only">';
-            html += '<button class="btn btn-pdf-view" onclick="viewPDFYear(\'' + year + '\')">View PDF</button>';
-            html += '<button class="btn btn-pdf-download" onclick="downloadPDFYear(\'' + year + '\')">Download PDF</button>';
-            html += '</div>';
-
-            html += '<div class="table-scroll"><table><thead><tr><th>Sr. No</th><th>Remark</th><th>Date</th><th>Mode</th><th>Cash In (+)</th><th>Cash Out (-)</th><th>Balance</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
-            html += '</div>';
-
-            container.innerHTML = html;
+            currentYearEntries = entries;
+            currentSelectedYear = year;
+            currentYearPage = 1;
+            renderVisibleYearData(container);
         } catch (e) {
             console.error('Error loading year ' + year, e);
             container.innerHTML = '<div class="empty-state"><p>Error loading data for ' + year + '.</p></div>';
         }
     }
+
+    function changeYearPage(delta) {
+        currentYearPage += delta;
+        renderVisibleYearData();
+    }
+
+    function renderVisibleYearData(container) {
+        if (!container) container = document.getElementById('visibleYearsContent');
+        const year = currentSelectedYear;
+        const entries = currentYearEntries;
+
+        let finalBalance = 0, totalIn = 0, totalOut = 0;
+        entries.forEach(e => {
+            const ci = parseFloat(e.cash_in) || 0;
+            const co = parseFloat(e.cash_out) || 0;
+            finalBalance += ci - co;
+            totalIn += ci;
+            totalOut += co;
+        });
+
+        const isMobile = window.innerWidth <= 768;
+        const TRANSACTIONS_PER_PAGE = isMobile ? 5 : entries.length || 1;
+        const totalPages = Math.ceil(entries.length / TRANSACTIONS_PER_PAGE) || 1;
+        
+        if (currentYearPage > totalPages) currentYearPage = totalPages;
+        if (currentYearPage < 1) currentYearPage = 1;
+        
+        const from = (currentYearPage - 1) * TRANSACTIONS_PER_PAGE;
+        const to = Math.min(from + TRANSACTIONS_PER_PAGE, entries.length);
+
+        let rows = '';
+        let runningBalance = 0;
+        
+        for (let i = 0; i < from; i++) {
+            const ci = parseFloat(entries[i].cash_in) || 0;
+            const co = parseFloat(entries[i].cash_out) || 0;
+            runningBalance += ci - co;
+        }
+
+        for (let i = from; i < to; i++) {
+            const e = entries[i];
+            const ci = parseFloat(e.cash_in) || 0;
+            const co = parseFloat(e.cash_out) || 0;
+            runningBalance += ci - co;
+            const modeClass = e.mode === 'Online' ? 'online' : 'cash';
+            rows += '<tr><td>' + (i + 1) + '</td><td class="remark">' + e.name + '</td><td class="date">' + e.date + '</td><td><span class="mode-badge ' + modeClass + '">' + e.mode + '</span></td><td class="cash-in-cell">' + (ci ? '\u20B9' + ci.toFixed(2) : '-') + '</td><td class="cash-out-cell">' + (co ? '\u20B9' + co.toFixed(2) : '-') + '</td><td class="balance-cell">\u20B9' + runningBalance.toFixed(2) + '</td></tr>';
+        }
+
+        let html = '<div class="year-section">';
+        html += '<div class="year-section-header"><h2>' + year + ' - Cashbook</h2><div class="section-actions desktop-only">';
+        html += '<button class="btn btn-pdf-view" onclick="viewPDFYear(\'' + year + '\')">View PDF</button>';
+        html += '<button class="btn btn-pdf-download" onclick="downloadPDFYear(\'' + year + '\')">Download PDF</button>';
+        html += '</div></div>';
+
+        html += '<div class="summary-cards">';
+        html += '<div class="card card-cash-in"><div class="card-glass"><div class="card-header"><div class="card-icon-wrapper icon-green"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><h3>Total Cash In</h3></div><p class="amount">\u20B9' + totalIn.toFixed(2) + '</p></div></div>';
+        html += '<div class="card card-cash-out"><div class="card-glass"><div class="card-header"><div class="card-icon-wrapper icon-red"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><h3>Total Cash Out</h3></div><p class="amount">\u20B9' + totalOut.toFixed(2) + '</p></div></div>';
+        html += '<div class="card card-balance"><div class="card-glass"><div class="card-header"><div class="card-icon-wrapper icon-purple"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><h3>Final Balance</h3></div><p class="amount">\u20B9' + finalBalance.toFixed(2) + '</p></div></div>';
+        html += '</div>';
+
+        html += '<div class="section-actions mobile-only">';
+        html += '<button class="btn btn-pdf-view" onclick="viewPDFYear(\'' + year + '\')">View PDF</button>';
+        html += '<button class="btn btn-pdf-download" onclick="downloadPDFYear(\'' + year + '\')">Download PDF</button>';
+        html += '</div>';
+
+        html += '<div class="table-scroll"><table><thead><tr><th>Sr. No</th><th>Remark</th><th>Date</th><th>Mode</th><th>Cash In (+)</th><th>Cash Out (-)</th><th>Balance</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+        
+        if (isMobile && totalPages > 1) {
+            html += '<div class="pdf-pagination table-pagination">';
+            html += '<button class="btn btn-secondary" onclick="changeYearPage(-1)" ' + (currentYearPage === 1 ? 'disabled' : '') + '>Previous</button>';
+            html += '<span class="pdf-page-info">Page ' + currentYearPage + ' / ' + totalPages + '</span>';
+            html += '<button class="btn btn-secondary" onclick="changeYearPage(1)" ' + (currentYearPage === totalPages ? 'disabled' : '') + '>Next</button>';
+            html += '</div>';
+        }
+
+        html += '</div>';
+
+        container.innerHTML = html;
+
 
     async function generatePDFFromHTML(htmlContent, download, filename) {
         const iframe = document.createElement('iframe');
@@ -436,7 +493,8 @@
     }
 
     function renderPagination() {
-        const totalPages = Math.ceil(uploadedPDFsData.length / UPLOADED_PDFS_PER_PAGE);
+        const perPage = getPDFsPerPage();
+        const totalPages = Math.ceil(uploadedPDFsData.length / perPage);
         return `
             <div class="pdf-pagination">
                 <button class="btn btn-secondary ripple" onclick="goToPDFPage(${uploadedPDFsPage - 1})" ${uploadedPDFsPage === 0 ? 'disabled' : ''}>
@@ -461,7 +519,8 @@
             if (result.success && result.data.length > 0) {
                 uploadedPDFsData = result.data;
                 uploadedPDFsPage = 0;
-                const to = Math.min(UPLOADED_PDFS_PER_PAGE, uploadedPDFsData.length);
+                const perPage = getPDFsPerPage();
+                const to = Math.min(perPage, uploadedPDFsData.length);
                 grid.innerHTML = renderPDFCards(0, to) + renderPagination();
             } else {
                 grid.innerHTML = '<div class="pdf-loading">No previous year PDFs uploaded yet.</div>';
@@ -474,11 +533,12 @@
     function goToPDFPage(page) {
         const grid = document.getElementById('uploadedPdfsGrid');
         if (!grid) return;
-        const totalPages = Math.ceil(uploadedPDFsData.length / UPLOADED_PDFS_PER_PAGE);
+        const perPage = getPDFsPerPage();
+        const totalPages = Math.ceil(uploadedPDFsData.length / perPage);
         if (page < 0 || page >= totalPages) return;
         uploadedPDFsPage = page;
-        const from = page * UPLOADED_PDFS_PER_PAGE;
-        const to = Math.min(from + UPLOADED_PDFS_PER_PAGE, uploadedPDFsData.length);
+        const from = page * perPage;
+        const to = Math.min(from + perPage, uploadedPDFsData.length);
         grid.innerHTML = renderPDFCards(from, to) + renderPagination();
     }
 
