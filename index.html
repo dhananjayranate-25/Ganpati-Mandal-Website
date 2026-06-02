@@ -257,7 +257,7 @@
             const visible = isYearVisible(year);
 
             if (!visible) {
-                container.innerHTML = '<div class="year-section"><div class="year-section-header"><h2>' + year + ' - Cashbook</h2><div class="section-actions"><button class="btn btn-pdf-view disabled" disabled>View PDF</button><button class="btn btn-pdf-download disabled" disabled>Download PDF</button></div></div><div class="empty-state"><p style="color:var(--text-secondary);">This Year Cashbook Hide By Admin | This Cashbook Visible Soon!!!</p></div></div>';
+                container.innerHTML = '<div class="year-section"><div class="year-section-header"><h2>' + year + ' - Cashbook</h2><div class="section-actions desktop-only"><button class="btn btn-pdf-view disabled" disabled>View PDF</button><button class="btn btn-pdf-download disabled" disabled>Download PDF</button></div></div><div class="empty-state"><p style="color:var(--text-secondary);">This Year Cashbook Hide By Admin | This Cashbook Visible Soon!!!</p></div><div class="section-actions mobile-only"><button class="btn btn-pdf-view disabled" disabled>View PDF</button><button class="btn btn-pdf-download disabled" disabled>Download PDF</button></div></div>';
                 return;
             }
 
@@ -274,7 +274,7 @@
             });
 
             let html = '<div class="year-section">';
-            html += '<div class="year-section-header"><h2>' + year + ' - Cashbook</h2><div class="section-actions">';
+            html += '<div class="year-section-header"><h2>' + year + ' - Cashbook</h2><div class="section-actions desktop-only">';
             html += '<button class="btn btn-pdf-view" onclick="viewPDFYear(\'' + year + '\')">View PDF</button>';
             html += '<button class="btn btn-pdf-download" onclick="downloadPDFYear(\'' + year + '\')">Download PDF</button>';
             html += '</div></div>';
@@ -283,6 +283,11 @@
             html += '<div class="card card-cash-in"><div class="card-glass"><div class="card-header"><div class="card-icon-wrapper icon-green"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><h3>Total Cash In</h3></div><p class="amount">\u20B9' + totalIn.toFixed(2) + '</p></div></div>';
             html += '<div class="card card-cash-out"><div class="card-glass"><div class="card-header"><div class="card-icon-wrapper icon-red"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><h3>Total Cash Out</h3></div><p class="amount">\u20B9' + totalOut.toFixed(2) + '</p></div></div>';
             html += '<div class="card card-balance"><div class="card-glass"><div class="card-header"><div class="card-icon-wrapper icon-purple"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><h3>Final Balance</h3></div><p class="amount">\u20B9' + balance.toFixed(2) + '</p></div></div>';
+            html += '</div>';
+
+            html += '<div class="section-actions mobile-only">';
+            html += '<button class="btn btn-pdf-view" onclick="viewPDFYear(\'' + year + '\')">View PDF</button>';
+            html += '<button class="btn btn-pdf-download" onclick="downloadPDFYear(\'' + year + '\')">Download PDF</button>';
             html += '</div>';
 
             html += '<div class="table-scroll"><table><thead><tr><th>Sr. No</th><th>Remark</th><th>Date</th><th>Mode</th><th>Cash In (+)</th><th>Cash Out (-)</th><th>Balance</th></tr></thead><tbody>' + rows + '</tbody></table></div>';

@@ -2499,6 +2499,26 @@ body > .container {
         font-size: 0.9rem;
         padding: 12px 16px;
     }
+}
+
+/* PDF Buttons Responsive Layout */
+.mobile-only { display: none !important; }
+.desktop-only { display: flex; }
+
+@media (max-width: 768px) {
+    .desktop-only { display: none !important; }
+    .mobile-only { 
+        display: flex !important; 
+        justify-content: center; 
+        gap: 15px; 
+        margin-bottom: 25px; 
+        width: 100%;
+    }
+    .mobile-only .btn {
+        flex: 1;
+        justify-content: center;
+    }
+}
 
     /* PDF Upload section */
     .pdf-upload-section {
