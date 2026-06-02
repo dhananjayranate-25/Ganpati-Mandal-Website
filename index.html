@@ -327,19 +327,19 @@
 
         let html = '<div class="year-section">';
         html += '<div class="year-section-header"><h2>' + year + ' - Cashbook</h2><div class="section-actions desktop-only">';
-        html += '<button class="btn btn-pdf-view" onclick="viewPDFYear(\'' + year + '\')">View PDF</button>';
-        html += '<button class="btn btn-pdf-download" onclick="downloadPDFYear(\'' + year + '\')">Download PDF</button>';
+        html += '<button class="btn btn-pdf-view" onclick="viewPDFYear(\'' + year + '\', this)">View PDF</button>';
+        html += '<button class="btn btn-pdf-download" onclick="downloadPDFYear(\'' + year + '\', this)">Download PDF</button>';
         html += '</div></div>';
 
         html += '<div class="summary-cards">';
         html += '<div class="card card-cash-in"><div class="card-glass"><div class="card-header"><div class="card-icon-wrapper icon-green"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><h3>Total Cash In</h3></div><p class="amount">\u20B9' + totalIn.toFixed(2) + '</p></div></div>';
-        html += '<div class="card card-cash-out"><div class="card-glass"><div class="card-header"><div class="card-icon-wrapper icon-red"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><h3>Total Cash Out</h3></div><p class="amount">\u20B9' + totalOut.toFixed(2) + '</p></div></div>';
+        html += '<div class="card card-cash-out"><div class="card-glass"><div class="card-header"><div class="card-icon-wrapper icon-red"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 1 0 7H6"/></svg></div><h3>Total Cash Out</h3></div><p class="amount">\u20B9' + totalOut.toFixed(2) + '</p></div></div>';
         html += '<div class="card card-balance"><div class="card-glass"><div class="card-header"><div class="card-icon-wrapper icon-purple"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><h3>Final Balance</h3></div><p class="amount">\u20B9' + finalBalance.toFixed(2) + '</p></div></div>';
         html += '</div>';
 
         html += '<div class="section-actions mobile-only">';
-        html += '<button class="btn btn-pdf-view" onclick="viewPDFYear(\'' + year + '\')">View PDF</button>';
-        html += '<button class="btn btn-pdf-download" onclick="downloadPDFYear(\'' + year + '\')">Download PDF</button>';
+        html += '<button class="btn btn-pdf-view" onclick="viewPDFYear(\'' + year + '\', this)">View PDF</button>';
+        html += '<button class="btn btn-pdf-download" onclick="downloadPDFYear(\'' + year + '\', this)">Download PDF</button>';
         html += '</div>';
 
         html += '<div class="table-scroll"><table><thead><tr><th>Sr. No</th><th>Remark</th><th>Date</th><th>Mode</th><th>Cash In (+)</th><th>Cash Out (-)</th><th>Balance</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
@@ -372,10 +372,9 @@
         const imgs = iframe.contentDocument.querySelectorAll('img');
         await Promise.all([...imgs].map(img => new Promise(r => {
             if (img.complete) r();
-            else { img.onload = r; img.onerror = r; setTimeout(r, 2000); }
+            else { img.onload = r; img.onerror = r; setTimeout(r, 1000); }
         })));
         try { await iframe.contentDocument.fonts.ready; } catch(e) {}
-        await new Promise(r => setTimeout(r, 500));
 
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF('p', 'mm', 'a4');
@@ -385,14 +384,14 @@
         const innerEl = iframe.contentDocument.querySelector('.inner-page');
 
         if (coverEl) {
-            const cCanvas = await html2canvas(coverEl, { scale: 2, useCORS: true, backgroundColor: '#ffffff', allowTaint: true });
+            const cCanvas = await html2canvas(coverEl, { scale: 1.5, useCORS: true, backgroundColor: '#ffffff', allowTaint: true });
             const cH = (cCanvas.height * pgW) / cCanvas.width;
             pdf.addImage(cCanvas, 'PNG', 0, 0, pgW, cH);
         }
 
         if (innerEl) {
             pdf.addPage();
-            const iCanvas = await html2canvas(innerEl, { scale: 2, useCORS: true, backgroundColor: '#ffffff', allowTaint: true });
+            const iCanvas = await html2canvas(innerEl, { scale: 1.5, useCORS: true, backgroundColor: '#ffffff', allowTaint: true });
             const iH = (iCanvas.height * pgW) / iCanvas.width;
             pdf.addImage(iCanvas, 'PNG', 0, 0, pgW, iH);
         }
@@ -409,28 +408,46 @@
         }
     }
 
-    async function viewPDFYear(year) {
+    async function viewPDFYear(year, btn) {
         if (!isYearVisible(year)) { alert('This Year Cashbook Hide By Admin. This Cashbook Visible Soon!!!'); return; }
+        const originalText = btn ? btn.innerHTML : 'View PDF';
+        if (btn) btn.innerHTML = 'Wait...';
         try {
-            const r = await fetch(API_URL + '/api/entries?year=' + year);
-            const d = await r.json();
-            if (!d.success || !d.data.length) { alert('No entries for ' + year); return; }
+            let entries = [];
+            if (year === currentSelectedYear && currentYearEntries.length) {
+                entries = currentYearEntries;
+            } else {
+                const r = await fetch(API_URL + '/api/entries?year=' + year);
+                const d = await r.json();
+                if (!d.success || !d.data.length) { alert('No entries for ' + year); if (btn) btn.innerHTML = originalText; return; }
+                entries = d.data;
+            }
             const logoDataURL = await loadLogoForCover();
-            const html = await generatePDFHTML(d.data, year, logoDataURL);
+            const html = await generatePDFHTML(entries, year, logoDataURL);
             await generatePDFFromHTML(html, false);
         } catch(e) { alert('Error: ' + e.message); }
+        if (btn) btn.innerHTML = originalText;
     }
 
-    async function downloadPDFYear(year) {
+    async function downloadPDFYear(year, btn) {
         if (!isYearVisible(year)) { alert('This Year Cashbook Hide By Admin. This Cashbook Visible Soon!!!'); return; }
+        const originalText = btn ? btn.innerHTML : 'Download PDF';
+        if (btn) btn.innerHTML = 'Wait...';
         try {
-            const r = await fetch(API_URL + '/api/entries?year=' + year);
-            const d = await r.json();
-            if (!d.success || !d.data.length) { alert('No entries for ' + year); return; }
+            let entries = [];
+            if (year === currentSelectedYear && currentYearEntries.length) {
+                entries = currentYearEntries;
+            } else {
+                const r = await fetch(API_URL + '/api/entries?year=' + year);
+                const d = await r.json();
+                if (!d.success || !d.data.length) { alert('No entries for ' + year); if (btn) btn.innerHTML = originalText; return; }
+                entries = d.data;
+            }
             const logoDataURL = await loadLogoForCover();
-            const html = await generatePDFHTML(d.data, year, logoDataURL);
+            const html = await generatePDFHTML(entries, year, logoDataURL);
             await generatePDFFromHTML(html, true, 'Cashbook_' + year + '.pdf');
         } catch(e) { alert('Error: ' + e.message); }
+        if (btn) btn.innerHTML = originalText;
     }
 
     function formatPDFCurrency(amount) {
