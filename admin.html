@@ -272,8 +272,8 @@
                     const password = document.getElementById('adminPassword').value;
                     const errorDiv = document.getElementById('loginError');
 
-                    // Get stored password from localStorage or use default 'Dhanu3010'
-                    const storedPassword = localStorage.getItem('adminPassword') || 'Dhanu3010';
+                    // Get stored password from localStorage or use default 'admin123'
+                    const storedPassword = localStorage.getItem('adminPassword') || 'admin123';
 
                     if (password === storedPassword) {
                         document.getElementById('loginContainer').style.display = 'none';
@@ -653,9 +653,10 @@ body{font-family:"Poppins","Noto Sans Devanagari",sans-serif;background:#f5f0eb;
         }
 
         async function deletePDF(filename) {
-            const pin = prompt('Enter Super Admin PIN to delete this PDF:');
-            if (pin !== 'Dhanu@3010') {
-                alert('Unauthorized: Only Super Admin can delete PDFs.');
+            const storedMaster = localStorage.getItem('masterPassword') || 'Dhanu3010';
+            const pin = prompt('Enter Super Admin PIN (Default Master Password) to delete this PDF:');
+            if (pin !== storedMaster) {
+                alert('Unauthorized: Incorrect Super Admin PIN.');
                 return;
             }
             if (!confirm(`Delete ${filename}?`)) return;
@@ -770,14 +771,26 @@ body{font-family:"Poppins","Noto Sans Devanagari",sans-serif;background:#f5f0eb;
             </div>
             <form id="changePasswordForm" onsubmit="changePassword(event)">
                 <div class="edit-form-grid">
+                    <div class="form-group floating-label select-group">
+                        <select id="passwordTypeToChange" onchange="updatePasswordLabels()">
+                            <option value="admin">Admin Login Password</option>
+                            <option value="master">Default Master Password</option>
+                        </select>
+                        <label for="passwordTypeToChange">What to change?</label>
+                    </div>
+                    <div class="form-group floating-label">
+                        <input type="password" id="masterPassword" placeholder=" " required>
+                        <label for="masterPassword">Default Master Password</label>
+                        <div class="input-focus-line"></div>
+                    </div>
                     <div class="form-group floating-label">
                         <input type="password" id="currentPassword" placeholder=" " required>
-                        <label for="currentPassword">Current Password</label>
+                        <label for="currentPassword">Current Admin Password</label>
                         <div class="input-focus-line"></div>
                     </div>
                     <div class="form-group floating-label">
                         <input type="password" id="newPassword" placeholder=" " required minlength="6">
-                        <label for="newPassword">New Password (min 6 chars)</label>
+                        <label for="newPassword" id="newPasswordLabel">New Admin Password</label>
                         <div class="input-focus-line"></div>
                     </div>
                     <div class="form-group floating-label">
@@ -1047,9 +1060,10 @@ body{font-family:"Poppins","Noto Sans Devanagari",sans-serif;background:#f5f0eb;
             switchNotepadNote(newNote.id);
         }
         function deleteNotepadNote(id) {
-            const pin = prompt('Enter Super Admin PIN to delete this note:');
-            if (pin !== 'Dhanu@3010') {
-                alert('Unauthorized: Only Super Admin can delete notes.');
+            const storedMaster = localStorage.getItem('masterPassword') || 'Dhanu3010';
+            const pin = prompt('Enter Super Admin PIN (Default Master Password) to delete this note:');
+            if (pin !== storedMaster) {
+                alert('Unauthorized: Incorrect Super Admin PIN.');
                 return;
             }
             if (!confirm('Delete this note?')) return;

@@ -841,9 +841,10 @@ function resetFormForYear(year) {
 }
 
 async function deleteEntry(id, year) {
-    const pin = prompt('Enter Super Admin PIN to delete this entry:');
-    if (pin !== 'Dhanu@3010') {
-        showNotification('Unauthorized: Only Super Admin can delete entries.', 'error');
+    const storedMaster = localStorage.getItem('masterPassword') || 'Dhanu3010';
+    const pin = prompt('Enter Super Admin PIN (Default Master Password) to delete:');
+    if (pin !== storedMaster) {
+        alert('Unauthorized: Incorrect Super Admin PIN.');
         return;
     }
 
@@ -894,35 +895,60 @@ window.closeEditModal = function() {
     document.getElementById('editForm').reset();
 };
 
-// Password change functions
+// ===== PASSWORD MANAGEMENT =====
+
+window.updatePasswordLabels = function() {
+    const type = document.getElementById('passwordTypeToChange').value;
+    const label = document.getElementById('newPasswordLabel');
+    if(type === 'admin') {
+        label.textContent = 'New Admin Password';
+    } else {
+        label.textContent = 'New Master Password';
+    }
+}
+
 window.openChangePasswordModal = function() {
     document.getElementById('changePasswordModal').classList.add('active');
+    document.getElementById('masterPassword').value = '';
     document.getElementById('currentPassword').value = '';
     document.getElementById('newPassword').value = '';
     document.getElementById('confirmPassword').value = '';
     document.getElementById('passwordChangeError').style.display = 'none';
     document.getElementById('passwordChangeSuccess').style.display = 'none';
-};
+    if(document.getElementById('passwordTypeToChange')) {
+        document.getElementById('passwordTypeToChange').value = 'admin';
+        updatePasswordLabels();
+    }
+}
 
 window.closeChangePasswordModal = function() {
     document.getElementById('changePasswordModal').classList.remove('active');
-};
+}
 
 window.changePassword = function(event) {
     event.preventDefault();
-
+    
+    const typeElement = document.getElementById('passwordTypeToChange');
+    const passType = typeElement ? typeElement.value : 'admin';
+    const masterPassword = document.getElementById('masterPassword').value;
     const currentPassword = document.getElementById('currentPassword').value;
     const newPassword = document.getElementById('newPassword').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
     const errorDiv = document.getElementById('passwordChangeError');
     const successDiv = document.getElementById('passwordChangeSuccess');
 
-    // Get stored password from localStorage or use default 'Dhanu3010'
-    const storedPassword = localStorage.getItem('adminPassword') || 'Dhanu3010';
+    const storedMaster = localStorage.getItem('masterPassword') || 'Dhanu3010';
+    const storedAdmin = localStorage.getItem('adminPassword') || 'admin123';
 
-    // Verify current admin password
-    if (currentPassword !== storedPassword) {
-        errorDiv.textContent = 'Current Password is incorrect!';
+    if (masterPassword !== storedMaster) {
+        errorDiv.textContent = 'Incorrect Default Master Password!';
+        errorDiv.style.display = 'block';
+        successDiv.style.display = 'none';
+        return;
+    }
+
+    if (currentPassword !== storedAdmin) {
+        errorDiv.textContent = 'Incorrect Current Admin Password!';
         errorDiv.style.display = 'block';
         successDiv.style.display = 'none';
         return;
@@ -945,13 +971,17 @@ window.changePassword = function(event) {
     }
 
     // Save new password to localStorage
-    localStorage.setItem('adminPassword', newPassword);
-
-    // Update the password check in script.js (update the checkAdminLogin function reference)
-    successDiv.textContent = 'Password changed successfully!';
-    successDiv.style.display = 'block';
+    if (passType === 'admin') {
+        localStorage.setItem('adminPassword', newPassword);
+        successDiv.textContent = 'Admin Login Password changed successfully!';
+    } else {
+        localStorage.setItem('masterPassword', newPassword);
+        successDiv.textContent = 'Default Master Password changed successfully!';
+    }
+    
     errorDiv.style.display = 'none';
-
+    successDiv.style.display = 'block';
+    
     setTimeout(() => {
         closeChangePasswordModal();
         showNotification('Password changed successfully!', 'success');
