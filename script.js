@@ -302,6 +302,12 @@ window.deleteCustomYearPanel = async function() {
         return;
     }
 
+    const pin = prompt('Enter Super Admin PIN to delete a panel:');
+    if (pin !== 'Dhanu@3010') {
+        showNotification('Unauthorized: Only Super Admin can delete panels.', 'error');
+        return;
+    }
+
     if (!confirm(`Are you sure you want to delete the panel and ALL DATA for ${year}?`)) {
         return;
     }
@@ -342,6 +348,12 @@ window.deleteCustomYearPanel = async function() {
 }
 
 window.deleteAllPanels = async function() {
+    const pin = prompt('Enter Super Admin PIN to delete all panels:');
+    if (pin !== 'Dhanu@3010') {
+        showNotification('Unauthorized: Only Super Admin can delete all panels.', 'error');
+        return;
+    }
+
     if (!confirm('Are you sure you want to delete ALL panels and ALL DATA? This cannot be undone!')) {
         return;
     }
@@ -829,6 +841,12 @@ function resetFormForYear(year) {
 }
 
 async function deleteEntry(id, year) {
+    const pin = prompt('Enter Super Admin PIN to delete this entry:');
+    if (pin !== 'Dhanu@3010') {
+        showNotification('Unauthorized: Only Super Admin can delete entries.', 'error');
+        return;
+    }
+
     try {
         const response = await fetch(`${API_URL}/entries/${id}`, {
             method: 'DELETE'

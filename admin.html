@@ -655,6 +655,11 @@ body{font-family:"Poppins","Noto Sans Devanagari",sans-serif;background:#f5f0eb;
         }
 
         async function deletePDF(filename) {
+            const pin = prompt('Enter Super Admin PIN to delete this PDF:');
+            if (pin !== 'Dhanu@3010') {
+                alert('Unauthorized: Only Super Admin can delete PDFs.');
+                return;
+            }
             if (!confirm(`Delete ${filename}?`)) return;
             try {
                 const response = await fetch(`/api/uploaded-pdfs/${filename}`, { method: 'DELETE' });
@@ -1044,6 +1049,11 @@ body{font-family:"Poppins","Noto Sans Devanagari",sans-serif;background:#f5f0eb;
             switchNotepadNote(newNote.id);
         }
         function deleteNotepadNote(id) {
+            const pin = prompt('Enter Super Admin PIN to delete this note:');
+            if (pin !== 'Dhanu@3010') {
+                alert('Unauthorized: Only Super Admin can delete notes.');
+                return;
+            }
             if (!confirm('Delete this note?')) return;
             const idx = notepadNotes.findIndex(n => n.id === id);
             if (idx === -1) return;
