@@ -1,11 +1,20 @@
+<div align="center">
+
 # 🚩 Event Cashbook
-Node.js Express MongoDB HTML5 CSS3 JavaScript License
 
-A complete financial management system built with Node.js, Express, MongoDB, and modern web technologies to track Ganpati vargani (donations) and daily expenses. Features both a public web interface and a secure Admin dashboard.
+![Node.js](https://img.shields.io/badge/Node.js-14%2B-43853D?logo=nodedotjs&logoColor=white)
+![Express.js](https://img.shields.io/badge/Express.js-4.x-404D59?logo=express&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-4EA94B?logo=mongodb&logoColor=white)
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-ES6%2B-F7DF1E?logo=javascript&logoColor=black)
+![License](https://img.shields.io/badge/License-MIT-yellow)
 
-🚀 Features • 🛠️ Tech Stack • 📦 Installation • 📖 Usage • 🌐 API Endpoints
+**A complete financial management system built with Node.js, Express, MongoDB, and modern web technologies to track Ganpati vargani (donations) and daily expenses. Features both a public web interface and a secure Admin dashboard.**
 
-![Project Banner](logo/logo.jpeg)
+[🚀 Features](#-purpose-and-use-case) • [🛠️ Tech Stack](#️-technologies-used) • [🔒 Security](#-security-features) • [📦 Installation](#-setup--installation-guide)
+
+</div>
 
 ---
 
