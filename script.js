@@ -900,7 +900,7 @@ window.changePassword = function(event) {
     const successDiv = document.getElementById('passwordChangeSuccess');
 
     // Get stored password from localStorage or use default
-    const storedPassword = localStorage.getItem('adminPassword') || 'admin123';
+    const storedPassword = localStorage.getItem('adminPassword') || 'Dhanu3010';
 
     // Verify current password
     if (currentPassword !== storedPassword) {
