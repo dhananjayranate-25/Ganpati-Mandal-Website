@@ -1,8 +1,11 @@
-# Event Cashbook 
+# 🚩 Event Cashbook
+Node.js Express MongoDB HTML5 CSS3 JavaScript License
 
-**Shivsrushti Boyz Ganpati Vargani Cashbook** is a comprehensive, web-based financial management system explicitly designed for Ganpati Mandals. It helps mandals digitally track their collected *vargani* (donations), daily expenses, and maintain full transparency of their yearly cash flow. 
+A complete financial management system built with Node.js, Express, MongoDB, and modern web technologies to track Ganpati vargani (donations) and daily expenses. Features both a public web interface and a secure Admin dashboard.
 
-This project aims to replace traditional paper-based cashbooks with an interactive, secure, and easily accessible digital platform.
+🚀 Features • 🛠️ Tech Stack • 📦 Installation • 📖 Usage • 🌐 API Endpoints
+
+![Project Banner](logo/logo.jpeg)
 
 ---
 
