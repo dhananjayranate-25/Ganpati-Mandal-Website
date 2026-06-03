@@ -1404,13 +1404,6 @@ function createPDFHTML(rows, yearLabel, totalCashIn, totalCashOut, finalBalance,
                 padding: 30px;
                 margin-top: -40px;
             }
-            .cover-om-top {
-                font-size: 32px;
-                color: #ffd700;
-                margin-bottom: 35px;
-                text-shadow: 0 0 40px rgba(255,215,0,0.8), 0 0 80px rgba(255,215,0,0.4);
-                font-weight: bold;
-            }
             .cover-logo-wrap {
                 width: 280px;
                 height: 280px;
