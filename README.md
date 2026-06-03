@@ -1,6 +1,4 @@
-# Shivsrushti Boyz - Ganpati Vargani Cashbook 🚩
-
-![Project Banner](logo/logo.jpeg)
+# Event Cashbook 
 
 **Shivsrushti Boyz Ganpati Vargani Cashbook** is a comprehensive, web-based financial management system explicitly designed for Ganpati Mandals. It helps mandals digitally track their collected *vargani* (donations), daily expenses, and maintain full transparency of their yearly cash flow. 
 
