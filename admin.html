@@ -653,12 +653,6 @@ body{font-family:"Poppins","Noto Sans Devanagari",sans-serif;background:#f5f0eb;
         }
 
         async function deletePDF(filename) {
-            const storedMaster = localStorage.getItem('masterPassword') || 'Dhanu3010';
-            const pin = prompt('Enter Super Admin PIN (Default Master Password) to delete this PDF:');
-            if (pin !== storedMaster) {
-                alert('Unauthorized: Incorrect Super Admin PIN.');
-                return;
-            }
             if (!confirm(`Delete ${filename}?`)) return;
             try {
                 const response = await fetch(`/api/uploaded-pdfs/${filename}`, { method: 'DELETE' });
@@ -771,18 +765,6 @@ body{font-family:"Poppins","Noto Sans Devanagari",sans-serif;background:#f5f0eb;
             </div>
             <form id="changePasswordForm" onsubmit="changePassword(event)">
                 <div class="edit-form-grid">
-                    <div class="form-group floating-label select-group">
-                        <select id="passwordTypeToChange" onchange="updatePasswordLabels()">
-                            <option value="admin">Admin Login Password</option>
-                            <option value="master">Default Master Password</option>
-                        </select>
-                        <label for="passwordTypeToChange">What to change?</label>
-                    </div>
-                    <div class="form-group floating-label">
-                        <input type="password" id="masterPassword" placeholder=" " required>
-                        <label for="masterPassword">Default Master Password</label>
-                        <div class="input-focus-line"></div>
-                    </div>
                     <div class="form-group floating-label">
                         <input type="password" id="currentPassword" placeholder=" " required>
                         <label for="currentPassword">Current Admin Password</label>
@@ -1060,12 +1042,6 @@ body{font-family:"Poppins","Noto Sans Devanagari",sans-serif;background:#f5f0eb;
             switchNotepadNote(newNote.id);
         }
         function deleteNotepadNote(id) {
-            const storedMaster = localStorage.getItem('masterPassword') || 'Dhanu3010';
-            const pin = prompt('Enter Super Admin PIN (Default Master Password) to delete this note:');
-            if (pin !== storedMaster) {
-                alert('Unauthorized: Incorrect Super Admin PIN.');
-                return;
-            }
             if (!confirm('Delete this note?')) return;
             const idx = notepadNotes.findIndex(n => n.id === id);
             if (idx === -1) return;

@@ -302,11 +302,6 @@ window.deleteCustomYearPanel = async function() {
         return;
     }
 
-    const pin = prompt('Enter Super Admin PIN to delete a panel:');
-    if (pin !== 'Dhanu@3010') {
-        showNotification('Unauthorized: Only Super Admin can delete panels.', 'error');
-        return;
-    }
 
     if (!confirm(`Are you sure you want to delete the panel and ALL DATA for ${year}?`)) {
         return;
@@ -348,11 +343,6 @@ window.deleteCustomYearPanel = async function() {
 }
 
 window.deleteAllPanels = async function() {
-    const pin = prompt('Enter Super Admin PIN to delete all panels:');
-    if (pin !== 'Dhanu@3010') {
-        showNotification('Unauthorized: Only Super Admin can delete all panels.', 'error');
-        return;
-    }
 
     if (!confirm('Are you sure you want to delete ALL panels and ALL DATA? This cannot be undone!')) {
         return;
@@ -841,12 +831,7 @@ function resetFormForYear(year) {
 }
 
 async function deleteEntry(id, year) {
-    const storedMaster = localStorage.getItem('masterPassword') || 'Dhanu3010';
-    const pin = prompt('Enter Super Admin PIN (Default Master Password) to delete:');
-    if (pin !== storedMaster) {
-        alert('Unauthorized: Incorrect Super Admin PIN.');
-        return;
-    }
+    if (!confirm('Are you sure you want to delete this entry?')) return;
 
     try {
         const response = await fetch(`${API_URL}/entries/${id}`, {
@@ -897,28 +882,13 @@ window.closeEditModal = function() {
 
 // ===== PASSWORD MANAGEMENT =====
 
-window.updatePasswordLabels = function() {
-    const type = document.getElementById('passwordTypeToChange').value;
-    const label = document.getElementById('newPasswordLabel');
-    if(type === 'admin') {
-        label.textContent = 'New Admin Password';
-    } else {
-        label.textContent = 'New Master Password';
-    }
-}
-
 window.openChangePasswordModal = function() {
     document.getElementById('changePasswordModal').classList.add('active');
-    document.getElementById('masterPassword').value = '';
     document.getElementById('currentPassword').value = '';
     document.getElementById('newPassword').value = '';
     document.getElementById('confirmPassword').value = '';
     document.getElementById('passwordChangeError').style.display = 'none';
     document.getElementById('passwordChangeSuccess').style.display = 'none';
-    if(document.getElementById('passwordTypeToChange')) {
-        document.getElementById('passwordTypeToChange').value = 'admin';
-        updatePasswordLabels();
-    }
 }
 
 window.closeChangePasswordModal = function() {
@@ -928,24 +898,13 @@ window.closeChangePasswordModal = function() {
 window.changePassword = function(event) {
     event.preventDefault();
     
-    const typeElement = document.getElementById('passwordTypeToChange');
-    const passType = typeElement ? typeElement.value : 'admin';
-    const masterPassword = document.getElementById('masterPassword').value;
     const currentPassword = document.getElementById('currentPassword').value;
     const newPassword = document.getElementById('newPassword').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
     const errorDiv = document.getElementById('passwordChangeError');
     const successDiv = document.getElementById('passwordChangeSuccess');
 
-    const storedMaster = localStorage.getItem('masterPassword') || 'Dhanu3010';
     const storedAdmin = localStorage.getItem('adminPassword') || 'admin123';
-
-    if (masterPassword !== storedMaster) {
-        errorDiv.textContent = 'Incorrect Default Master Password!';
-        errorDiv.style.display = 'block';
-        successDiv.style.display = 'none';
-        return;
-    }
 
     if (currentPassword !== storedAdmin) {
         errorDiv.textContent = 'Incorrect Current Admin Password!';
@@ -954,15 +913,6 @@ window.changePassword = function(event) {
         return;
     }
 
-    // Check if new passwords match
-    if (newPassword !== confirmPassword) {
-        errorDiv.textContent = 'New passwords do not match!';
-        errorDiv.style.display = 'block';
-        successDiv.style.display = 'none';
-        return;
-    }
-
-    // Validate new password length
     if (newPassword.length < 6) {
         errorDiv.textContent = 'New password must be at least 6 characters!';
         errorDiv.style.display = 'block';
@@ -970,15 +920,17 @@ window.changePassword = function(event) {
         return;
     }
 
-    // Save new password to localStorage
-    if (passType === 'admin') {
-        localStorage.setItem('adminPassword', newPassword);
-        successDiv.textContent = 'Admin Login Password changed successfully!';
-    } else {
-        localStorage.setItem('masterPassword', newPassword);
-        successDiv.textContent = 'Default Master Password changed successfully!';
+    if (newPassword !== confirmPassword) {
+        errorDiv.textContent = 'New passwords do not match!';
+        errorDiv.style.display = 'block';
+        successDiv.style.display = 'none';
+        return;
     }
+
+    // Save new password to localStorage
+    localStorage.setItem('adminPassword', newPassword);
     
+    successDiv.textContent = 'Password changed successfully!';
     errorDiv.style.display = 'none';
     successDiv.style.display = 'block';
     
