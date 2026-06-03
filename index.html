@@ -465,11 +465,11 @@
                 </div>
                 <div class="pdf-card-title">${pdf.displayName.replace('.pdf', '')}</div>
                 <div class="pdf-card-actions">
-                    <button onclick="viewPDFHome('${pdf.filename}', this)" class="pdf-card-btn view">
+                    <button onclick="viewPDFHome('${pdf.filename}', '${pdf.year}', '${escSub}', '${escTag}', '${escOrg}', this)" class="pdf-card-btn view">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                         View
                     </button>
-                    <button onclick="downloadPDFHome('${pdf.filename}', '${pdf.year}', this)" class="pdf-card-btn download">
+                    <button onclick="downloadPDFHome('${pdf.filename}', '${pdf.year}', '${escSub}', '${escTag}', '${escOrg}', this)" class="pdf-card-btn download">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                         Download
                     </button>
@@ -622,30 +622,84 @@ body{font-family:'Poppins','Noto Sans Devanagari',sans-serif;background:#f5f0eb;
 
     let cachedLogo = '';
 
-    async function generateAndOpenMergedPDF(filename, year, download) {
-        if (download) {
-            const a = document.createElement('a');
-            a.href = '/uploads/' + filename;
-            a.download = 'Ganpati_Cashbook_' + year + '.pdf';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        } else {
-            window.open('/uploads/' + filename, '_blank');
+    async function generateAndOpenMergedPDF(filename, year, download, pdfSubtitle, pdfTagline, pdfOrgName) {
+        try {
+            const logoDataURL = await loadLogoForCover();
+            const coverHTML = createCoverHTML(year, logoDataURL, pdfSubtitle, pdfTagline, pdfOrgName);
+            const iframe = document.createElement('iframe');
+            iframe.style.position = 'absolute';
+            iframe.style.left = '-9999px';
+            iframe.style.top = '-9999px';
+            iframe.style.width = '210mm';
+            iframe.style.height = '297mm';
+            iframe.style.border = 'none';
+            document.body.appendChild(iframe);
+            iframe.contentDocument.write(coverHTML);
+            iframe.contentDocument.close();
+            const imgs = iframe.contentDocument.querySelectorAll('img');
+            await Promise.all([...imgs].map(img => new Promise(r => {
+                if (img.complete) r(); else { img.onload = r; img.onerror = r; setTimeout(r, 2000); }
+            })));
+            try { await iframe.contentDocument.fonts.ready; } catch(e) {}
+            await new Promise(r => setTimeout(r, 500));
+            const canvas = await html2canvas(iframe.contentDocument.body, {
+                scale: 2, useCORS: true, backgroundColor: '#ffffff', allowTaint: true
+            });
+            document.body.removeChild(iframe);
+            const { jsPDF } = window.jspdf;
+            const coverDoc = new jsPDF('p', 'mm', 'a4');
+            const pgW = coverDoc.internal.pageSize.getWidth();
+            const imgH = (canvas.height * pgW) / canvas.width;
+            coverDoc.addImage(canvas, 'PNG', 0, 0, pgW, imgH);
+            const coverBytes = coverDoc.output('arraybuffer');
+            
+            const resp = await fetch('/uploads/' + filename);
+            const uploadBytes = await resp.arrayBuffer();
+            
+            const { PDFDocument } = window.PDFLib;
+            const mergedPdf = await PDFDocument.create();
+            
+            const coverPdf = await PDFDocument.load(coverBytes);
+            const cPgs = await mergedPdf.copyPages(coverPdf, coverPdf.getPageIndices());
+            cPgs.forEach(p => mergedPdf.addPage(p));
+            
+            const existingPdf = await PDFDocument.load(uploadBytes);
+            const indices = existingPdf.getPageIndices();
+            const uPgs = await mergedPdf.copyPages(existingPdf, indices);
+            uPgs.forEach(p => mergedPdf.addPage(p));
+            
+            const mergedBytes = await mergedPdf.save();
+            const blob = new Blob([mergedBytes], { type: 'application/pdf' });
+            const url = URL.createObjectURL(blob);
+            
+            if (download) {
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'Ganpati_Cashbook_' + year + '.pdf';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                setTimeout(() => URL.revokeObjectURL(url), 10000);
+            } else {
+                window.open(url, '_blank');
+            }
+        } catch (error) {
+            console.error('PDF merge error:', error);
+            alert('Error generating PDF. Make sure server is running!');
         }
     }
 
-    async function viewPDFHome(filename, btn) {
+    async function viewPDFHome(filename, year, subtitle, tagline, orgName, btn) {
         const originalText = btn ? btn.innerHTML : 'View';
         if (btn) btn.innerHTML = 'Wait...';
-        await generateAndOpenMergedPDF(filename, null, false);
+        await generateAndOpenMergedPDF(filename, year, false, subtitle, tagline, orgName);
         if (btn) btn.innerHTML = originalText;
     }
 
-    async function downloadPDFHome(filename, year, btn) {
+    async function downloadPDFHome(filename, year, subtitle, tagline, orgName, btn) {
         const originalText = btn ? btn.innerHTML : 'Download';
         if (btn) btn.innerHTML = 'Wait...';
-        await generateAndOpenMergedPDF(filename, year, true);
+        await generateAndOpenMergedPDF(filename, year, true, subtitle, tagline, orgName);
         if (btn) btn.innerHTML = originalText;
     }
     </script>
