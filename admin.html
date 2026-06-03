@@ -272,8 +272,8 @@
                     const password = document.getElementById('adminPassword').value;
                     const errorDiv = document.getElementById('loginError');
 
-                    // Get stored password from localStorage or use default
-                    const storedPassword = localStorage.getItem('adminPassword') || 'Dhanu3010';
+                    // Get stored password from localStorage or use default 'admin'
+                    const storedPassword = localStorage.getItem('adminPassword') || 'admin';
 
                     if (password === storedPassword) {
                         document.getElementById('loginContainer').style.display = 'none';
@@ -768,8 +768,13 @@ body{font-family:"Poppins","Noto Sans Devanagari",sans-serif;background:#f5f0eb;
             <form id="changePasswordForm" onsubmit="changePassword(event)">
                 <div class="edit-form-grid">
                     <div class="form-group floating-label">
+                        <input type="password" id="masterPassword" placeholder=" " required>
+                        <label for="masterPassword">Default Password (Required to change)</label>
+                        <div class="input-focus-line"></div>
+                    </div>
+                    <div class="form-group floating-label">
                         <input type="password" id="currentPassword" placeholder=" " required>
-                        <label for="currentPassword">Current Password</label>
+                        <label for="currentPassword">Current Admin Password</label>
                         <div class="input-focus-line"></div>
                     </div>
                     <div class="form-group floating-label">

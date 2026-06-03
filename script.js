@@ -879,6 +879,7 @@ window.closeEditModal = function() {
 // Password change functions
 window.openChangePasswordModal = function() {
     document.getElementById('changePasswordModal').classList.add('active');
+    document.getElementById('masterPassword').value = '';
     document.getElementById('currentPassword').value = '';
     document.getElementById('newPassword').value = '';
     document.getElementById('confirmPassword').value = '';
@@ -893,18 +894,27 @@ window.closeChangePasswordModal = function() {
 window.changePassword = function(event) {
     event.preventDefault();
 
+    const masterPassword = document.getElementById('masterPassword').value;
     const currentPassword = document.getElementById('currentPassword').value;
     const newPassword = document.getElementById('newPassword').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
     const errorDiv = document.getElementById('passwordChangeError');
     const successDiv = document.getElementById('passwordChangeSuccess');
 
-    // Get stored password from localStorage or use default
-    const storedPassword = localStorage.getItem('adminPassword') || 'Dhanu3010';
+    // Verify Default/Master password
+    if (masterPassword !== 'Dhanu3010') {
+        errorDiv.textContent = 'Default Password is incorrect!';
+        errorDiv.style.display = 'block';
+        successDiv.style.display = 'none';
+        return;
+    }
 
-    // Verify current password
+    // Get stored password from localStorage or use default 'admin'
+    const storedPassword = localStorage.getItem('adminPassword') || 'admin';
+
+    // Verify current admin password
     if (currentPassword !== storedPassword) {
-        errorDiv.textContent = 'Current password is incorrect!';
+        errorDiv.textContent = 'Current Admin Password is incorrect!';
         errorDiv.style.display = 'block';
         successDiv.style.display = 'none';
         return;
