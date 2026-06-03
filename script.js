@@ -1081,7 +1081,7 @@ function renderTable(year, entries) {
         row.style.animationDelay = (index * 0.05) + 's';
 
         const deleteBtn = year !== 'all'
-            ? `<td><button class="btn btn-edit" onclick="editEntry(${entry.id}, '${year}')">Edit</button> <button class="btn btn-delete" onclick="deleteEntry(${entry.id}, '${year}')">Delete</button></td>`
+            ? `<td><button class="btn btn-edit" onclick="editEntry('${entry.id}', '${year}')">Edit</button> <button class="btn btn-delete" onclick="deleteEntry('${entry.id}', '${year}')">Delete</button></td>`
             : '';
         
         row.innerHTML = `
@@ -1222,68 +1222,8 @@ window.downloadPDFForYear = async function(year) {
         return;
     }
 
-    const htmlContent = await generatePDFForYear(entries, yearLabel);
-    
-    // Use html2canvas + jsPDF for download
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = htmlContent;
-    tempDiv.style.position = 'absolute';
-    tempDiv.style.left = '-9999px';
-    tempDiv.style.top = '-9999px';
-    tempDiv.style.width = '210mm';
-    document.body.appendChild(tempDiv);
-    
-    try {
-        // Wait for logo image to load
-        const logoImg = tempDiv.querySelector('img.logo');
-        if (logoImg) {
-            await new Promise((resolve) => {
-                if (logoImg.complete) {
-                    resolve();
-                } else {
-                    logoImg.onload = resolve;
-                    logoImg.onerror = resolve;
-                    setTimeout(resolve, 2000); // Timeout after 2 seconds
-                }
-            });
-        }
-        
-        const canvas = await html2canvas(tempDiv, {
-            scale: 2,
-            useCORS: true,
-            logging: false,
-            backgroundColor: '#ffffff',
-            allowTaint: true
-        });
-        
-        document.body.removeChild(tempDiv);
-        
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF('p', 'mm', 'a4');
-        const pageWidth = doc.internal.pageSize.getWidth();
-        const imgWidth = pageWidth;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        
-        let heightLeft = imgHeight;
-        let position = 0;
-        
-        doc.addImage(canvas, 'PNG', 0, position, imgWidth, imgHeight);
-        while (heightLeft > 0) {
-            position = height - imgHeight + 10;
-            doc.addPage();
-            doc.addImage(canvas, 'PNG', 0, position, imgWidth, imgHeight);
-            heightLeft -= doc.internal.pageSize.getHeight();
-        }
-        
-        doc.save(`Ganpati_Cashbook_Shivsrushti_${yearLabel}.pdf`);
-        showNotification(`Cashbook for ${yearLabel} downloaded successfully!`, 'success');
-    } catch (error) {
-        if (tempDiv.parentNode) {
-            document.body.removeChild(tempDiv);
-        }
-        console.error('PDF download error:', error);
-        showNotification('Error generating PDF. Try "View PDF" instead.', 'error');
-    }
+    // Use the native print dialog for a high-quality vector PDF (same as viewPDFForYear)
+    await viewPDFForYear(year);
 }
 
 window.viewPDFForYear = async function(year) {
@@ -1799,14 +1739,13 @@ function createPDFHTML(rows, yearLabel, totalCashIn, totalCashOut, finalBalance,
             <div class="cover-corner bl"></div>
             <div class="cover-corner br"></div>
             <div class="cover-content">
-                <div class="cover-om-top">|| हर हर महादेव 🔱 ||</div>
                 <div class="cover-logo-wrap">
                     <div class="cover-logo-glow"></div>
                     <div class="cover-logo-ring"></div>
                     <div class="cover-logo-ring2"></div>
                     <img src="${logoSrc}" alt="Logo" class="cover-logo" onerror="this.style.display='none'">
                 </div>
-                <div class="cover-mandal-name">${getPDFSettings(yearLabel).orgName}</div>
+                <div class="cover-mandal-name" style="font-size: 48px;">${getPDFSettings(yearLabel).orgName}</div>
                 <div class="cover-divider"></div>
                 <div class="cover-subtitle">${getPDFSettings(yearLabel).subtitle}</div>
                 <div class="cover-tagline">${getPDFSettings(yearLabel).tagline}</div>
@@ -1816,18 +1755,17 @@ function createPDFHTML(rows, yearLabel, totalCashIn, totalCashOut, finalBalance,
                 </div>
             </div>
             <div class="cover-footer">
-                <div class="cover-footer-om">ॐ गण गणपतये नमः</div>
                 <p>Developed by | Dhananjay Ranate</p>
             </div>
         </div>
 
         <!-- INNER PAGE -->
         <div class="inner-page">
-            <div class="page-header-bar">
-                <div class="header-logo-box">
+            <div class="page-header-bar" style="position: relative; display: flex; align-items: center; justify-content: center;">
+                <div class="header-logo-box" style="position: absolute; left: 0;">
                     <img src="${logoSrc}" alt="Logo" onerror="this.style.display='none'">
                 </div>
-                <div class="header-info">
+                <div class="header-info" style="text-align: center;">
                     <h1>${(getPDFSettings(yearLabel).headerOrgName || getPDFSettings(yearLabel).orgName)} 🚩</h1>
                     <p>${(getPDFSettings(yearLabel).headerSubtitle || getPDFSettings(yearLabel).subtitle)} — वर्ष: ${yearLabel}</p>
                 </div>
@@ -1874,10 +1812,7 @@ function createPDFHTML(rows, yearLabel, totalCashIn, totalCashOut, finalBalance,
                 </div>
 
                 <div class="page-footer">
-                    <div class="org">|| हर हर महादेव 🔱 ||</div>
-                    <div class="org">${getPDFSettings(yearLabel).orgName} 🚩</div>
                     <div class="dev">Developed by | Dhananjay Ranate</div>
-                    <div class="dt">Generated on ${new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</div>
                 </div>
             </div>
         </div>
