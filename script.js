@@ -207,15 +207,23 @@ function setTodayDate() {
     }
 }
 
+function getTodayDateString() {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+}
+
 function updateDateForYear(year) {
     const dateInput = document.getElementById(`date-${year}`);
     if (dateInput && year) {
         const currentDate = dateInput.value;
         if (currentDate) {
             const monthDay = currentDate.substring(5);
-            dateInput.value = year + '-' + (monthDay || '01-01');
+            dateInput.value = year + '-' + (monthDay || getTodayDateString().substring(5));
         } else {
-            dateInput.value = year + '-01-01';
+            dateInput.value = getTodayDateString();
         }
     }
 }
@@ -567,7 +575,7 @@ function createYearPanel(year) {
 
     const dateInput = panel.querySelector(`#date-${year}`);
     if (dateInput) {
-        dateInput.value = `${year}-01-01`;
+        dateInput.value = getTodayDateString();
     }
 
     yearPanels[year] = panel;
@@ -817,7 +825,7 @@ function resetFormForYear(year) {
     if (modeSelect) modeSelect.value = '';
     if (cashInInput) cashInInput.value = '';
     if (cashOutInput) cashOutInput.value = '';
-    if (dateInput) dateInput.value = `${year}-01-01`;
+    if (dateInput) dateInput.value = getTodayDateString();
 }
 
 async function deleteEntry(id, year) {
