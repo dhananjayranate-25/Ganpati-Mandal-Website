@@ -277,7 +277,7 @@ app.get('/api/uploaded-pdfs', (req, res) => {
                 mergedPath: `/api/merged-pdf/${f}/${year}`
             };
         });
-        pdfList.sort((a, b) => a.year.localeCompare(b.year));
+        pdfList.sort((a, b) => b.year.localeCompare(a.year));
         res.json({ success: true, data: pdfList });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });

@@ -407,7 +407,7 @@ async function loadYearsForAdmin() {
         const localYears = getYearPanelsFromStorage();
 
         // Combine both, remove duplicates
-        const allYears = [...new Set([...dbYears, ...localYears])];
+        const allYears = [...new Set([...dbYears, ...localYears])].sort().reverse();
 
         // Create panels for all years
         allYears.forEach(year => {

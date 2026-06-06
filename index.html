@@ -212,7 +212,7 @@
                 if (!Array.isArray(panelYears)) panelYears = [];
             } catch(e) { panelYears = []; }
 
-            const allYears = [...new Set([...apiYears, ...panelYears])].sort();
+            const allYears = [...new Set([...apiYears, ...panelYears])].sort().reverse();
 
             select.style.display = allYears.length ? '' : 'none';
             const prevValue = select.value;
