@@ -1812,12 +1812,12 @@ function createPDFHTML(rows, yearLabel, totalCashIn, totalCashOut, finalBalance,
                     <div style="height:1.5px;background:linear-gradient(90deg,#ff8c00,#ffd700,#ff8c00);margin:12px 0 8px 0;border-radius:2px;"></div>
                     <div style="display:flex; justify-content:space-between; margin-top:30px; padding:0 30px;">
                         <div style="text-align:center;">
-                            <div style="font-weight:800; font-size:12px; color:#5a2010; margin-bottom:30px;">अध्यक्ष</div>
+                            <div style="font-weight:800; font-size:12px; color:#5a2010; margin-bottom:15px;">अध्यक्ष</div>
                             <div style="font-weight:700; font-size:13px; color:#1a1a2e;">तेजस फटांगरे</div>
                             <div style="font-size:11px; color:#555555; margin-top:3px;">मो. नं - 9370599259</div>
                         </div>
                         <div style="text-align:center;">
-                            <div style="font-weight:800; font-size:12px; color:#5a2010; margin-bottom:30px;">खजिनदार</div>
+                            <div style="font-weight:800; font-size:12px; color:#5a2010; margin-bottom:15px;">खजिनदार</div>
                             <div style="font-weight:700; font-size:13px; color:#1a1a2e;">धनंजय रणाते</div>
                             <div style="font-size:11px; color:#555555; margin-top:3px;">मो. नं - 9322134560</div>
                         </div>
