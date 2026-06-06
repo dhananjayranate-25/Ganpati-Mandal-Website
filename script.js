@@ -1763,11 +1763,8 @@ function createPDFHTML(rows, yearLabel, totalCashIn, totalCashOut, finalBalance,
         <!-- INNER PAGE -->
         <div class="inner-page">
             <div class="page-header-bar" style="position: relative; display: flex; align-items: center; justify-content: center;">
-                <div class="header-logo-box" style="position: absolute; left: 0;">
-                    <img src="${logoSrc}" alt="Logo" onerror="this.style.display='none'">
-                </div>
                 <div class="header-info" style="text-align: center;">
-                    <h1>${(getPDFSettings(yearLabel).headerOrgName || getPDFSettings(yearLabel).orgName)} 🚩</h1>
+                    <h1>${getPDFSettings(yearLabel).headerOrgName || getPDFSettings(yearLabel).orgName}</h1>
                     <p>${(getPDFSettings(yearLabel).headerSubtitle || getPDFSettings(yearLabel).subtitle)} — वर्ष: ${yearLabel}</p>
                 </div>
             </div>
