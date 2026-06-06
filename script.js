@@ -406,12 +406,15 @@ async function loadYearsForAdmin() {
         // Get years from localStorage (custom created panels)
         const localYears = getYearPanelsFromStorage();
 
+        // Convert dbYears to strings to ensure correct Set merging
+        const dbYearsStr = dbYears.map(String);
+
         // Combine both, remove duplicates
-        const allYears = [...new Set([...dbYears, ...localYears])].sort().reverse();
+        const allYears = [...new Set([...dbYearsStr, ...localYears])].sort().reverse();
 
         // Create panels for all years
         allYears.forEach(year => {
-            const yearStr = year.toString();
+            const yearStr = year.toString().trim();
 
             const tab = document.createElement('button');
             tab.className = 'year-tab';
