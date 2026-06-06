@@ -23,7 +23,7 @@
                 </div>
                 <h1 class="title-gradient">Admin Login</h1>
                 <div class="subtitle-wrapper">
-                    <span class="subtitle-badge">शिवसृष्टी Boyz 🚩</span>
+                    <span class="subtitle-badge">शिवसृष्टी हिंदू तरुण मित्र मंडळ 🚩</span>
                 </div>
             </div>
         </header>
@@ -77,7 +77,7 @@
                 </div>
                 <h1 class="title-gradient">Admin Panel</h1>
                 <div class="subtitle-wrapper">
-                    <span class="subtitle-badge">शिवसृष्टी Boyz 🚩</span>
+                    <span class="subtitle-badge">शिवसृष्टी हिंदू तरुण मित्र मंडळ 🚩</span>
                 </div>
             </div>
             <div class="wave-divider">
@@ -110,7 +110,7 @@
                 <div style="display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap; margin-top: 12px;">
                     <div style="flex:1;min-width:180px;">
                         <label style="color: var(--text-secondary); font-size: 12px; display: block; margin-bottom: 5px;">Organization Name</label>
-                        <input type="text" id="uploadOrgName" placeholder="शिवसृष्टी Boyz" style="width:100%;padding:10px 14px;border-radius:10px;background:var(--bg-card);border:1px solid var(--glass-border);color:var(--text-primary);font-size:14px;font-family:inherit;">
+                        <input type="text" id="uploadOrgName" placeholder="शिवसृष्टी हिंदू तरुण मित्र मंडळ 🚩" style="width:100%;padding:10px 14px;border-radius:10px;background:var(--bg-card);border:1px solid var(--glass-border);color:var(--text-primary);font-size:14px;font-family:inherit;">
                     </div>
                     <div style="flex:1;min-width:180px;">
                         <label style="color: var(--text-secondary); font-size: 12px; display: block; margin-bottom: 5px;">Marathi Title</label>
@@ -247,7 +247,7 @@
                 <div class="footer-divider-gold"></div>
                 <div class="footer-marathi-middle">
                     <p>गणपती बाप्पा मोरया | मंगलमूर्ती मोरया |</p>
-                    <p>शिवसृष्टी Boyz - शिवसृष्टी उत्सव कॅशबुक</p>
+                    <p>शिवसृष्टी हिंदू तरुण मित्र मंडळ 🚩 - शिवसृष्टी उत्सव कॅशबुक</p>
                 </div>
                 <div class="footer-divider-gold"></div>
                 <div class="footer-marathi-bottom">
@@ -492,7 +492,7 @@
         }
 
         function getPDFSettingsForYear(year) {
-            const defaults = { orgName: 'शिवसृष्टी Boyz', subtitle: 'गणेश उत्सव कॅशबुक', tagline: 'Ganpati Festival Cashbook' };
+            const defaults = { orgName: 'शिवसृष्टी हिंदू तरुण मित्र मंडळ 🚩', subtitle: 'गणेश उत्सव कॅशबुक', tagline: 'Ganpati Festival Cashbook' };
             try {
                 const key = 'pdfCustomSettings_' + year;
                 const stored = JSON.parse(localStorage.getItem(key) || '{}');
@@ -549,7 +549,7 @@ body{font-family:"Poppins","Noto Sans Devanagari",sans-serif;background:#f5f0eb;
   <div class="cover-corner tl"></div><div class="cover-corner tr"></div><div class="cover-corner bl"></div><div class="cover-corner br"></div>
   <div class="cover-content">
     <div class="cover-logo-wrap"><div class="cover-logo-glow"></div><div class="cover-logo-ring"></div><div class="cover-logo-ring2"></div><img src="${logoSrc}" alt="Logo" class="cover-logo" onerror="this.style.display='none'"></div>
-    <div class="cover-mandal-name">${s.orgName}</div>
+    <div class="cover-mandal-name" style="font-size: 32px; padding: 10px 15px; line-height: 1.3;">${s.orgName}</div>
     <div class="cover-divider"></div>
     <div class="cover-subtitle">${s.subtitle}</div>
     <div class="cover-tagline">${s.tagline}</div>

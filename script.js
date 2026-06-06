@@ -63,7 +63,7 @@ function toggleHomeVisibility(year) {
 // PDF custom title settings (per-year)
 function getPDFSettings(year) {
     const defaults = {
-        orgName: 'शिवसृष्टी Boyz',
+        orgName: 'शिवसृष्टी हिंदू तरुण मित्र मंडळ 🚩',
         subtitle: 'गणेश उत्सव कॅशबुक',
         tagline: 'Ganpati Festival Cashbook',
         headerOrgName: '',
@@ -1746,7 +1746,7 @@ function createPDFHTML(rows, yearLabel, totalCashIn, totalCashOut, finalBalance,
                     <div class="cover-logo-ring2"></div>
                     <img src="${logoSrc}" alt="Logo" class="cover-logo" onerror="this.style.display='none'">
                 </div>
-                <div class="cover-mandal-name" style="font-size: 48px;">${getPDFSettings(yearLabel).orgName}</div>
+                <div class="cover-mandal-name" style="font-size: 32px; padding: 10px 15px; line-height: 1.3;">${getPDFSettings(yearLabel).orgName}</div>
                 <div class="cover-divider"></div>
                 <div class="cover-subtitle">${getPDFSettings(yearLabel).subtitle}</div>
                 <div class="cover-tagline">${getPDFSettings(yearLabel).tagline}</div>

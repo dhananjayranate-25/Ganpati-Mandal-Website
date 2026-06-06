@@ -355,7 +355,7 @@ async function generateMergedPdf(filename, year, subtitle, tagline, orgName) {
 
     subtitle = subtitle || '\u0917\u0923\u0947\u0936 \u0909\u0924\u094D\u0938\u0935 \u0915\u0945\u0936\u092C\u0941\u0915';
     tagline = tagline || 'Ganpati Festival Cashbook';
-    orgName = orgName || 'ShivSrushti Boyz';
+    orgName = orgName || 'Shivsrushti Hindu Tarun Mitra Mandal 🚩';
 
     const existingPdfBytes = fs.readFileSync(pdfPath);
     const existingPdf = await PDFDocument.load(existingPdfBytes, { ignoreEncryption: true });
@@ -458,7 +458,7 @@ async function generateMergedPdf(filename, year, subtitle, tagline, orgName) {
         x: nameBoxX + nameBoxWidth - 5, y: nameY, width: 5, height: nameBoxHeight, color: red
     });
 
-    const orgText = (orgName && /^[\x00-\x7F\s]+$/.test(orgName)) ? orgName : 'ShivSrushti Boyz';
+    const orgText = (orgName && /^[\x00-\x7F\s]+$/.test(orgName)) ? orgName : 'Shivsrushti Hindu Tarun Mitra Mandal 🚩';
     page.drawText(orgText, {
         x: cx - 70, y: nameY + 15, size: 20,
         color: gold
