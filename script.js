@@ -1423,7 +1423,8 @@ function createPDFHTML(rows, yearLabel, totalCashIn, totalCashOut, finalBalance,
                 z-index: 2;
             }
             .cover-mandal-name {
-                font-size: 36px;
+                font-size: 24px;
+                white-space: nowrap;
                 font-weight: 900;
                 color: #ffd700;
                 text-align: center;
@@ -1746,7 +1747,7 @@ function createPDFHTML(rows, yearLabel, totalCashIn, totalCashOut, finalBalance,
                     <div class="cover-logo-ring2"></div>
                     <img src="${logoSrc}" alt="Logo" class="cover-logo" onerror="this.style.display='none'">
                 </div>
-                <div class="cover-mandal-name" style="font-size: 32px; padding: 10px 15px; line-height: 1.3;">${getPDFSettings(yearLabel).orgName}</div>
+                <div class="cover-mandal-name">${getPDFSettings(yearLabel).orgName}</div>
                 <div class="cover-divider"></div>
                 <div class="cover-subtitle">${getPDFSettings(yearLabel).subtitle}</div>
                 <div class="cover-tagline">${getPDFSettings(yearLabel).tagline}</div>
