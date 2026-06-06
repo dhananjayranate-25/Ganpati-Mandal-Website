@@ -6,6 +6,7 @@ let yearPanels = {};
 let editingEntryId = null;
 let editingYear = null;
 let cachedLogoDataURL = null;
+let yearVisibilityMap = {};
 
 function loadLogo() {
     if (cachedLogoDataURL) return Promise.resolve(cachedLogoDataURL);
@@ -49,15 +50,26 @@ function clearYearPanelsFromStorage() {
     localStorage.removeItem('customYearPanels');
 }
 
-function toggleHomeVisibility(year) {
-    const key = 'yearVisibility_' + year;
-    const current = localStorage.getItem(key) === 'true';
-    localStorage.setItem(key, (!current).toString());
+async function toggleHomeVisibility(year) {
+    const current = yearVisibilityMap[year] === true;
+    const nextState = !current;
+    
+    yearVisibilityMap[year] = nextState;
 
     const tracks = document.querySelectorAll(`.toggle-track[data-year="${year}"]`);
-    tracks.forEach(t => t.classList.toggle('active', !current));
+    tracks.forEach(t => t.classList.toggle('active', nextState));
 
-    showNotification('Year ' + year + ' is now ' + (!current ? 'visible' : 'hidden') + ' on Home page', 'success');
+    try {
+        await fetch(`${API_URL}/year-visibility`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ year: year, isVisible: nextState })
+        });
+        showNotification('Year ' + year + ' is now ' + (nextState ? 'visible' : 'hidden') + ' on Home page', 'success');
+    } catch (error) {
+        console.error('Error saving visibility:', error);
+        showNotification('Error saving visibility state', 'error');
+    }
 }
 
 // PDF custom title settings (per-year)
@@ -391,8 +403,16 @@ window.deleteAllPanels = async function() {
 
 async function loadYearsForAdmin() {
     try {
-        const response = await fetch(`${API_URL}/years`);
+        const [response, visResponse] = await Promise.all([
+            fetch(`${API_URL}/years`),
+            fetch(`${API_URL}/year-visibility`)
+        ]);
         const result = await response.json();
+        const visResult = await visResponse.json();
+        
+        if (visResult.success) {
+            yearVisibilityMap = visResult.data;
+        }
 
         const yearTabs = document.getElementById('yearTabs');
         const yearPanelsContainer = document.getElementById('yearPanels');
@@ -438,7 +458,7 @@ function createYearPanel(year) {
     panel.className = 'year-panel';
     panel.id = `panel-${year}`;
 
-    const isVisible = localStorage.getItem('yearVisibility_' + year) === 'true';
+    const isVisible = yearVisibilityMap[year] === true;
 
     panel.innerHTML = `
         <div class="form-container" style="animation-delay: 0.2s">

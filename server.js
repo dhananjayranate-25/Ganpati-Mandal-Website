@@ -67,6 +67,12 @@ entrySchema.set('toJSON', {
 
 const Entry = mongoose.model('Entry', entrySchema);
 
+const visibilitySchema = new mongoose.Schema({
+    year: { type: String, required: true, unique: true },
+    isVisible: { type: Boolean, default: false }
+});
+const YearVisibility = mongoose.model('YearVisibility', visibilitySchema);
+
 app.get('/api/entries', async (req, res) => {
     try {
         const { year } = req.query;
@@ -86,6 +92,36 @@ app.get('/api/years', async (req, res) => {
         const entries = await Entry.find({}, 'date');
         const years = [...new Set(entries.map(e => e.date.substring(0, 4)))].sort().reverse();
         res.json({ success: true, data: years });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.get('/api/year-visibility', async (req, res) => {
+    try {
+        const visibilities = await YearVisibility.find({});
+        const visibilityMap = {};
+        visibilities.forEach(v => {
+            visibilityMap[v.year] = v.isVisible;
+        });
+        res.json({ success: true, data: visibilityMap });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.post('/api/year-visibility', async (req, res) => {
+    try {
+        const { year, isVisible } = req.body;
+        if (!year) {
+            return res.status(400).json({ success: false, error: 'Year is required' });
+        }
+        await YearVisibility.findOneAndUpdate(
+            { year: year.toString() },
+            { isVisible },
+            { upsert: true, new: true }
+        );
+        res.json({ success: true });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }

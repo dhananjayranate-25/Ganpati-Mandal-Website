@@ -119,6 +119,7 @@
     const API_URL = '';
     let uploadedPDFsData = [];
     let uploadedPDFsPage = 0;
+    let yearVisibilityMap = {};
 
     function getPDFsPerPage() {
         return window.innerWidth <= 768 ? 1 : 5;
@@ -187,12 +188,12 @@
 
     window.addEventListener('storage', function(e) {
         if (e.key && e.key.startsWith('yearVisibility_')) {
-            renderVisibleYearSections();
+            // No longer used, but kept to prevent errors if old logic triggers
         }
     });
 
     function isYearVisible(year) {
-        return localStorage.getItem('yearVisibility_' + year) === 'true';
+        return yearVisibilityMap[year] === true;
     }
 
     async function renderVisibleYearSections() {
@@ -202,8 +203,16 @@
         if (!container || !outer || !select) return;
 
         try {
-            const r = await fetch(API_URL + '/api/years');
+            const [r, visR] = await Promise.all([
+                fetch(API_URL + '/api/years'),
+                fetch(API_URL + '/api/year-visibility')
+            ]);
             const d = await r.json();
+            const visD = await visR.json();
+            
+            if (visD.success) {
+                yearVisibilityMap = visD.data;
+            }
             const apiYears = (d.success && d.data) ? d.data : [];
 
             let panelYears = [];
