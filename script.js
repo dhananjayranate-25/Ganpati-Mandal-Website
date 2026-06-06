@@ -1423,7 +1423,7 @@ function createPDFHTML(rows, yearLabel, totalCashIn, totalCashOut, finalBalance,
                 z-index: 2;
             }
             .cover-mandal-name {
-                font-size: 24px;
+                font-size: 30px;
                 white-space: nowrap;
                 font-weight: 900;
                 color: #ffd700;
@@ -1433,7 +1433,7 @@ function createPDFHTML(rows, yearLabel, totalCashIn, totalCashOut, finalBalance,
                 line-height: 1.4;
                 border-left: 6px solid #dc2626;
                 border-right: 6px solid #dc2626;
-                padding: 10px 35px;
+                padding: 10px 20px;
                 margin-top: 10px;
             }
             .cover-divider {
