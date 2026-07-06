@@ -3201,7 +3201,7 @@ footer::after {
 
 @media (max-width: 768px) {
     header, .custom-header {
-        position: absolute;
+        position: sticky;
         top: 0;
         left: 0;
         right: 0;
@@ -3210,7 +3210,7 @@ footer::after {
         border-bottom: 3px solid #ffcc00 !important;
         box-shadow: 0 4px 15px rgba(255, 140, 0, 0.4) !important;
         padding: 10px 20px !important;
-        margin: 0 !important;
+        margin: 0 0 20px 0 !important;
         border-radius: 0 !important;
         z-index: 1000;
         display: flex;
