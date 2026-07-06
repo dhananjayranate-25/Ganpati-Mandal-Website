@@ -142,6 +142,56 @@
                     <div id="appearanceStatus" style="font-size:14px;"></div>
                 </div>
             </div>
+
+            <!-- DONATION SETTINGS -->
+            <div class="appearance-settings-section animate-fade-up" style="animation-delay: 0.2s; margin-top: 20px;">
+                <div class="section-header">
+                    <div class="header-line"></div>
+                    <h2>Donation Details Settings</h2>
+                    <div class="header-line"></div>
+                </div>
+                <div class="upload-container">
+                    <div class="form-grid">
+                        <div class="form-group floating-label">
+                            <input type="text" id="donateAccName" placeholder=" ">
+                            <label for="donateAccName">Account Name (खात्याचे नाव)</label>
+                            <div class="input-focus-line"></div>
+                        </div>
+                        <div class="form-group floating-label">
+                            <input type="text" id="donateAccNo" placeholder=" ">
+                            <label for="donateAccNo">Account Number (खाते क्रमांक)</label>
+                            <div class="input-focus-line"></div>
+                        </div>
+                        <div class="form-group floating-label">
+                            <input type="text" id="donateIFSC" placeholder=" ">
+                            <label for="donateIFSC">IFSC Code (आयएफएससी कोड)</label>
+                            <div class="input-focus-line"></div>
+                        </div>
+                        <div class="form-group floating-label">
+                            <input type="text" id="donateBranch" placeholder=" ">
+                            <label for="donateBranch">Bank & Branch (बँक व शाखा)</label>
+                            <div class="input-focus-line"></div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 15px;">
+                        <label style="color: var(--text-secondary); font-size: 12px; display: block; margin-bottom: 5px;">Donation QR Code (UPI स्कॅन फोटो)</label>
+                        <input type="file" id="donateQRInput" accept="image/*" style="padding: 8px; border-radius: 10px; background: var(--bg-card); border: 2px dashed var(--glass-border); color: var(--text-primary); cursor: pointer; width: 100%;">
+                    </div>
+
+                    <div style="margin-top: 20px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                        <button class="btn btn-primary ripple" onclick="saveDonationSettings()" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                                <polyline points="17 21 17 13 7 13 7 21"/>
+                                <polyline points="7 3 7 8 15 8"/>
+                            </svg>
+                            Save Donation Details
+                        </button>
+                        <div id="donationStatus" style="font-size:14px;"></div>
+                    </div>
+                </div>
+            </div>
         </div>
             </div>
         </div>
@@ -533,6 +583,11 @@
                     document.getElementById('appRegNo').value = settings.regNo || '';
                     document.getElementById('appMainTitle').value = settings.mainTitle || '';
                     document.getElementById('appNavbarTitle').value = settings.navbarTitle || '';
+                    
+                    document.getElementById('donateAccName').value = settings.donateAccName || 'Dhananjay Sachin Ranate';
+                    document.getElementById('donateAccNo').value = settings.donateAccNo || '322502010043655';
+                    document.getElementById('donateIFSC').value = settings.donateIFSC || 'UBIN0532258';
+                    document.getElementById('donateBranch').value = settings.donateBranch || 'Union Bank Of India, Gulewadi Sangamner';
                 }
             } catch(e) {
                 console.error("Error loading settings:", e);
@@ -557,6 +612,20 @@
                     { key: 'navbarTitle', value: navbarTitle }
                 ];
                 
+                // Upload Banner as Base64 to MongoDB if selected
+                const fileInput = document.getElementById('heroBannerInput');
+                if (fileInput.files && fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    const base64 = await new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onload = () => resolve(reader.result);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(file);
+                    });
+                    settingsToSave.push({ key: 'heroBannerImage', value: base64 });
+                    fileInput.value = '';
+                }
+
                 for (const setting of settingsToSave) {
                     await fetch('/api/settings', {
                         method: 'POST',
@@ -565,24 +634,53 @@
                     });
                 }
                 
-                // Upload Banner if selected
-                const fileInput = document.getElementById('heroBannerInput');
+                status.innerHTML = '<span style="color: #10b981;">Settings saved successfully!</span>';
+                setTimeout(() => { status.innerHTML = ''; }, 3000);
+                
+            } catch (error) {
+                status.innerHTML = '<span style="color: #ef4444;">Error: ' + error.message + '</span>';
+            }
+        }
+
+        async function saveDonationSettings() {
+            const status = document.getElementById('donationStatus');
+            status.innerHTML = '<span style="color: #3b82f6;">Saving...</span>';
+            
+            const accName = document.getElementById('donateAccName').value;
+            const accNo = document.getElementById('donateAccNo').value;
+            const ifsc = document.getElementById('donateIFSC').value;
+            const branch = document.getElementById('donateBranch').value;
+            
+            try {
+                const settingsToSave = [
+                    { key: 'donateAccName', value: accName },
+                    { key: 'donateAccNo', value: accNo },
+                    { key: 'donateIFSC', value: ifsc },
+                    { key: 'donateBranch', value: branch }
+                ];
+
+                const fileInput = document.getElementById('donateQRInput');
                 if (fileInput.files && fileInput.files.length > 0) {
-                    const formData = new FormData();
-                    formData.append('banner', fileInput.files[0]);
-                    const uploadRes = await fetch('/api/upload-hero', {
-                        method: 'POST',
-                        body: formData
+                    const file = fileInput.files[0];
+                    const base64 = await new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onload = () => resolve(reader.result);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(file);
                     });
-                    const uploadResult = await uploadRes.json();
-                    if (!uploadResult.success) {
-                        throw new Error(uploadResult.error || "Failed to upload banner");
-                    }
-                    // Reset file input
+                    settingsToSave.push({ key: 'donateQRCode', value: base64 });
                     fileInput.value = '';
                 }
+
+                for (const setting of settingsToSave) {
+                    await fetch('/api/settings', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(setting)
+                    });
+                }
                 
-                status.innerHTML = '<span style="color: #10b981;">Settings saved successfully!</span>';
+                status.innerHTML = '<span style="color: #10b981;">Donation settings saved successfully!</span>';
                 setTimeout(() => { status.innerHTML = ''; }, 3000);
                 
             } catch (error) {

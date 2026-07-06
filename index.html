@@ -90,7 +90,7 @@
                             <ul class="bank-info-list">
                                 <li>
                                     <span class="info-label">खात्याचे नाव:</span>
-                                    <span class="info-value">Dhananjay Sachin Ranate</span>
+                                    <span class="info-value" id="bankAccName">Dhananjay Sachin Ranate</span>
                                 </li>
                                 <li>
                                     <span class="info-label">खाते क्रमांक:</span>
@@ -590,13 +590,28 @@
                         heroImg.onload = () => {
                             heroImg.style.opacity = '1';
                         };
-                        heroImg.src = '/uploads/' + settings.heroBannerImage + '?t=' + new Date().getTime();
+                        if (settings.heroBannerImage.startsWith('data:image')) {
+                            heroImg.src = settings.heroBannerImage;
+                        } else {
+                            heroImg.src = '/uploads/' + settings.heroBannerImage + '?t=' + new Date().getTime();
+                        }
                         heroImg.style.display = 'block';
                     }
                 } else {
                     if (heroImg) {
                         heroImg.style.opacity = '1';
                     }
+                }
+                
+                // Populate Donation Details
+                if (settings.donateAccName) document.getElementById('bankAccName').textContent = settings.donateAccName;
+                if (settings.donateAccNo) document.getElementById('bankAccNo').textContent = settings.donateAccNo;
+                if (settings.donateIFSC) document.getElementById('bankIFSC').textContent = settings.donateIFSC;
+                if (settings.donateBranch) document.getElementById('bankBranch').textContent = settings.donateBranch;
+                
+                if (settings.donateQRCode) {
+                    const qrImg = document.getElementById('donationQRImg');
+                    if (qrImg) qrImg.src = settings.donateQRCode;
                 }
             } else {
                 const heroImg = document.getElementById('heroBannerImg');
