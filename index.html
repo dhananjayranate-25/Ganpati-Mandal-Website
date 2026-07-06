@@ -38,7 +38,7 @@
         </header>
         
         <div id="heroSectionContainer" class="hero-section animate-fade-down" style="animation-delay: 0.2s;">
-            <img src="logo/logo.jpeg" id="heroBannerImg" alt="Ganpati Banner" class="hero-banner-img" onerror="this.style.display='none'">
+            <img src="logo/logo.jpeg" id="heroBannerImg" alt="Ganpati Banner" class="hero-banner-img" style="opacity: 0; transition: opacity 0.5s ease-in-out;" onerror="this.style.display='none'">
         </div>
 
         <div class="container">
@@ -557,16 +557,28 @@
                 // if (settings.mainTitle) document.getElementById('displayMainTitle').textContent = settings.mainTitle;
                 if (settings.navbarTitle) document.getElementById('displayNavbarTitle').textContent = settings.navbarTitle;
                 
+                const heroImg = document.getElementById('heroBannerImg');
                 if (settings.heroBannerImage) {
-                    const heroImg = document.getElementById('heroBannerImg');
                     if (heroImg) {
+                        heroImg.onload = () => {
+                            heroImg.style.opacity = '1';
+                        };
                         heroImg.src = '/uploads/' + settings.heroBannerImage + '?t=' + new Date().getTime();
                         heroImg.style.display = 'block';
                     }
+                } else {
+                    if (heroImg) {
+                        heroImg.style.opacity = '1';
+                    }
                 }
+            } else {
+                const heroImg = document.getElementById('heroBannerImg');
+                if (heroImg) heroImg.style.opacity = '1';
             }
         } catch (e) {
             console.error('Error loading appearance settings:', e);
+            const heroImg = document.getElementById('heroBannerImg');
+            if (heroImg) heroImg.style.opacity = '1';
         }
     }
 

@@ -3206,7 +3206,26 @@ footer::after {
         gap: 5px;
     }
     .nav-links {
-        display: none;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 10px;
+    }
+    .nav-links a {
+        font-size: 14px;
+        padding: 5px 10px;
+    }
+    
+    .hero-section {
+        height: 75vh;
+        max-height: 75vh;
+        flex-grow: 0;
+    }
+    
+    .hero-banner-img {
+        object-fit: contain; /* Ensures the whole vertical image is visible without cropping */
+        object-position: top;
     }
 }
 
