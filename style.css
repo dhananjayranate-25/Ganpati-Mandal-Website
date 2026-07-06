@@ -3205,10 +3205,7 @@ footer::after {
         top: 0;
         left: 0;
         right: 0;
-        background: linear-gradient(to right, #ff8c00, #ff6a00) !important;
         border: none !important;
-        border-bottom: 3px solid #ffcc00 !important;
-        box-shadow: 0 4px 15px rgba(255, 140, 0, 0.4) !important;
         padding: 10px 20px !important;
         margin: 0 0 20px 0 !important;
         border-radius: 0 !important;
