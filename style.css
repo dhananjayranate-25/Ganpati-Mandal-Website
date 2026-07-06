@@ -3200,32 +3200,91 @@ footer::after {
 }
 
 @media (max-width: 768px) {
-    .top-bar {
-        flex-direction: column;
-        align-items: center;
-        gap: 5px;
-    }
-    .nav-links {
+    header, .custom-header {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 15px 20px !important;
+        margin: 0 !important;
+        border-radius: 0 !important;
+        z-index: 1000;
         display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 10px;
-        margin-top: 10px;
-    }
-    .nav-links a {
-        font-size: 14px;
-        padding: 5px 10px;
+        justify-content: space-between;
+        align-items: center;
+        overflow: visible !important;
     }
     
+    header::before, header::after {
+        display: none !important;
+    }
+    
+    .main-banner {
+        flex: 1;
+        text-align: center;
+        margin: 0;
+    }
+    
+    #displayEstYear {
+        display: none !important;
+    }
+    
+    #displayMainTitle {
+        font-size: 1.2rem !important;
+        margin: 0;
+    }
+
+    .custom-navbar {
+        position: relative;
+    }
+
+    #mobileMenuBtn {
+        display: flex !important;
+    }
+
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: rgba(10, 2, 20, 0.95);
+        border: 1px solid rgba(232, 121, 249, 0.3);
+        border-radius: 8px;
+        padding: 10px;
+        gap: 5px;
+        min-width: 180px;
+        margin-top: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+    }
+    
+    .nav-links.active {
+        display: flex;
+    }
+    
+    .nav-links a {
+        font-size: 14px;
+        padding: 12px;
+        display: block;
+        width: 100%;
+        text-align: left;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
     .hero-section {
-        height: 75vh;
-        max-height: 75vh;
+        height: 100vh;
+        max-height: 100vh;
         flex-grow: 0;
+        margin: 0;
+        padding: 0;
     }
     
     .hero-banner-img {
-        object-fit: contain; /* Ensures the whole vertical image is visible without cropping */
-        object-position: top;
+        object-fit: cover;
+        object-position: center;
     }
 }
 

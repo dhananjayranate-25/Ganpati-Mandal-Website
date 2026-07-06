@@ -26,8 +26,12 @@
                 <h1 id="displayMainTitle">शिवसृष्टी सार्वजनिक उत्सव मंडळ संगमनेर</h1>
             </div>
             <nav class="custom-navbar">
-
-                <div class="nav-links">
+                <div class="hamburger" id="mobileMenuBtn" style="display: none; flex-direction: column; cursor: pointer; gap: 5px; padding: 10px;">
+                    <div style="width: 25px; height: 3px; background-color: white;"></div>
+                    <div style="width: 25px; height: 3px; background-color: white;"></div>
+                    <div style="width: 25px; height: 3px; background-color: white;"></div>
+                </div>
+                <div class="nav-links" id="navLinks">
                     <a href="#" id="nav-home">मुखपृष्ठ</a>
                     <a href="#" id="nav-ganeshotsav">गणेशोत्सव हिशोब</a>
                     <a href="#" id="nav-committee">उत्सव कमिटी</a>
@@ -36,6 +40,29 @@
                 </div>
             </nav>
         </header>
+        
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+                const navLinks = document.getElementById('navLinks');
+                
+                if (mobileMenuBtn && navLinks) {
+                    mobileMenuBtn.addEventListener('click', () => {
+                        navLinks.classList.toggle('active');
+                    });
+                    
+                    // Close menu when clicking a link
+                    const links = navLinks.querySelectorAll('a');
+                    links.forEach(link => {
+                        link.addEventListener('click', () => {
+                            if (window.innerWidth <= 768) {
+                                navLinks.classList.remove('active');
+                            }
+                        });
+                    });
+                }
+            });
+        </script>
         
         <div id="heroSectionContainer" class="hero-section animate-fade-down" style="animation-delay: 0.2s;">
             <img src="logo/logo.jpeg" id="heroBannerImg" alt="Ganpati Banner" class="hero-banner-img" style="opacity: 0; transition: opacity 0.5s ease-in-out;" onerror="this.style.display='none'">
