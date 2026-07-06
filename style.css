@@ -3233,7 +3233,9 @@ footer::after {
     }
     
     #displayEstYear {
-        display: none !important;
+        display: block !important;
+        font-size: 0.8rem !important;
+        margin-bottom: 2px !important;
     }
     
     #displayMainTitle {
