@@ -3201,14 +3201,14 @@ footer::after {
 
 @media (max-width: 768px) {
     .custom-header {
-        position: sticky;
+        position: absolute;
         top: 0;
         left: 0;
         right: 0;
-        background: linear-gradient(135deg, #0d0218 0%, #1a0533 25%, #3b0a5e 50%, #2d084a 75%, #1a0533 100%) !important;
+        background: transparent !important;
         border: none !important;
         padding: 10px 20px !important;
-        margin: 0 0 20px 0 !important;
+        margin: 0 !important;
         border-radius: 0 !important;
         z-index: 1000;
         display: flex;
@@ -3294,8 +3294,10 @@ footer::after {
     }
 
     .hero-banner-img {
-        object-fit: contain;
+        object-fit: cover;
         object-position: center;
+        width: 100vw;
+        height: 100vh;
     }
 }
 
