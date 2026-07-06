@@ -3289,11 +3289,13 @@ footer::after {
         padding: 0;
     }
     
+    .floating-decor, .particles {
+        display: none !important;
+    }
+
     .hero-banner-img {
-        object-fit: fill;
+        object-fit: contain;
         object-position: center;
-        width: 100vw;
-        height: 100vh;
     }
 }
 
