@@ -3201,11 +3201,11 @@ footer::after {
 
 @media (max-width: 768px) {
     .custom-header {
-        position: absolute;
+        position: sticky;
         top: 0;
         left: 0;
         right: 0;
-        background: transparent !important;
+        background: linear-gradient(to right, #ff8c00, #ff6a00) !important;
         border: none !important;
         padding: 10px 20px !important;
         margin: 0 !important;
@@ -3215,6 +3215,7 @@ footer::after {
         justify-content: space-between;
         align-items: center;
         overflow: visible !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
     }
     
     .custom-header::before, .custom-header::after {
@@ -3224,12 +3225,11 @@ footer::after {
     .main-banner {
         flex: 1;
         text-align: center;
-        margin: 0 10px;
-        background: linear-gradient(to right, #ff8c00, #ff6a00) !important;
-        border: 2px solid #ffcc00 !important;
-        border-radius: 10px !important;
-        box-shadow: 0 2px 10px rgba(255, 140, 0, 0.4) !important;
-        padding: 5px 10px !important;
+        margin: 0;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
     }
     
     #displayEstYear {
