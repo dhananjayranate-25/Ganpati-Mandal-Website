@@ -11,7 +11,7 @@ const app = express();
 const PORT = process.env.PORT || 3003;
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
 
 // Explicit root route to prevent browser cache issues
 app.get('/', (req, res) => {
