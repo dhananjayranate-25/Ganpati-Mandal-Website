@@ -3518,15 +3518,18 @@ footer::after {
 /* Mobile responsiveness */
 @media (max-width: 768px) {
     .committee-row-2, .committee-row-3 {
-        gap: 15px; /* Slightly reduced gap to accommodate larger cards */
+        gap: 15px;
     }
     .committee-member {
-        width: 165px;
-        padding: 18px 10px;
+        width: calc(50% - 8px); /* Exactly 2 per line */
+        padding: 15px 5px;
+        box-sizing: border-box;
     }
     .member-photo-frame {
-        width: 115px;
-        height: 115px;
+        width: 100%;
+        max-width: 130px;
+        height: auto;
+        aspect-ratio: 1 / 1;
     }
     .member-role {
         font-size: 1.1rem;
@@ -3535,7 +3538,7 @@ footer::after {
         font-size: 1rem;
     }
     .member-phone {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
     }
 }
 
