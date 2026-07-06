@@ -3200,11 +3200,12 @@ footer::after {
 }
 
 @media (max-width: 768px) {
-    header, .custom-header {
+    .custom-header {
         position: sticky;
         top: 0;
         left: 0;
         right: 0;
+        background: linear-gradient(135deg, #0d0218 0%, #1a0533 25%, #3b0a5e 50%, #2d084a 75%, #1a0533 100%) !important;
         border: none !important;
         padding: 10px 20px !important;
         margin: 0 0 20px 0 !important;
@@ -3216,7 +3217,7 @@ footer::after {
         overflow: visible !important;
     }
     
-    header::before, header::after {
+    .custom-header::before, .custom-header::after {
         display: none !important;
     }
     
