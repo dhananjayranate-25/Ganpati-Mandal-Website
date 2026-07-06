@@ -467,13 +467,8 @@
         loadCommitteeDataHome();
     });
 
-    function setupNavigation() {
-        const navHome = document.getElementById('nav-home');
-        const navGaneshotsav = document.getElementById('nav-ganeshotsav');
-        const navDonate = document.getElementById('nav-donate');
-        const navCommittee = document.getElementById('nav-committee');
-        const navContact = document.getElementById('nav-contact');
-        
+    function switchTab(tabName, pushState = true) {
+        currentTab = tabName;
         const heroContainer = document.getElementById('heroSectionContainer');
         const ganeshotsavHeader = document.getElementById('ganeshotsavHeader');
         const cashbookContainer = document.getElementById('visibleYearsContainer');
@@ -484,91 +479,72 @@
         const committeeSection = document.getElementById('committeeSection');
         const contactSection = document.getElementById('contactSection');
         const adminPanelBtnWrapper = document.getElementById('adminPanelBtnWrapper');
-        
-        if (navHome) {
-            navHome.addEventListener('click', (e) => {
-                e.preventDefault();
-                currentTab = 'home';
-                if(heroContainer) heroContainer.style.display = 'block';
-                if(ganeshotsavHeader) ganeshotsavHeader.style.display = 'none';
-                if(cashbookContainer) cashbookContainer.style.display = 'none';
-                if(prevYearsContainer) prevYearsContainer.style.display = 'none';
-                if(siteFooter) siteFooter.style.display = 'none';
-                if(mainContainer) mainContainer.style.display = 'none';
-                if(donationSection) donationSection.style.display = 'none';
-                if(committeeSection) committeeSection.style.display = 'none';
-                if(contactSection) contactSection.style.display = 'none';
-                if(adminPanelBtnWrapper) adminPanelBtnWrapper.style.display = 'none';
-            });
-        }
-        
-        if (navGaneshotsav) {
-            navGaneshotsav.addEventListener('click', (e) => {
-                e.preventDefault();
-                currentTab = 'ganeshotsav';
-                if(heroContainer) heroContainer.style.display = 'none';
-                if(ganeshotsavHeader) ganeshotsavHeader.style.display = 'block';
-                if(cashbookContainer) cashbookContainer.style.display = 'block';
-                if(prevYearsContainer) prevYearsContainer.style.display = 'block';
-                if(siteFooter) siteFooter.style.display = 'block';
-                if(mainContainer) mainContainer.style.display = 'block';
-                if(donationSection) donationSection.style.display = 'none';
-                if(committeeSection) committeeSection.style.display = 'none';
-                if(contactSection) contactSection.style.display = 'none';
-                if(adminPanelBtnWrapper) adminPanelBtnWrapper.style.display = 'block';
-            });
-        }
-        
-        if (navDonate) {
-            navDonate.addEventListener('click', (e) => {
-                e.preventDefault();
-                currentTab = 'donate';
-                if(heroContainer) heroContainer.style.display = 'none';
-                if(ganeshotsavHeader) ganeshotsavHeader.style.display = 'none';
-                if(cashbookContainer) cashbookContainer.style.display = 'none';
-                if(prevYearsContainer) prevYearsContainer.style.display = 'none';
-                if(siteFooter) siteFooter.style.display = 'block';
-                if(mainContainer) mainContainer.style.display = 'block';
-                if(donationSection) donationSection.style.display = 'block';
-                if(committeeSection) committeeSection.style.display = 'none';
-                if(contactSection) contactSection.style.display = 'none';
-                if(adminPanelBtnWrapper) adminPanelBtnWrapper.style.display = 'none';
-            });
-        }
 
-        if (navCommittee) {
-            navCommittee.addEventListener('click', (e) => {
-                e.preventDefault();
-                currentTab = 'committee';
-                if(heroContainer) heroContainer.style.display = 'none';
-                if(ganeshotsavHeader) ganeshotsavHeader.style.display = 'none';
-                if(cashbookContainer) cashbookContainer.style.display = 'none';
-                if(prevYearsContainer) prevYearsContainer.style.display = 'none';
-                if(siteFooter) siteFooter.style.display = 'block';
-                if(mainContainer) mainContainer.style.display = 'block';
-                if(donationSection) donationSection.style.display = 'none';
-                if(committeeSection) committeeSection.style.display = 'block';
-                if(contactSection) contactSection.style.display = 'none';
-                if(adminPanelBtnWrapper) adminPanelBtnWrapper.style.display = 'none';
-            });
-        }
+        // Hide everything first
+        if(heroContainer) heroContainer.style.display = 'none';
+        if(ganeshotsavHeader) ganeshotsavHeader.style.display = 'none';
+        if(cashbookContainer) cashbookContainer.style.display = 'none';
+        if(prevYearsContainer) prevYearsContainer.style.display = 'none';
+        if(siteFooter) siteFooter.style.display = 'none';
+        if(mainContainer) mainContainer.style.display = 'none';
+        if(donationSection) donationSection.style.display = 'none';
+        if(committeeSection) committeeSection.style.display = 'none';
+        if(contactSection) contactSection.style.display = 'none';
+        if(adminPanelBtnWrapper) adminPanelBtnWrapper.style.display = 'none';
 
-        if (navContact) {
-            navContact.addEventListener('click', (e) => {
-                e.preventDefault();
-                currentTab = 'contact';
-                if(heroContainer) heroContainer.style.display = 'none';
-                if(ganeshotsavHeader) ganeshotsavHeader.style.display = 'none';
-                if(cashbookContainer) cashbookContainer.style.display = 'none';
-                if(prevYearsContainer) prevYearsContainer.style.display = 'none';
-                if(siteFooter) siteFooter.style.display = 'block';
-                if(mainContainer) mainContainer.style.display = 'block';
-                if(donationSection) donationSection.style.display = 'none';
-                if(committeeSection) committeeSection.style.display = 'none';
-                if(contactSection) contactSection.style.display = 'block';
-                if(adminPanelBtnWrapper) adminPanelBtnWrapper.style.display = 'none';
-            });
+        // Show based on tabName
+        if (tabName === 'home') {
+            if(heroContainer) heroContainer.style.display = 'block';
+        } else if (tabName === 'ganeshotsav') {
+            if(ganeshotsavHeader) ganeshotsavHeader.style.display = 'block';
+            if(cashbookContainer) cashbookContainer.style.display = 'block';
+            if(prevYearsContainer) prevYearsContainer.style.display = 'block';
+            if(siteFooter) siteFooter.style.display = 'block';
+            if(mainContainer) mainContainer.style.display = 'block';
+            if(adminPanelBtnWrapper) adminPanelBtnWrapper.style.display = 'block';
+        } else if (tabName === 'donate') {
+            if(siteFooter) siteFooter.style.display = 'block';
+            if(mainContainer) mainContainer.style.display = 'block';
+            if(donationSection) donationSection.style.display = 'block';
+        } else if (tabName === 'committee') {
+            if(siteFooter) siteFooter.style.display = 'block';
+            if(mainContainer) mainContainer.style.display = 'block';
+            if(committeeSection) committeeSection.style.display = 'block';
+        } else if (tabName === 'contact') {
+            if(siteFooter) siteFooter.style.display = 'block';
+            if(mainContainer) mainContainer.style.display = 'block';
+            if(contactSection) contactSection.style.display = 'block';
         }
+        
+        if (pushState) {
+            window.history.pushState({ tab: tabName }, '', '#' + tabName);
+        }
+    }
+
+    function setupNavigation() {
+        const navHome = document.getElementById('nav-home');
+        const navGaneshotsav = document.getElementById('nav-ganeshotsav');
+        const navDonate = document.getElementById('nav-donate');
+        const navCommittee = document.getElementById('nav-committee');
+        const navContact = document.getElementById('nav-contact');
+
+        if (navHome) navHome.addEventListener('click', (e) => { e.preventDefault(); switchTab('home'); });
+        if (navGaneshotsav) navGaneshotsav.addEventListener('click', (e) => { e.preventDefault(); switchTab('ganeshotsav'); });
+        if (navDonate) navDonate.addEventListener('click', (e) => { e.preventDefault(); switchTab('donate'); });
+        if (navCommittee) navCommittee.addEventListener('click', (e) => { e.preventDefault(); switchTab('committee'); });
+        if (navContact) navContact.addEventListener('click', (e) => { e.preventDefault(); switchTab('contact'); });
+
+        // Handle browser back/forward buttons
+        window.addEventListener('popstate', (e) => {
+            if (e.state && e.state.tab) {
+                switchTab(e.state.tab, false);
+            } else {
+                switchTab('home', false);
+            }
+        });
+        
+        // Push initial state
+        window.history.replaceState({ tab: 'home' }, '', '#home');
     }
 
     async function loadAppearanceSettingsHome() {
