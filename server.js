@@ -48,7 +48,7 @@ const uploadBanner = multer({ storage: bannerStorage, limits: { fileSize: 10 * 1
 
 // Storage for committee photos (Memory storage to save in DB)
 const committeeStorage = multer.memoryStorage();
-const uploadCommittee = multer({ storage: committeeStorage, limits: { fileSize: 5 * 1024 * 1024 } });
+const uploadCommittee = multer({ storage: committeeStorage, limits: { fileSize: 10 * 1024 * 1024 } });
 
 
 const MONGODB_URI = process.env.MONGODB_URI;
