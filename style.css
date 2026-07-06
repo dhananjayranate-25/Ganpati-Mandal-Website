@@ -3518,24 +3518,24 @@ footer::after {
 /* Mobile responsiveness */
 @media (max-width: 768px) {
     .committee-row-2, .committee-row-3 {
-        gap: 20px;
+        gap: 15px; /* Slightly reduced gap to accommodate larger cards */
     }
     .committee-member {
-        width: 140px;
-        padding: 15px 10px;
+        width: 165px;
+        padding: 18px 10px;
     }
     .member-photo-frame {
-        width: 90px;
-        height: 90px;
+        width: 115px;
+        height: 115px;
     }
     .member-role {
-        font-size: 1rem;
+        font-size: 1.1rem;
     }
     .member-name {
-        font-size: 0.9rem;
+        font-size: 1rem;
     }
     .member-phone {
-        font-size: 0.8rem;
+        font-size: 0.9rem;
     }
 }
 
