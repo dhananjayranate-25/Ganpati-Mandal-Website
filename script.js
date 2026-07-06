@@ -7,6 +7,7 @@ let editingEntryId = null;
 let editingYear = null;
 let cachedLogoDataURL = null;
 let yearVisibilityMap = {};
+let appSettings = {};
 
 function loadLogo() {
     if (cachedLogoDataURL) return Promise.resolve(cachedLogoDataURL);
@@ -27,27 +28,38 @@ function loadLogo() {
     });
 }
 
-// LocalStorage helpers for persisting custom year panels
+// MongoDB Settings helpers for persisting custom year panels
+async function saveSettingToDB(key, value) {
+    appSettings[key] = value;
+    try {
+        await fetch(`${API_URL}/settings`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ key, value })
+        });
+    } catch(e) { console.error('Error saving setting:', e); }
+}
+
 function saveYearPanelToStorage(year) {
-    let panels = JSON.parse(localStorage.getItem('customYearPanels') || '[]');
+    let panels = appSettings['customYearPanels'] || [];
     if (!panels.includes(year)) {
         panels.push(year);
-        localStorage.setItem('customYearPanels', JSON.stringify(panels));
+        saveSettingToDB('customYearPanels', panels);
     }
 }
 
 function removeYearPanelFromStorage(year) {
-    let panels = JSON.parse(localStorage.getItem('customYearPanels') || '[]');
+    let panels = appSettings['customYearPanels'] || [];
     panels = panels.filter(y => y !== year);
-    localStorage.setItem('customYearPanels', JSON.stringify(panels));
+    saveSettingToDB('customYearPanels', panels);
 }
 
 function getYearPanelsFromStorage() {
-    return JSON.parse(localStorage.getItem('customYearPanels') || '[]');
+    return appSettings['customYearPanels'] || [];
 }
 
 function clearYearPanelsFromStorage() {
-    localStorage.removeItem('customYearPanels');
+    saveSettingToDB('customYearPanels', []);
 }
 
 async function toggleHomeVisibility(year) {
@@ -83,13 +95,13 @@ function getPDFSettings(year) {
     };
     try {
         const key = year ? 'pdfCustomSettings_' + year : 'pdfCustomSettings';
-        const stored = JSON.parse(localStorage.getItem(key) || '{}');
+        const stored = appSettings[key] || {};
         if (Object.keys(stored).length > 0) {
             return { ...defaults, ...stored };
         }
         // fallback to global key
         if (year) {
-            const global = JSON.parse(localStorage.getItem('pdfCustomSettings') || '{}');
+            const global = appSettings['pdfCustomSettings'] || {};
             if (Object.keys(global).length > 0) return { ...defaults, ...global };
         }
         return defaults;
@@ -102,26 +114,33 @@ function savePDFSettings(year, settings) {
     const current = getPDFSettings(year);
     const updated = { ...current, ...settings };
     const key = year ? 'pdfCustomSettings_' + year : 'pdfCustomSettings';
-    localStorage.setItem(key, JSON.stringify(updated));
+    saveSettingToDB(key, updated);
     return updated;
 }
 
-window.checkAdminLogin = function() {
+window.checkAdminLogin = async function() {
     const password = document.getElementById('adminPassword').value;
     const errorDiv = document.getElementById('loginError');
 
-    // Get stored password from localStorage or use default
-    const storedPassword = localStorage.getItem('adminPassword') || 'admin123';
-
-    if (password === storedPassword) {
-        localStorage.setItem('adminLoggedIn', 'true');
-        document.getElementById('loginContainer').style.display = 'none';
-        document.getElementById('adminPanel').style.display = 'block';
-        errorDiv.style.display = 'none';
-        loadYearsForAdmin();
-    } else {
+    try {
+        const res = await fetch(`${API_URL}/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password })
+        });
+        const data = await res.json();
+        if (data.success) {
+            sessionStorage.setItem('adminLoggedIn', 'true');
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'block';
+            errorDiv.style.display = 'none';
+            loadYearsForAdmin();
+        } else {
+            errorDiv.style.display = 'block';
+            document.getElementById('adminPassword').value = '';
+        }
+    } catch (error) {
         errorDiv.style.display = 'block';
-        document.getElementById('adminPassword').value = '';
     }
 }
 
@@ -403,15 +422,20 @@ window.deleteAllPanels = async function() {
 
 async function loadYearsForAdmin() {
     try {
-        const [response, visResponse] = await Promise.all([
+        const [response, visResponse, setResponse] = await Promise.all([
             fetch(`${API_URL}/years`),
-            fetch(`${API_URL}/year-visibility`)
+            fetch(`${API_URL}/year-visibility`),
+            fetch(`${API_URL}/settings`)
         ]);
         const result = await response.json();
         const visResult = await visResponse.json();
+        const setResult = await setResponse.json();
         
         if (visResult.success) {
             yearVisibilityMap = visResult.data;
+        }
+        if (setResult.success) {
+            appSettings = setResult.data;
         }
 
         const yearTabs = document.getElementById('yearTabs');
@@ -918,7 +942,7 @@ window.closeChangePasswordModal = function() {
     document.getElementById('changePasswordModal').classList.remove('active');
 }
 
-window.changePassword = function(event) {
+window.changePassword = async function(event) {
     event.preventDefault();
     
     const currentPassword = document.getElementById('currentPassword').value;
@@ -927,40 +951,45 @@ window.changePassword = function(event) {
     const errorDiv = document.getElementById('passwordChangeError');
     const successDiv = document.getElementById('passwordChangeSuccess');
 
-    const storedAdmin = localStorage.getItem('adminPassword') || 'admin123';
-
-    if (currentPassword !== storedAdmin) {
-        errorDiv.textContent = 'Incorrect Current Admin Password!';
-        errorDiv.style.display = 'block';
-        successDiv.style.display = 'none';
-        return;
-    }
-
-    if (newPassword.length < 6) {
-        errorDiv.textContent = 'New password must be at least 6 characters!';
+    if (newPassword.length < 4) {
+        errorDiv.textContent = 'New Password must be at least 4 characters!';
         errorDiv.style.display = 'block';
         successDiv.style.display = 'none';
         return;
     }
 
     if (newPassword !== confirmPassword) {
-        errorDiv.textContent = 'New passwords do not match!';
+        errorDiv.textContent = 'New Passwords do not match!';
         errorDiv.style.display = 'block';
         successDiv.style.display = 'none';
         return;
     }
 
-    // Save new password to localStorage
-    localStorage.setItem('adminPassword', newPassword);
-    
-    successDiv.textContent = 'Password changed successfully!';
-    errorDiv.style.display = 'none';
-    successDiv.style.display = 'block';
-    
-    setTimeout(() => {
-        closeChangePasswordModal();
-        showNotification('Password changed successfully!', 'success');
-    }, 1500);
+    try {
+        const res = await fetch(`${API_URL}/change-password`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ currentPassword, newPassword })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+            errorDiv.style.display = 'none';
+            successDiv.textContent = 'Password Changed Successfully!';
+            successDiv.style.display = 'block';
+            setTimeout(() => {
+                closeChangePasswordModal();
+            }, 1500);
+        } else {
+            errorDiv.textContent = data.error || 'Incorrect Current Admin Password!';
+            errorDiv.style.display = 'block';
+            successDiv.style.display = 'none';
+        }
+    } catch(error) {
+        errorDiv.textContent = 'Server Error!';
+        errorDiv.style.display = 'block';
+        successDiv.style.display = 'none';
+    }
 };
 
 async function updateEntry(id, year) {

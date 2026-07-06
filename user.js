@@ -27,20 +27,32 @@ function createParticles() {
     }
 }
 
-function login() {
+async function login() {
     const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value.trim();
 
-    // Get stored password from localStorage or use default
-    const storedPassword = localStorage.getItem('adminPassword') || 'admin123';
-
-    if (username === 'admin' && password === storedPassword) {
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('mainScreen').style.display = 'block';
-        document.getElementById('loggedUser').textContent = username;
-        showNotification('Login successful!', 'success');
-    } else {
+    if (username !== 'admin') {
         showNotification('Invalid username or password!', 'error');
+        return;
+    }
+
+    try {
+        const res = await fetch(`${API_URL}/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password })
+        });
+        const data = await res.json();
+        if (data.success) {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('mainScreen').style.display = 'block';
+            document.getElementById('loggedUser').textContent = username;
+            showNotification('Login successful!', 'success');
+        } else {
+            showNotification('Invalid username or password!', 'error');
+        }
+    } catch(error) {
+        showNotification('Login failed. Server error.', 'error');
     }
 }
 
