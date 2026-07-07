@@ -3105,6 +3105,21 @@ footer::after {
     box-shadow: 0 4px 15px rgba(255, 140, 0, 0.4);
 }
 
+.top-banner-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0;
+}
+
+@media (min-width: 769px) {
+    .top-banner-img {
+        height: 190px;
+        object-fit: cover;
+        object-position: center;
+    }
+}
+
 .main-banner h1 {
     color: white;
     font-size: clamp(2.5rem, 6vw, 4.5rem);
