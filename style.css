@@ -3200,16 +3200,6 @@ footer::after {
 }
 
 @media (max-width: 768px) {
-    .hero-section {
-        background-color: #000;
-        justify-content: center;
-    }
-    
-    .hero-banner-img {
-        height: 100% !important;
-        object-fit: contain !important;
-    }
-    
     .custom-header {
         position: sticky;
         top: 0;
