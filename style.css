@@ -1606,8 +1606,8 @@ footer[style*="text-align: left"] {
 }
 
 .ganpati-image {
-    width: 180px;
-    height: 180px;
+    width: 220px;
+    height: 220px;
     object-fit: cover;
     border-radius: 50%;
     border: 4px solid #fbbf24;
@@ -1735,8 +1735,8 @@ footer[style*="text-align: left"] {
 
 @media (max-width: 768px) {
     .ganpati-image {
-        width: 140px;
-        height: 140px;
+        width: 180px;
+        height: 180px;
     }
     
     .ganpati-image.fallback-icon {
@@ -1767,8 +1767,8 @@ footer[style*="text-align: left"] {
 
 @media (max-width: 480px) {
     .ganpati-image {
-        width: 120px;
-        height: 120px;
+        width: 150px;
+        height: 150px;
     }
     
     .ganpati-image.fallback-icon {
@@ -2398,8 +2398,8 @@ body > .container {
     }
 
     .ganpati-image {
-        width: 120px !important;
-        height: 120px !important;
+        width: 160px !important;
+        height: 160px !important;
     }
 
     .subtitle-badge {
@@ -2608,8 +2608,8 @@ body > .container {
     }
 
     .ganpati-image {
-        width: 100px !important;
-        height: 100px !important;
+        width: 140px !important;
+        height: 140px !important;
     }
 
     .section-header h2 {
@@ -3775,4 +3775,15 @@ footer::after {
     .form-row {
         flex-direction: column;
     }
+}
+
+
+/* Added for main banner image */
+.main-title-image {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    height: clamp(60px, 12vw, 180px); /* Reduces height by cropping top/bottom space */
+    object-fit: cover; /* Crops the extra white space without squashing text */
+    object-position: center;
+    display: block;
 }

@@ -102,6 +102,17 @@ const committeeSchema = new mongoose.Schema({
 });
 const CommitteeMember = mongoose.model('CommitteeMember', committeeSchema);
 
+const aartiSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    timeOfDay: { type: String, required: true }, // "सकाळ" or "संध्याकाळ"
+    date: { type: String, required: true }, // e.g. "2026-09-07"
+    phone: { type: String },
+    pujaDetails: { type: String },
+    createdAt: { type: Date, default: Date.now }
+});
+const Aarti = mongoose.model('Aarti', aartiSchema);
+
+
 const pdfSchema = new mongoose.Schema({
     filename: { type: String, required: true, unique: true },
     year: { type: String, required: true },
@@ -367,6 +378,40 @@ app.get('/api/summary', async (req, res) => {
         res.json({ success: true, data: summary });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+
+// ==========================================
+// MAHA-AARTI API
+// ==========================================
+
+app.get('/api/aarti', async (req, res) => {
+    try {
+        const aartis = await Aarti.find().sort({ date: 1 }); // Sort by date ascending
+        res.json(aartis);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch aarti details' });
+    }
+});
+
+app.post('/api/aarti', async (req, res) => {
+    try {
+        const { name, timeOfDay, date, phone, pujaDetails } = req.body;
+        const newAarti = new Aarti({ name, timeOfDay, date, phone, pujaDetails });
+        await newAarti.save();
+        res.status(201).json(newAarti);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to add aarti details' });
+    }
+});
+
+app.delete('/api/aarti/:id', async (req, res) => {
+    try {
+        await Aarti.findByIdAndDelete(req.params.id);
+        res.json({ message: 'Aarti deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to delete aarti details' });
     }
 });
 
