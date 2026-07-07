@@ -111,7 +111,7 @@
                 </div>
             </div>
 
-            <header class="animate-fade-down" id="ganeshotsavHeader">
+            <header class="animate-fade-down" id="ganeshotsavHeader" style="display: none;">
                 <div class="header-glow-orb a"></div>
                 <div class="header-glow-orb b"></div>
                 <div class="header-glow-orb c"></div>
@@ -465,6 +465,8 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         setupNavigation();
+        const initialTab = window.location.hash.replace('#', '') || 'home';
+        switchTab(initialTab, false);
         loadUploadedPDFsHome();
         renderVisibleYearSections();
         initScrollReveal();
