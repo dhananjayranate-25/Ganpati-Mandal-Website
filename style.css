@@ -3200,12 +3200,6 @@ footer::after {
 }
 
 @media (max-width: 768px) {
-    .hero-banner-img {
-        height: auto !important;
-        max-height: calc(100vh - 60px) !important;
-        object-fit: contain !important;
-    }
-    
     .custom-header {
         position: sticky;
         top: 0;
