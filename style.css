@@ -3205,15 +3205,13 @@ footer::after {
         top: 0;
         left: 0;
         right: 0;
-        background: linear-gradient(to right, #ff8c00, #ff6a00) !important;
+        background: transparent !important;
         border: none !important;
-        padding: 10px 20px !important;
+        padding: 0 !important;
         margin: 0 !important;
         border-radius: 0 !important;
         z-index: 1000;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        display: block !important;
         overflow: visible !important;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
     }
@@ -3249,7 +3247,9 @@ footer::after {
     }
 
     .custom-navbar {
-        position: relative;
+        position: absolute;
+        top: 0;
+        right: 0;
         background: transparent !important;
         box-shadow: none !important;
         padding: 0 !important;
