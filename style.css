@@ -3192,15 +3192,20 @@ footer::after {
 
 .hero-banner-img {
     width: 100%;
-    height: auto;
-    max-height: calc(100vh - 60px); /* Account for header */
-    object-fit: contain;
+    height: 100%;
+    object-fit: cover;
     border-radius: 0;
     display: block;
     background-color: transparent;
 }
 
 @media (max-width: 768px) {
+    .hero-banner-img {
+        height: auto !important;
+        max-height: calc(100vh - 60px) !important;
+        object-fit: contain !important;
+    }
+    
     .custom-header {
         position: sticky;
         top: 0;
