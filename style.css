@@ -3264,14 +3264,22 @@ footer::after {
     .custom-navbar {
         position: absolute;
         top: 0;
+        left: 0;
         right: 0;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         background: transparent !important;
         box-shadow: none !important;
-        padding: 0 !important;
+        padding: 15px 20px !important;
+        box-sizing: border-box;
     }
 
     #mobileMenuBtn {
         display: flex !important;
+        -webkit-tap-highlight-color: transparent;
+        user-select: none;
     }
 
     .nav-links {
