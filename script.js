@@ -1940,7 +1940,7 @@ function initVisitorTracking() {
         fetch('/api/visitors/increment', { method: 'POST' })
             .then(res => res.json())
             .then(data => {
-                if (data.count && visitorCountDisplay) {
+                if (data.count !== undefined && visitorCountDisplay) {
                     visitorCountDisplay.innerText = data.count;
                     localStorage.setItem('last_visit_date', today);
                 }
@@ -1950,7 +1950,7 @@ function initVisitorTracking() {
         fetch('/api/visitors')
             .then(res => res.json())
             .then(data => {
-                if (data.count && visitorCountDisplay) {
+                if (data.count !== undefined && visitorCountDisplay) {
                     visitorCountDisplay.innerText = data.count;
                 }
             })
