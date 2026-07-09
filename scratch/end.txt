@@ -1,0 +1,47 @@
+ink.download = 'Donation_Poster.jpg';
+                link.href = canvas.toDataURL('image/jpeg', 0.9);
+                link.click();
+            }
+        }).catch(err => {
+            console.error('Error generating image:', err);
+            alert('इमेज तयार करताना त्रुटी आली.');
+        }).finally(() => {
+            if(btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-download"></i> डाउनलोड करा'; }
+        });
+    }
+
+    async function shareDonationImage() {
+        const btn = document.querySelector('.donation-share-btn');
+        if(btn) { btn.disabled = true; btn.innerHTML = 'Sharing...'; }
+        
+        try {
+            const canvas = await captureDonationPoster();
+            if(canvas) {
+                canvas.toBlob(async (blob) => {
+                    const file = new File([blob], 'Donation_Poster.jpg', { type: 'image/jpeg' });
+                    
+                    const orgName = (typeof settings !== 'undefined' && settings.orgName) ? settings.orgName : 'श्री शिवसृष्टी मित्र मंडळ';
+                    const shareData = {
+                        title: orgName + ' - देणगी',
+                        text: 'कृपया ' + orgName + ' ला सढळ हाताने मदत करा. खालील QR कोड वापरून आपण देणगी देऊ शकता.',
+                        files: [file]
+                    };
+
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        await navigator.share(shareData);
+                    } else {
+                        alert('शेअर करण्याचा पर्याय तुमच्या ब्राउझरमध्ये उपलब्ध नाही. कृपया डाउनलोड करून शेअर करा.');
+                    }
+                }, 'image/jpeg', 0.9);
+            }
+        } catch (err) {
+            console.error('Error sharing image:', err);
+            alert('शेअर करताना त्रुटी आली. कृपया डाउनलोड करून शेअर करा.');
+        } finally {
+            if(btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-share-alt"></i> शेअर करा'; }
+        }
+    }
+    </script>
+
+</body>
+</html>

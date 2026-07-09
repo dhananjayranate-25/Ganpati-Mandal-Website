@@ -50,6 +50,26 @@ const uploadBanner = multer({ storage: bannerStorage, limits: { fileSize: 10 * 1
 const committeeStorage = multer.memoryStorage();
 const uploadCommittee = multer({ storage: committeeStorage, limits: { fileSize: 10 * 1024 * 1024 } });
 
+// Storage for Aarti media (Audio & PDF)
+const aartiMediaStorage = multer.diskStorage({
+    destination: (req, file, cb) => cb(null, UPLOAD_DIR),
+    filename: (req, file, cb) => {
+        const ext = path.extname(file.originalname) || '';
+        cb(null, `aarti_${file.fieldname}_${Date.now()}${ext}`);
+    }
+});
+const uploadAartiMedia = multer({ storage: aartiMediaStorage, limits: { fileSize: 50 * 1024 * 1024 } }); // Up to 50MB for audio files
+
+// Storage for Gallery Photos
+const galleryStorage = multer.diskStorage({
+    destination: (req, file, cb) => cb(null, UPLOAD_DIR),
+    filename: (req, file, cb) => {
+        const ext = path.extname(file.originalname) || '.jpg';
+        cb(null, `gallery_${Date.now()}_${Math.floor(Math.random() * 1000)}${ext}`);
+    }
+});
+const uploadGallery = multer({ storage: galleryStorage, limits: { fileSize: 20 * 1024 * 1024 } });
+
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
@@ -61,6 +81,16 @@ if (!MONGODB_URI) {
 mongoose.connect(MONGODB_URI)
     .then(() => console.log('MongoDB connected successfully to Atlas'))
     .catch(err => console.error('MongoDB connection error:', err));
+
+
+const niyojanSchema = new mongoose.Schema({
+    date: { type: String, required: true },
+    time: { type: String, required: true },
+    title: { type: String, required: true },
+    description: { type: String },
+    createdAt: { type: Date, default: Date.now }
+});
+const Niyojan = mongoose.model('Niyojan', niyojanSchema);
 
 const entrySchema = new mongoose.Schema({
     name: { type: String, required: true },
@@ -98,9 +128,15 @@ const committeeSchema = new mongoose.Schema({
     name: { type: String, required: true },
     mobile: { type: String, required: true },
     photoUrl: { type: String, default: '' },
-    order: { type: Number, default: 0 }
+    base64Data: { type: String, default: '' } // For backward compatibility or fallback
 });
 const CommitteeMember = mongoose.model('CommitteeMember', committeeSchema);
+
+const counterSchema = new mongoose.Schema({
+    key: { type: String, required: true, unique: true },
+    count: { type: Number, default: 0 }
+});
+const Counter = mongoose.model('Counter', counterSchema);
 
 const aartiSchema = new mongoose.Schema({
     name: { type: String, required: true },
@@ -111,6 +147,13 @@ const aartiSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now }
 });
 const Aarti = mongoose.model('Aarti', aartiSchema);
+
+const galleryAlbumSchema = new mongoose.Schema({
+    title: { type: String, required: true },
+    order: { type: Number, default: 0 },
+    photos: [{ type: String }] // Array of file paths
+});
+const GalleryAlbum = mongoose.model('GalleryAlbum', galleryAlbumSchema);
 
 
 const pdfSchema = new mongoose.Schema({
@@ -178,6 +221,36 @@ app.post('/api/year-visibility', async (req, res) => {
     }
 });
 
+// ==========================================
+// VISITOR COUNTER ENDPOINTS
+// ==========================================
+app.get('/api/visitors', async (req, res) => {
+    try {
+        let counter = await Counter.findOne({ key: 'total_visitors' });
+        if (!counter) {
+            counter = new Counter({ key: 'total_visitors', count: 0 });
+            await counter.save();
+        }
+        res.json({ count: counter.count });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.post('/api/visitors/increment', async (req, res) => {
+    try {
+        let counter = await Counter.findOne({ key: 'total_visitors' });
+        if (!counter) {
+            counter = new Counter({ key: 'total_visitors', count: 0 });
+        }
+        counter.count += 1;
+        await counter.save();
+        res.json({ count: counter.count });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 app.get('/api/settings', async (req, res) => {
     try {
         const settings = await AppSetting.find({});
@@ -201,6 +274,148 @@ app.post('/api/settings', async (req, res) => {
             { upsert: true, new: true }
         );
         res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Upload Aarti Media Endpoint
+app.post('/api/settings/aarti-media', uploadAartiMedia.fields([{ name: 'aarti_audio', maxCount: 1 }, { name: 'aarti_pdf', maxCount: 1 }]), async (req, res) => {
+    try {
+        if (req.files['aarti_audio']) {
+            const audioPath = 'uploads/' + req.files['aarti_audio'][0].filename;
+            await AppSetting.findOneAndUpdate({ key: 'aartiAudioPath' }, { value: audioPath }, { upsert: true });
+        }
+        if (req.files['aarti_pdf']) {
+            const pdfPath = 'uploads/' + req.files['aarti_pdf'][0].filename;
+            await AppSetting.findOneAndUpdate({ key: 'aartiPdfPath' }, { value: pdfPath }, { upsert: true });
+        }
+        res.json({ success: true, message: 'Media uploaded successfully' });
+    } catch (error) {
+        console.error('Error uploading aarti media:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Storage Usage Endpoint
+app.get('/api/system/storage', async (req, res) => {
+    try {
+        // 1. Get MongoDB size
+        const dbStats = await mongoose.connection.db.command({ dbStats: 1 });
+        const dbSize = dbStats.dataSize + dbStats.indexSize; // Size in bytes
+        
+        // 2. Get Uploads folder size
+        let uploadsSize = 0;
+        try {
+            const files = await fs.promises.readdir(UPLOAD_DIR);
+            for (const file of files) {
+                const stat = await fs.promises.stat(path.join(UPLOAD_DIR, file));
+                if (stat.isFile()) {
+                    uploadsSize += stat.size;
+                }
+            }
+        } catch (e) {
+            console.error('Error reading uploads dir for size:', e);
+        }
+        
+        const totalUsedBytes = dbSize + uploadsSize;
+        const maxBytes = 512 * 1024 * 1024; // 512 MB Free Tier limit
+        const remainingBytes = Math.max(0, maxBytes - totalUsedBytes);
+        
+        res.json({
+            success: true,
+            dbSizeBytes: dbSize,
+            uploadsSizeBytes: uploadsSize,
+            totalUsedBytes: totalUsedBytes,
+            maxBytes: maxBytes,
+            remainingBytes: remainingBytes,
+            usedPercentage: Math.min(100, (totalUsedBytes / maxBytes) * 100)
+        });
+    } catch (error) {
+        console.error('Error fetching storage stats:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// ==========================================
+// GALLERY ENDPOINTS
+// ==========================================
+
+// Get all albums
+app.get('/api/gallery', async (req, res) => {
+    try {
+        const albums = await GalleryAlbum.find().sort({ order: 1 });
+        res.json({ success: true, albums });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Create album
+app.post('/api/gallery/album', async (req, res) => {
+    try {
+        const { title, order } = req.body;
+        const newAlbum = new GalleryAlbum({ title, order: order || 0, photos: [] });
+        await newAlbum.save();
+        res.json({ success: true, album: newAlbum });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Delete album
+app.delete('/api/gallery/album/:id', async (req, res) => {
+    try {
+        const album = await GalleryAlbum.findById(req.params.id);
+        if (album) {
+            // Delete all photos in this album from disk
+            for (let photo of album.photos) {
+                const filePath = path.join(__dirname, photo);
+                if (fs.existsSync(filePath)) {
+                    fs.unlinkSync(filePath);
+                }
+            }
+            await GalleryAlbum.findByIdAndDelete(req.params.id);
+        }
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Upload photos to album
+app.post('/api/gallery/album/:id/photos', uploadGallery.array('photos', 20), async (req, res) => {
+    try {
+        const album = await GalleryAlbum.findById(req.params.id);
+        if (!album) return res.status(404).json({ success: false, error: 'Album not found' });
+        
+        const newPhotos = req.files.map(file => 'uploads/' + file.filename);
+        album.photos.push(...newPhotos);
+        await album.save();
+        
+        res.json({ success: true, album });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Delete specific photo from album
+app.delete('/api/gallery/album/:id/photo/:filename', async (req, res) => {
+    try {
+        const album = await GalleryAlbum.findById(req.params.id);
+        if (!album) return res.status(404).json({ success: false, error: 'Album not found' });
+        
+        const photoPath = 'uploads/' + req.params.filename;
+        album.photos = album.photos.filter(p => p !== photoPath);
+        await album.save();
+        
+        // Delete from disk
+        const filePath = path.join(__dirname, photoPath);
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+        }
+        
+        res.json({ success: true, album });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }
@@ -412,6 +627,40 @@ app.delete('/api/aarti/:id', async (req, res) => {
         res.json({ message: 'Aarti deleted successfully' });
     } catch (error) {
         res.status(500).json({ error: 'Failed to delete aarti details' });
+    }
+});
+
+
+// ==========================================
+// NIYOJAN API
+// ==========================================
+
+app.get('/api/niyojan', async (req, res) => {
+    try {
+        const niyojans = await Niyojan.find().sort({ date: 1, time: 1 });
+        res.json(niyojans);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch niyojan details' });
+    }
+});
+
+app.post('/api/niyojan', async (req, res) => {
+    try {
+        const { date, time, title, description } = req.body;
+        const newNiyojan = new Niyojan({ date, time, title, description });
+        await newNiyojan.save();
+        res.status(201).json(newNiyojan);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to add niyojan' });
+    }
+});
+
+app.delete('/api/niyojan/:id', async (req, res) => {
+    try {
+        await Niyojan.findByIdAndDelete(req.params.id);
+        res.json({ message: 'Niyojan deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to delete niyojan' });
     }
 });
 

@@ -70,13 +70,33 @@
                 <div class="decoration-line left"></div>
                 <div class="decoration-line right"></div>
             </div>
-            <div class="header-content">
-                <div class="ganpati-image-container">
-                    <img src="logo/logo.jpeg" alt="Shivsrushti Logo" class="ganpati-image" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🙏</text></svg>';this.classList.add('fallback-icon')">
+            <div class="header-content" style="position: relative; z-index: 2;">
+                <!-- Center: Logo and Title -->
+                <div style="text-align: center;">
+                    <div class="ganpati-image-container">
+                        <img src="logo/logo.jpeg" alt="Shivsrushti Logo" class="ganpati-image" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🙏</text></svg>';this.classList.add('fallback-icon')">
+                    </div>
+                    <h1 class="title-gradient">Admin Panel</h1>
+                    <div class="subtitle-wrapper">
+                        <span class="subtitle-badge">शिवसृष्टी हिंदू तरुण मित्र मंडळ 🚩</span>
+                    </div>
                 </div>
-                <h1 class="title-gradient">Admin Panel</h1>
-                <div class="subtitle-wrapper">
-                    <span class="subtitle-badge">शिवसृष्टी हिंदू तरुण मित्र मंडळ 🚩</span>
+
+                <!-- Right: Storage Widget (Absolute Bottom Right) -->
+                <div class="storage-widget-container" style="position: absolute; bottom: -50px; right: 0px; z-index: 10; width: 100%; max-width: 300px;">
+                    <div class="storage-widget" style="background: rgba(0,0,0,0.6); padding: 15px; border-radius: 12px; border: 1px solid rgba(212,175,55,0.4); text-align: left; box-shadow: 0 4px 15px rgba(0,0,0,0.3); backdrop-filter: blur(5px);">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span style="color: #ffeb3b; font-size: 14px; font-weight: 600;"><i class="fas fa-database"></i> Database Space</span>
+                            <span id="storagePercText" style="color: white; font-size: 13px; font-weight: bold;">--%</span>
+                        </div>
+                        <div style="width: 100%; height: 10px; background: rgba(255,255,255,0.1); border-radius: 5px; overflow: hidden; margin-bottom: 8px;">
+                            <div id="storageBar" style="height: 100%; width: 0%; background: linear-gradient(90deg, #4caf50, #8bc34a); transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 5px;"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 12px; color: #ccc;">
+                            <span id="storageUsedText">Used: -- MB</span>
+                            <span id="storageFreeText">Free: -- MB</span>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="wave-divider">
@@ -90,6 +110,8 @@
             <button id="btn-tab-committee" class="btn btn-tab" onclick="switchAdminTab('tab-committee')">Committee Settings</button>
             <button id="btn-tab-cashbook" class="btn btn-tab" onclick="switchAdminTab('tab-cashbook')">Cashbook Settings</button>
             <button id="btn-tab-aarti" class="btn btn-tab" onclick="switchAdminTab('tab-aarti')">Maha Aarti</button>
+            <button id="btn-tab-gallery" class="btn btn-tab" onclick="switchAdminTab('tab-gallery')">गणपती छायाचित्रे</button>
+            <button id="btn-tab-niyojan" class="btn btn-tab" onclick="switchAdminTab('tab-niyojan')">नियोजन</button>
             <button class="btn btn-tab" onclick="window.location.href='index.html'" style="background: linear-gradient(135deg, #f43f5e, #e11d48); color: white; border: none;">🏠 Back to Home (मागे जा)</button>
         </div>
 
@@ -121,6 +143,11 @@
                     <div class="form-group floating-label">
                         <input type="text" id="appNavbarTitle" placeholder=" ">
                         <label for="appNavbarTitle">Navbar Title</label>
+                        <div class="input-focus-line"></div>
+                    </div>
+                    <div class="form-group floating-label" style="grid-column: 1 / -1;">
+                        <input type="text" id="appMarqueeText" placeholder=" ">
+                        <label for="appMarqueeText">फिरती पट्टी (Scrolling Banner Text)</label>
                         <div class="input-focus-line"></div>
                     </div>
                 </div>
@@ -195,8 +222,30 @@
         </div>
             </div>
         <div id="tab-aarti" class="admin-tab-content" style="display: none;">
+            
+            <!-- Aarti Media Upload Section -->
+            <div class="admin-card" style="padding: 20px; background: rgba(255,255,255,0.05); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top:20px; margin-bottom:20px;">
+                <h2 style="color: #ffeb3b; text-align:center; margin-bottom: 20px;"><i class="fas fa-music"></i> महाआरती मीडिया (ऑडिओ आणि PDF)</h2>
+                <form id="uploadAartiMediaForm" onsubmit="handleUploadAartiMedia(event)" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; align-items: end;">
+                    <div class="form-group">
+                        <label style="color:white; display:block; margin-bottom:5px;">आरती ऑडिओ (MP3/WAV)</label>
+                        <input type="file" id="aartiAudioFile" accept="audio/*" style="width:100%; padding:10px; background: rgba(0,0,0,0.5); color:white; border-radius:8px; border:none; outline:none;">
+                    </div>
+                    <div class="form-group">
+                        <label style="color:white; display:block; margin-bottom:5px;">आरती पुस्तक (PDF)</label>
+                        <input type="file" id="aartiPdfFile" accept="application/pdf" style="width:100%; padding:10px; background: rgba(0,0,0,0.5); color:white; border-radius:8px; border:none; outline:none;">
+                    </div>
+                    <div style="grid-column: 1 / -1; display:flex; gap: 10px; align-items:center;">
+                        <button type="submit" class="admin-btn">
+                            <i class="fas fa-upload"></i> सेव्ह करा
+                        </button>
+                        <div id="aartiMediaStatus" style="font-size:14px;"></div>
+                    </div>
+                </form>
+            </div>
+
             <div class="admin-card" style="padding: 20px; background: rgba(255,255,255,0.05); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top:20px;">
-                <h2 style="color: #ffeb3b; text-align:center; margin-bottom: 20px;"><i class="fas fa-om"></i> महाआरती व्यवस्थापन</h2>
+                <h2 style="color: #ffeb3b; text-align:center; margin-bottom: 20px;"><i class="fas fa-om"></i> महाआरती बुकिंग व्यवस्थापन</h2>
                 <form id="addAartiForm" onsubmit="handleAddAarti(event)" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                     <div class="form-group">
                         <label style="color:white; display:block; margin-bottom:5px;">संपूर्ण नाव *</label>
@@ -253,9 +302,41 @@
                     </table>
                 </div>
             </div>
-        </div></div>
+            </div>
+        </div>
 
-        <!-- COMMITTEE SETTINGS TAB -->
+        <!-- GALLERY SETTINGS TAB -->
+        <div id="tab-gallery" class="admin-tab-content" style="display: none;">
+            <div class="appearance-settings-section animate-fade-up" style="animation-delay: 0.1s; margin-top: 10px;">
+                <div class="section-header">
+                    <div class="header-line"></div>
+                    <h2>गणपती छायाचित्रे (Photo Gallery)</h2>
+                    <div class="header-line"></div>
+                </div>
+                
+                <div class="upload-container" style="margin-bottom: 20px;">
+                    <h3 style="margin-bottom: 15px; color: var(--text-primary);">नवीन अल्बम तयार करा (Create New Album)</h3>
+                    <form id="addAlbumForm" onsubmit="handleCreateAlbum(event)" style="display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap;">
+                        <div class="form-group floating-label" style="flex: 1; min-width: 250px;">
+                            <input type="text" id="albumTitle" placeholder=" " required>
+                            <label for="albumTitle">अल्बमचे नाव (उदा. 1935-1950, विसर्जन २०२३)</label>
+                            <div class="input-focus-line"></div>
+                        </div>
+                        <div class="form-group floating-label" style="width: 100px;">
+                            <input type="number" id="albumOrder" placeholder=" " value="0">
+                            <label for="albumOrder">क्रम (Order)</label>
+                            <div class="input-focus-line"></div>
+                        </div>
+                        <button type="submit" class="btn btn-primary ripple" style="background: linear-gradient(135deg, #10b981, #059669); padding: 12px 25px;"><i class="fas fa-plus"></i> तयार करा</button>
+                    </form>
+                    <div id="albumStatus" style="font-size:14px; margin-top:10px;"></div>
+                </div>
+
+                <div id="albumsListContainer">
+                    <p style="color: white; text-align: center;">अल्बम लोड होत आहेत...</p>
+                </div>
+            </div>
+        </div>        <!-- COMMITTEE SETTINGS TAB -->
         <div id="tab-committee" class="admin-tab-content" style="display: none;">
             <div class="appearance-settings-section animate-fade-up" style="animation-delay: 0.1s; margin-top: 10px;">
                 <div class="section-header">
@@ -647,6 +728,8 @@
                     document.getElementById('appRegNo').value = settings.regNo || '';
                     document.getElementById('appMainTitle').value = settings.mainTitle || '';
                     document.getElementById('appNavbarTitle').value = settings.navbarTitle || '';
+                    document.getElementById('appMarqueeText').value = settings.appMarqueeText || '';
+                    document.getElementById('appNiyojanMarqueeText').value = settings.appNiyojanMarqueeText || '';
                     
                     document.getElementById('donateAccName').value = settings.donateAccName || 'Dhananjay Sachin Ranate';
                     document.getElementById('donateAccNo').value = settings.donateAccNo || '322502010043655';
@@ -666,6 +749,8 @@
             const regNo = document.getElementById('appRegNo').value;
             const mainTitle = document.getElementById('appMainTitle').value;
             const navbarTitle = document.getElementById('appNavbarTitle').value;
+            const marqueeText = document.getElementById('appMarqueeText').value;
+            const niyojanMarqueeText = document.getElementById('appNiyojanMarqueeText').value;
             
             try {
                 // Save texts
@@ -673,7 +758,9 @@
                     { key: 'estYear', value: estYear },
                     { key: 'regNo', value: regNo },
                     { key: 'mainTitle', value: mainTitle },
-                    { key: 'navbarTitle', value: navbarTitle }
+                    { key: 'navbarTitle', value: navbarTitle },
+                    { key: 'appMarqueeText', value: marqueeText },
+                    { key: 'appNiyojanMarqueeText', value: niyojanMarqueeText }
                 ];
                 
                 // Upload Banner as Base64 to MongoDB if selected
@@ -700,6 +787,7 @@
                 
                 status.innerHTML = '<span style="color: #10b981;">Settings saved successfully!</span>';
                 setTimeout(() => { status.innerHTML = ''; }, 3000);
+                alert('Settings Saved Successfully!');
                 
             } catch (error) {
                 status.innerHTML = '<span style="color: #ef4444;">Error: ' + error.message + '</span>';
@@ -746,6 +834,7 @@
                 
                 status.innerHTML = '<span style="color: #10b981;">Donation settings saved successfully!</span>';
                 setTimeout(() => { status.innerHTML = ''; }, 3000);
+                alert('Settings Saved Successfully!');
                 
             } catch (error) {
                 status.innerHTML = '<span style="color: #ef4444;">Error: ' + error.message + '</span>';
@@ -1312,6 +1401,76 @@ body{font-family:"Poppins","Noto Sans Devanagari",sans-serif;background:#f5f0eb;
         </div>
     </div>
 
+    
+        <!-- NIYOJAN SETTINGS TAB -->
+        <div id="tab-niyojan" class="admin-tab-content" style="display: none;">
+            <div class="animate-fade-up" style="animation-delay: 0.1s; margin-top: 10px;">
+                <div class="section-header">
+                    <div class="header-line"></div>
+                    <h2>उत्सव नियोजन (Schedule)</h2>
+                    <div class="header-line"></div>
+                </div>
+                
+                <div class="form-container">
+                    
+                <div class="form-container" style="margin-bottom: 20px; border-bottom: 2px dashed rgba(255, 204, 0, 0.3); padding-bottom: 20px;">
+                    <h3 style="color: #ffcc00; margin-bottom: 15px;">नियोजन फिरती पट्टी (Niyojan Marquee)</h3>
+                    <div class="form-group floating-label">
+                        <input type="text" id="appNiyojanMarqueeText" placeholder=" ">
+                        <label for="appNiyojanMarqueeText">नियोजन सेक्शन मधील फिरती पट्टीचा मेसेज</label>
+                        <div class="input-focus-line"></div>
+                    </div>
+                    <button class="btn btn-primary ripple" onclick="saveAppearanceSettings()" style="margin-top: 10px;">
+                        <i class="fas fa-save"></i> मेसेज सेव्ह करा
+                    </button>
+                </div>
+                    <form id="niyojanForm" onsubmit="addNiyojan(event)">
+                        <div class="form-grid">
+                            <div class="form-group floating-label">
+                                <input type="date" id="niyojanDate" required>
+                                <label for="niyojanDate">तारीख</label>
+                                <div class="input-focus-line"></div>
+                            </div>
+                            <div class="form-group floating-label">
+                                <input type="time" id="niyojanTime" required>
+                                <label for="niyojanTime">वेळ</label>
+                                <div class="input-focus-line"></div>
+                            </div>
+                            <div class="form-group floating-label" style="grid-column: 1 / -1;">
+                                <input type="text" id="niyojanTitle" placeholder=" " required>
+                                <label for="niyojanTitle">कार्यक्रमाचे नाव</label>
+                                <div class="input-focus-line"></div>
+                            </div>
+                            <div class="form-group floating-label" style="grid-column: 1 / -1;">
+                                <textarea id="niyojanDescription" placeholder=" " rows="3"></textarea>
+                                <label for="niyojanDescription">अधिक माहिती (पर्यायी)</label>
+                                <div class="input-focus-line"></div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary ripple" style="width: 100%; margin-top: 15px;">
+                            <span class="btn-icon"><i class="fas fa-plus"></i></span> नियोजन ऍड करा
+                        </button>
+                    </form>
+                </div>
+
+                <div class="data-table-container" style="margin-top: 30px;">
+                    <table class="data-table" id="niyojanTable">
+                        <thead>
+                            <tr>
+                                <th>तारीख</th>
+                                <th>वेळ</th>
+                                <th>कार्यक्रमाचे नाव</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="niyojanList">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
     <script>
         function populatePDFSettingsYear() {
             const sel = document.getElementById('pdfSettingsYear');
@@ -1590,6 +1749,9 @@ body{font-family:"Poppins","Noto Sans Devanagari",sans-serif;background:#f5f0eb;
             if (tabId === 'tab-aarti') {
                 loadAartiData();
             }
+            if (tabId === 'tab-gallery') {
+                loadAdminAlbums();
+            }
         }
 
         async function saveCommitteeMember(role) {
@@ -1726,7 +1888,160 @@ async function loadAartiData() {
         console.error('Failed to load aarti data:', e);
     }
 }
+// ==========================================
+// GALLERY MANAGEMENT
+// ==========================================
+async function loadAdminAlbums() {
+    const container = document.getElementById('albumsListContainer');
+    try {
+        const res = await fetch('/api/gallery');
+        const data = await res.json();
+        if (data.success) {
+            if (data.albums.length === 0) {
+                container.innerHTML = '<p style="color:white;text-align:center;">कोणतेही अल्बम नाहीत. नवीन अल्बम तयार करा.</p>';
+                return;
+            }
+            container.innerHTML = data.albums.map(album => `
+                <div class="admin-card" style="margin-bottom: 20px; padding: 20px; background: rgba(0,0,0,0.4); border-radius: 12px; border: 1px solid rgba(212,175,55,0.3);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3 style="color: #ffeb3b; margin:0;">${album.title} <span style="font-size:14px; color:#ccc;">(Photos: ${album.photos.length})</span></h3>
+                        <button class="delete-btn" onclick="deleteAlbum('${album._id}')" style="background:#f44336; border:none; color:white; padding:5px 10px; border-radius:5px; cursor:pointer;"><i class="fas fa-trash"></i> Delete Album</button>
+                    </div>
+                    
+                    <form onsubmit="handleUploadPhotos(event, '${album._id}')" style="display:flex; gap:10px; align-items:center; margin-bottom: 15px;">
+                        <input type="file" multiple accept="image/*" id="photos_${album._id}" required style="color: white;">
+                        <button type="submit" class="btn btn-primary" style="padding: 5px 15px; font-size:14px;"><i class="fas fa-upload"></i> Upload Photos</button>
+                        <span id="uploadStatus_${album._id}" style="color:#ffeb3b; font-size:14px;"></span>
+                    </form>
+                    
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        ${album.photos.map(photo => `
+                            <div style="position:relative; width: 100px; height: 100px; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.2);">
+                                <img src="/${photo}" style="width:100%; height:100%; object-fit:cover;">
+                                <button onclick="deletePhoto('${album._id}', '${photo.split('/').pop()}')" style="position:absolute; top:2px; right:2px; background:rgba(244,67,54,0.9); color:white; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer;"><i class="fas fa-times"></i></button>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+    } catch (e) {
+        console.error(e);
+        container.innerHTML = '<p style="color:red;text-align:center;">Failed to load albums.</p>';
+    }
+}
 
+async function handleCreateAlbum(e) {
+    e.preventDefault();
+    const title = document.getElementById('albumTitle').value;
+    const order = document.getElementById('albumOrder').value;
+    const status = document.getElementById('albumStatus');
+    status.innerText = "Creating...";
+    status.style.color = "#ffeb3b";
+    
+    try {
+        const res = await fetch('/api/gallery/album', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({title, order})
+        });
+        const data = await res.json();
+        if (data.success) {
+            status.innerText = "Album created successfully!";
+            status.style.color = "#4caf50";
+            document.getElementById('addAlbumForm').reset();
+            loadAdminAlbums();
+            setTimeout(() => { status.innerText = ""; }, 3000);
+        }
+    } catch (err) {
+        status.innerText = "Error: " + err.message;
+        status.style.color = "red";
+    }
+}
+
+async function deleteAlbum(id) {
+    if(!confirm("Are you sure you want to delete this album and ALL its photos?")) return;
+    try {
+        await fetch('/api/gallery/album/' + id, { method: 'DELETE' });
+        loadAdminAlbums();
+    } catch (e) { console.error(e); }
+}
+
+async function handleUploadPhotos(e, albumId) {
+    e.preventDefault();
+    const input = document.getElementById('photos_' + albumId);
+    const status = document.getElementById('uploadStatus_' + albumId);
+    
+    if (input.files.length === 0) return;
+    status.innerText = "Uploading...";
+    
+    const formData = new FormData();
+    for (let i = 0; i < input.files.length; i++) {
+        formData.append('photos', input.files[i]);
+    }
+    
+    try {
+        const res = await fetch('/api/gallery/album/' + albumId + '/photos', {
+            method: 'POST',
+            body: formData
+        });
+        const data = await res.json();
+        if (data.success) {
+            loadAdminAlbums();
+        }
+    } catch (err) {
+        status.innerText = "Error uploading.";
+    }
+}
+
+async function deletePhoto(albumId, filename) {
+    if(!confirm("Delete this photo?")) return;
+    try {
+        await fetch(`/api/gallery/album/${albumId}/photo/${filename}`, { method: 'DELETE' });
+        loadAdminAlbums();
+    } catch (e) { console.error(e); }
+}
+
+// ==========================================
+// AARTI MEDIA
+// ==========================================
+async function handleUploadAartiMedia(e) {
+    e.preventDefault();
+    const statusDiv = document.getElementById('aartiMediaStatus');
+    const audioFile = document.getElementById('aartiAudioFile').files[0];
+    const pdfFile = document.getElementById('aartiPdfFile').files[0];
+
+    if (!audioFile && !pdfFile) {
+        statusDiv.style.color = '#ff5252';
+        statusDiv.innerText = 'कृपया किमान एक फाइल (ऑडिओ किंवा PDF) निवडा.';
+        return;
+    }
+
+    statusDiv.style.color = '#ffeb3b';
+    statusDiv.innerText = 'अपलोड होत आहे... कृपया प्रतीक्षा करा...';
+
+    const formData = new FormData();
+    if (audioFile) formData.append('aarti_audio', audioFile);
+    if (pdfFile) formData.append('aarti_pdf', pdfFile);
+
+    try {
+        const res = await fetch('/api/settings/aarti-media', {
+            method: 'POST',
+            body: formData
+        });
+        const data = await res.json();
+        if (data.success) {
+            statusDiv.style.color = '#4caf50';
+            statusDiv.innerText = 'मीडिया यशस्वीरित्या सेव्ह झाला!';
+            setTimeout(() => { statusDiv.innerText = ''; }, 3000);
+        } else {
+            throw new Error(data.error);
+        }
+    } catch (err) {
+        statusDiv.style.color = '#ff5252';
+        statusDiv.innerText = 'चूक: ' + err.message;
+    }
+}
 async function handleAddAarti(e) {
     e.preventDefault();
     
@@ -1777,6 +2092,82 @@ async function deleteAarti(id) {
         }
     } catch (e) {
         console.error('Error deleting aarti:', e);
+    }
+}
+
+    
+// ==========================================
+// NIYOJAN LOGIC
+// ==========================================
+async function loadNiyojanAdmin() {
+    try {
+        const response = await fetch('/api/niyojan');
+        const list = await response.json();
+        const tbody = document.getElementById('niyojanList');
+        tbody.innerHTML = '';
+        
+        list.forEach(item => {
+            const tr = document.createElement('tr');
+            
+            const d = new Date(item.date);
+            const formattedDate = d.toLocaleDateString('mr-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+            
+            tr.innerHTML = `
+                <td>${formattedDate}</td>
+                <td>${item.time}</td>
+                <td><strong>${item.title}</strong><br><small style="color: #aaa;">${item.description || ''}</small></td>
+                <td>
+                    <button class="btn-action delete" onclick="deleteNiyojan('${item._id}')" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    } catch (e) {
+        console.error('Error loading niyojan:', e);
+    }
+}
+
+async function addNiyojan(e) {
+    e.preventDefault();
+    const payload = {
+        date: document.getElementById('niyojanDate').value,
+        time: document.getElementById('niyojanTime').value,
+        title: document.getElementById('niyojanTitle').value,
+        description: document.getElementById('niyojanDescription').value
+    };
+    
+    try {
+        const res = await fetch('/api/niyojan', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        if (res.ok) {
+            document.getElementById('niyojanForm').reset();
+            loadNiyojanAdmin();
+            alert('नियोजन ऍड केले!');
+        } else {
+            alert('नियोजन ऍड करताना एरर आली.');
+        }
+    } catch (e) {
+        console.error(e);
+        alert('Server error.');
+    }
+}
+
+async function deleteNiyojan(id) {
+    if(!confirm('हे नियोजन डिलीट करायचे?')) return;
+    try {
+        const res = await fetch(`/api/niyojan/${id}`, { method: 'DELETE' });
+        if (res.ok) {
+            loadNiyojanAdmin();
+        } else {
+            alert('डिलीट करताना एरर आली.');
+        }
+    } catch(e) {
+        console.error(e);
     }
 }
 

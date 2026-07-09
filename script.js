@@ -135,6 +135,7 @@ window.checkAdminLogin = async function() {
             document.getElementById('adminPanel').style.display = 'block';
             errorDiv.style.display = 'none';
             loadYearsForAdmin();
+            fetchStorageStats();
         } else {
             errorDiv.style.display = 'block';
             document.getElementById('adminPassword').value = '';
@@ -143,6 +144,52 @@ window.checkAdminLogin = async function() {
         errorDiv.style.display = 'block';
     }
 }
+
+window.fetchStorageStats = async function() {
+    try {
+        const res = await fetch(`${API_URL}/system/storage`);
+        const data = await res.json();
+        
+        if (data.success) {
+            const percText = document.getElementById('storagePercText');
+            const bar = document.getElementById('storageBar');
+            const usedText = document.getElementById('storageUsedText');
+            const freeText = document.getElementById('storageFreeText');
+            
+            if (percText && bar) {
+                const perc = data.usedPercentage.toFixed(1);
+                percText.innerText = `${perc}%`;
+                
+                // Color formatting
+                if (perc > 85) {
+                    bar.style.background = 'linear-gradient(90deg, #f44336, #e53935)';
+                    percText.style.color = '#f44336';
+                } else if (perc > 60) {
+                    bar.style.background = 'linear-gradient(90deg, #ff9800, #fb8c00)';
+                    percText.style.color = '#ff9800';
+                } else {
+                    bar.style.background = 'linear-gradient(90deg, #4caf50, #8bc34a)';
+                    percText.style.color = '#4caf50';
+                }
+                
+                // Set Width
+                setTimeout(() => {
+                    bar.style.width = `${perc}%`;
+                }, 300);
+                
+                // Convert bytes to MB
+                const usedMB = (data.totalUsedBytes / (1024 * 1024)).toFixed(1);
+                const freeMB = (data.remainingBytes / (1024 * 1024)).toFixed(1);
+                
+                if (usedText) usedText.innerText = `Used: ${usedMB} MB`;
+                if (freeText) freeText.innerText = `Free: ${freeMB} MB`;
+            }
+        }
+    } catch (err) {
+        console.error('Error loading storage stats', err);
+    }
+}
+
 
 document.addEventListener('DOMContentLoaded', () => {
     setTodayDate();
@@ -1883,3 +1930,32 @@ function createPDFHTML(rows, yearLabel, totalCashIn, totalCashOut, finalBalance,
     </html>
     `;
 }
+
+function initVisitorTracking() {
+    const today = new Date().toISOString().split('T')[0];
+    const lastVisit = localStorage.getItem('last_visit_date');
+    const visitorCountDisplay = document.getElementById('visitorCountDisplay');
+    
+    if (lastVisit !== today) {
+        fetch('/api/visitors/increment', { method: 'POST' })
+            .then(res => res.json())
+            .then(data => {
+                if (data.count && visitorCountDisplay) {
+                    visitorCountDisplay.innerText = data.count;
+                    localStorage.setItem('last_visit_date', today);
+                }
+            })
+            .catch(err => console.error('Visitor tracking error:', err));
+    } else {
+        fetch('/api/visitors')
+            .then(res => res.json())
+            .then(data => {
+                if (data.count && visitorCountDisplay) {
+                    visitorCountDisplay.innerText = data.count;
+                }
+            })
+            .catch(err => console.error('Visitor fetch error:', err));
+    }
+}
+document.addEventListener('DOMContentLoaded', initVisitorTracking);
+
