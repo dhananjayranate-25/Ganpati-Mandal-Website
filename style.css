@@ -3244,6 +3244,11 @@ footer::after {
         box-shadow: none !important;
         padding: 0 !important;
     }
+
+    .top-banner-img {
+        height: 65px;
+        object-fit: fill;
+    }
     
     #displayEstYear {
         display: block !important;
