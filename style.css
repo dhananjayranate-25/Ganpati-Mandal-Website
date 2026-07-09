@@ -3326,7 +3326,9 @@ footer::after {
     .hero-banner-img {
         object-fit: cover;
         object-position: center;
-        width: 100%;
+        width: 90%;
+        margin: 0 auto;
+        border-radius: 15px;
         height: 100%;
     }
 }
