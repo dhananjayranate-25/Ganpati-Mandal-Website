@@ -3313,7 +3313,7 @@ footer::after {
 
     .hero-section {
         height: auto;
-        max-height: 45vh;
+        max-height: none;
         flex-grow: 0;
         margin: 0;
         padding: 0;
@@ -3324,10 +3324,10 @@ footer::after {
     }
 
     .hero-banner-img {
-        object-fit: cover;
+        object-fit: contain;
         object-position: center;
         width: 100vw;
-        height: 45vh; /* Reduced from 100vh so user doesn't have to scroll excessively */
+        height: auto;
     }
 }
 
