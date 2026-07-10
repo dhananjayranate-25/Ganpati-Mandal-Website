@@ -796,6 +796,7 @@ app.delete('/api/uploaded-pdfs/:filename', async (req, res) => {
         if (fs.existsSync(metaPath)) {
             fs.unlinkSync(metaPath);
         }
+        await UploadedPDF.deleteOne({ filename: filename });
         res.json({ success: true, message: 'PDF deleted' });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });

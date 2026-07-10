@@ -466,7 +466,6 @@
                         <input type="number" id="uploadYearInput" placeholder=" " min="2021" max="2050" value="2026">
                         <label for="uploadYearInput">Enter Year (2021-2050)</label>
                         <div class="input-focus-line"></div>
-                        <input type="hidden" id="uploadYear" value="">
                     </div>
                     <div>
                         <label style="color: var(--text-secondary); font-size: 12px; display: block; margin-bottom: 5px;">PDF File</label>
@@ -705,7 +704,6 @@
                 uploadYearInput.addEventListener('input', function() {
                     let val = this.value.trim();
                     if (val && !isNaN(val) && val.length === 4) {
-                        document.getElementById('uploadYear').value = val;
                         const s = getPDFSettingsForYear(val);
                         document.getElementById('uploadOrgName').value = s.orgName;
                         document.getElementById('uploadSubtitle').value = s.subtitle;
@@ -842,7 +840,7 @@
         }
 
         async function uploadPDF() {
-            const year = document.getElementById('uploadYear').value;
+            const year = document.getElementById('uploadYearInput').value;
             const fileInput = document.getElementById('pdfFileInput');
             const status = document.getElementById('uploadStatus');
 
@@ -889,7 +887,6 @@
                 if (result.success) {
                     status.innerHTML = '<p style="color: #22c55e;">PDF uploaded successfully with cover settings!</p>';
                     fileInput.value = '';
-                    document.getElementById('uploadYear').value = '';
                     document.getElementById('uploadOrgName').value = '';
                     document.getElementById('uploadSubtitle').value = '';
                     document.getElementById('uploadTagline').value = '';
@@ -903,8 +900,8 @@
             }
         }
 
-        window.saveUploadCoverSettings = function saveUploadCoverSettings() {
-            const year = document.getElementById('uploadYear').value;
+        window.saveUploadCoverSettings = async function saveUploadCoverSettings() {
+            const year = document.getElementById('uploadYearInput').value;
             const status = document.getElementById('uploadStatus');
             if (!year) {
                 status.innerHTML = '<p style="color: #ef4444;">Please select a year first!</p>';
