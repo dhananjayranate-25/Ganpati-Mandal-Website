@@ -6,10 +6,14 @@
     <title>Ganpati Vargani Cashbook - Shivsrushti</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Noto+Sans+Devanagari:wght@300;400;500;600;700;900&family=Yatra+One&family=Amita:wght@700&family=Eczar:wght@800&family=Khand:wght@800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css?v=2">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    
+    <!-- Preload critical top images for faster loading -->
+    <link rel="preload" as="image" href="logo/logo1.jpeg">
+    <link rel="preload" as="image" href="uploads/hero_banner.jpg">
 </head>
 <body>
     <div id="mainContent">
@@ -24,7 +28,7 @@
             <div class="main-banner" style="padding: 0;">
                 <div id="displayEstYear" style="background-color: #ff8c00; color: white; text-align: center; font-size: clamp(12px, 3vw, 16px); font-weight: bold; padding: 5px 0; margin: 0; width: 100%;">स्थापना - २०१९ वर्ष - ८ वे</div>
                 <!-- The new logo from uploads -->
-                <img src="logo/logo1.jpeg" alt="Shivsrushti Logo" class="top-banner-img">
+                <img src="logo/logo1.jpeg" alt="Shivsrushti Logo" class="top-banner-img" fetchpriority="high" decoding="async">
             </div>
             <nav class="custom-navbar">
                 <div class="hamburger" id="mobileMenuBtn" style="display: none; flex-direction: column; cursor: pointer; gap: 5px; padding: 10px;">
@@ -69,8 +73,8 @@
             });
         </script>
         
-        <div id="heroSectionContainer" class="hero-section animate-fade-down" style="animation-delay: 0.2s; display: none;">
-            <img id="heroBannerImg" src="uploads/hero_banner.jpg" alt="Ganpati Banner" class="hero-banner-img" style="opacity: 1; transition: opacity 0.5s ease-in-out;" onerror="this.style.display='none'">
+        <div id="heroSectionContainer" class="hero-section" style="display: none;">
+            <img id="heroBannerImg" src="uploads/hero_banner.jpg" alt="Ganpati Banner" class="hero-banner-img" onerror="this.style.display='none'" fetchpriority="high">
         </div>
 
         <div class="container">
@@ -87,7 +91,7 @@
                         <!-- QR Code Section -->
                         <div class="qr-section">
                             <div class="qr-frame">
-                                <img src="uploads/donate_qr.jpg" alt="Donate QR Code" id="donationQRImg">
+                                <img src="uploads/donate_qr.jpg" alt="Donate QR Code" id="donationQRImg" loading="lazy">
                             </div>
                             <p class="scan-text">UPI द्वारे स्कॅन करून देणगी द्या</p>
                         </div>
@@ -419,19 +423,15 @@
                 const heroImg = document.getElementById('heroBannerImg');
                 if (settings.heroBannerImage) {
                     if (heroImg) {
-                        heroImg.onload = () => {
-                            heroImg.style.opacity = '1';
-                        };
                         if (settings.heroBannerImage.startsWith('data:image')) {
                             heroImg.src = settings.heroBannerImage;
                         } else {
-                            heroImg.src = '/uploads/' + settings.heroBannerImage + '?t=' + new Date().getTime();
+                            const newSrc = 'uploads/' + settings.heroBannerImage;
+                            if (!heroImg.src.includes(newSrc)) {
+                                heroImg.src = newSrc;
+                            }
                         }
                         heroImg.style.display = 'block';
-                    }
-                } else {
-                    if (heroImg) {
-                        heroImg.style.opacity = '1';
                     }
                 }
                 
@@ -505,7 +505,7 @@
                     return `
                         <div class="album-card" onclick="openAlbum('${album._id}')" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; overflow: hidden; cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease;">
                             <div style="width: 100%; padding-top: 75%; position: relative;">
-                                <img src="${coverPhoto}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+                                <img src="${coverPhoto}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;" loading="lazy">
                             </div>
                             <div style="padding: 15px; text-align: center;">
                                 <h3 style="color: #ffeb3b; margin: 0 0 5px 0; font-size: 1.2rem;">${album.title}</h3>
@@ -537,7 +537,7 @@
 
         photosGrid.innerHTML = album.photos.map(photo => `
             <div style="width: 100%; padding-top: 100%; position: relative; border-radius: 8px; overflow: hidden; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" onclick="openLightbox('/${photo}')">
-                <img src="/${photo}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+                <img src="/${photo}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;" loading="lazy">
             </div>
         `).join('');
     }

@@ -365,6 +365,7 @@
                     </div>
                     <div style="margin-top: 20px;">
                         <button class="btn btn-primary ripple" onclick="saveCommitteeMember('president')" style="background: linear-gradient(135deg, #10b981, #059669);">Save President</button>
+                        <button class="btn btn-primary ripple" onclick="deleteCommitteeMember('president')" style="background: linear-gradient(135deg, #ef4444, #dc2626); margin-left: 10px;">Delete</button>
                         <span id="presidentStatus" style="font-size:14px; margin-left:10px;"></span>
                     </div>
                 </div>
@@ -389,6 +390,7 @@
                     </div>
                     <div style="margin-top: 20px;">
                         <button class="btn btn-primary ripple" onclick="saveCommitteeMember('treasurer')" style="background: linear-gradient(135deg, #10b981, #059669);">Save Treasurer</button>
+                        <button class="btn btn-primary ripple" onclick="deleteCommitteeMember('treasurer')" style="background: linear-gradient(135deg, #ef4444, #dc2626); margin-left: 10px;">Delete</button>
                         <span id="treasurerStatus" style="font-size:14px; margin-left:10px;"></span>
                     </div>
                 </div>
@@ -422,6 +424,7 @@
                             </div>
                             <div style="margin-top: 20px;">
                                 <button class="btn btn-primary ripple" onclick="saveCommitteeMember('member${i}')" style="background: linear-gradient(135deg, #10b981, #059669);">Save Member ${i}</button>
+                                <button class="btn btn-primary ripple" onclick="deleteCommitteeMember('member${i}')" style="background: linear-gradient(135deg, #ef4444, #dc2626); margin-left: 10px;">Delete</button>
                                 <span id="member${i}Status" style="font-size:14px; margin-left:10px;"></span>
                             </div>
                         </div>
@@ -1766,11 +1769,16 @@ body{font-family:"Poppins","Noto Sans Devanagari",sans-serif;background:#f5f0eb;
                 return;
             }
             
+            let orderNum = 99;
+            if (role === 'president') orderNum = 1;
+            else if (role === 'treasurer') orderNum = 2;
+            else if (role.startsWith('member')) orderNum = 2 + parseInt(role.replace('member', ''), 10);
+            
             const formData = new FormData();
             formData.append('role', role);
             formData.append('name', name);
             formData.append('mobile', mobile);
-            formData.append('order', role === 'president' ? 1 : 2);
+            formData.append('order', orderNum);
             
             if (photoInput.files.length > 0) {
                 formData.append('photo', photoInput.files[0]);
@@ -1796,6 +1804,38 @@ body{font-family:"Poppins","Noto Sans Devanagari",sans-serif;background:#f5f0eb;
                 console.error("Save committee member error:", error);
                 statusElem.style.color = '#ff6b6b';
                 statusElem.textContent = 'Network/Server Error! (Check photo size or retry)';
+            }
+        }
+
+        async function deleteCommitteeMember(role) {
+            if (!confirm(`Are you sure you want to delete ${role}?`)) return;
+            
+            const statusElem = document.getElementById(role + 'Status');
+            statusElem.style.color = '#fff';
+            statusElem.textContent = 'Deleting...';
+            
+            try {
+                const response = await fetch(`/api/committee/${role}`, {
+                    method: 'DELETE'
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    statusElem.style.color = '#10b981';
+                    statusElem.textContent = 'Deleted Successfully!';
+                    document.getElementById(role + 'Name').value = '';
+                    document.getElementById(role + 'Mobile').value = '';
+                    const photoInput = document.getElementById(role + 'PhotoInput');
+                    if(photoInput) photoInput.value = '';
+                    setTimeout(() => statusElem.textContent = '', 3000);
+                } else {
+                    statusElem.style.color = '#ff6b6b';
+                    statusElem.textContent = 'Error: ' + result.error;
+                }
+            } catch (error) {
+                console.error("Delete committee member error:", error);
+                statusElem.style.color = '#ff6b6b';
+                statusElem.textContent = 'Network/Server Error!';
             }
         }
 

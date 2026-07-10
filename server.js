@@ -465,6 +465,15 @@ app.post('/api/committee', (req, res, next) => {
     }
 });
 
+app.delete('/api/committee/:role', async (req, res) => {
+    try {
+        await CommitteeMember.findOneAndDelete({ role: req.params.role });
+        res.json({ success: true, message: 'Member deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 app.post('/api/login', async (req, res) => {
     try {
         const { password } = req.body;

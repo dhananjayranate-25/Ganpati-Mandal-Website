@@ -3496,8 +3496,8 @@ footer::after {
     flex-wrap: wrap;
 }
 
-/* Row of 3 items */
-.committee-row-3 {
+/* Wrap for other members */
+.committee-members-wrap {
     display: flex;
     justify-content: center;
     gap: 40px;
@@ -3565,13 +3565,30 @@ footer::after {
 
 /* Mobile responsiveness */
 @media (max-width: 768px) {
-    .committee-row-2, .committee-row-3 {
+    .committee-row-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
         gap: 15px;
+        justify-items: center;
+        width: 100%;
+    }
+    .committee-members-wrap {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        justify-items: center;
+        width: 100%;
+    }
+    .committee-members-wrap .committee-member:nth-child(3n + 1) {
+        grid-column: 1 / -1;
     }
     .committee-member {
-        width: calc(50% - 8px); /* Exactly 2 per line */
+        width: 100%;
+        max-width: 220px;
         padding: 15px 5px;
         box-sizing: border-box;
+        word-break: break-word;
+        flex: none;
     }
     .member-photo-frame {
         width: 100%;
