@@ -1621,13 +1621,26 @@ body{font-family:'Poppins','Noto Sans Devanagari',sans-serif;background:#f5f0eb;
         const originalBg = card.style.background;
         card.style.background = '#1a1a1a'; // solid dark background
         
+        // Force desktop width for mobile capture so the layout remains side-by-side
+        const originalWidth = card.style.width;
+        const originalMaxWidth = card.style.maxWidth;
+        if (window.innerWidth < 992) {
+            card.style.width = '900px';
+            card.style.maxWidth = '900px';
+        }
+        
         const canvas = await html2canvas(card, {
             scale: 2,
             useCORS: true,
-            backgroundColor: '#1a1a1a'
+            backgroundColor: '#1a1a1a',
+            windowWidth: window.innerWidth < 992 ? 1200 : window.innerWidth
         });
         
         // Restore
+        if (window.innerWidth < 992) {
+            card.style.width = originalWidth;
+            card.style.maxWidth = originalMaxWidth;
+        }
         card.style.background = originalBg;
         mandalPoster.remove();
         if(title) title.style.display = originalTitleDisplay;
