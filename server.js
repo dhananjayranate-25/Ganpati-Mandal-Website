@@ -34,7 +34,7 @@ const storage = multer.diskStorage({
         cb(null, `cashbook_${year}_${Date.now()}.pdf`);
     }
 });
-const upload = multer({ storage, limits: { fileSize: 10 * 1024 * 1024 } });
+const upload = multer({ storage, limits: { fileSize: 50 * 1024 * 1024 } });
 
 // Storage for hero banner image
 const bannerStorage = multer.diskStorage({
@@ -44,11 +44,11 @@ const bannerStorage = multer.diskStorage({
         cb(null, `hero_banner${ext}`);
     }
 });
-const uploadBanner = multer({ storage: bannerStorage, limits: { fileSize: 10 * 1024 * 1024 } });
+const uploadBanner = multer({ storage: bannerStorage, limits: { fileSize: 50 * 1024 * 1024 } });
 
 // Storage for committee photos (Memory storage to save in DB)
 const committeeStorage = multer.memoryStorage();
-const uploadCommittee = multer({ storage: committeeStorage, limits: { fileSize: 10 * 1024 * 1024 } });
+const uploadCommittee = multer({ storage: committeeStorage, limits: { fileSize: 50 * 1024 * 1024 } });
 
 // Storage for Aarti media (Audio & PDF)
 const aartiMediaStorage = multer.diskStorage({
@@ -798,13 +798,26 @@ app.delete('/api/uploaded-pdfs/:filename', async (req, res) => {
     try {
         const { filename } = req.params;
         const filePath = path.join(UPLOAD_DIR, filename);
-        if (fs.existsSync(filePath)) {
-            fs.unlinkSync(filePath);
+        try {
+            if (fs.existsSync(filePath)) {
+                fs.unlinkSync(filePath);
+            }
+        } catch (err) {
+            if (err.code === 'EBUSY' || err.code === 'EPERM') {
+                return res.status(500).json({ success: false, error: 'फाईल दुसरीकडे उघडी आहे (File is open/locked). कृपया ती बंद करा आणि पुन्हा प्रयत्न करा.' });
+            }
+            throw err;
         }
+
         const metaPath = path.join(UPLOAD_DIR, filename.replace('.pdf', '.meta.json'));
-        if (fs.existsSync(metaPath)) {
-            fs.unlinkSync(metaPath);
+        try {
+            if (fs.existsSync(metaPath)) {
+                fs.unlinkSync(metaPath);
+            }
+        } catch (err) {
+            console.error('Meta file delete error:', err);
         }
+
         await UploadedPDF.deleteOne({ filename: filename });
         res.json({ success: true, message: 'PDF deleted' });
     } catch (error) {
