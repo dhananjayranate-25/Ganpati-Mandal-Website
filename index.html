@@ -82,8 +82,8 @@
         <div id="niyojanMarqueeContainer" style="display: none; width: 100%; background: #1a1a1a; color: #ffcc00; padding: 5px 0; font-family: 'Khand', sans-serif; font-size: 1.2rem; border: 1px solid rgba(255, 204, 0, 0.3); border-radius: 8px; margin-bottom: 20px; overflow: hidden; white-space: nowrap;">
                 <marquee id="niyojanMarqueeText" scrollamount="5" style="display: block; width: 100%;"></marquee>
             </div>
-    <div id="heroSectionContainer" class="hero-section">
-            <img id="heroBannerImg" src="uploads/hero_banner.jpg" alt="Ganpati Banner" class="hero-banner-img" style="display: block;" onerror="this.src='images/default-banner.jpg'" fetchpriority="high" decoding="async">
+    <div id="heroSectionContainer" class="hero-section" style="background-image: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAJABQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDnLVmBU7gpLYDelamqTnYhMhcFQuCc/Q1lx/8AHufrU11/rov92uaUU5XNkrKxRkLlznqKKV/vt9aK2M7H/9k='); background-size: cover; background-position: center;">
+            <img id="heroBannerImg" src="uploads/hero_banner.jpg" alt="Ganpati Banner" class="hero-banner-img" style="display: block; opacity: 0; transition: opacity 0.3s ease-in-out;" onload="this.style.opacity=1" onerror="this.src='images/default-banner.jpg'" fetchpriority="high" decoding="async">
         </div>
 
         <div class="container">
