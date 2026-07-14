@@ -4596,7 +4596,41 @@ body.mobile-hishob-navbar .custom-navbar {
     z-index: 1000 !important;
 }
 body.mobile-hishob-navbar .hamburger div {
-    background-color: #5a2010 !important; /* Make hamburger lines visible on potentially white banner */
-    box-shadow: 0 0 5px rgba(255,255,255,0.8) !important;
+    background-color: #ffffff !important; 
+    box-shadow: 0 0 4px rgba(0,0,0,0.7) !important;
+}
+
+
+/* Mobile Hishob Nav Links Dropdown and white hamburger */
+
+body.mobile-hishob-navbar .nav-links.active {
+    display: flex !important;
+    flex-direction: column !important;
+    position: absolute !important;
+    top: 60px !important;
+    left: 20px !important;
+    background: linear-gradient(135deg, #b8860b, #d4a017) !important;
+    padding: 20px 30px !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6) !important;
+    z-index: 2000 !important;
+    min-width: 280px !important;
+    align-items: flex-start !important;
+    animation: fadeInDown 0.3s ease forwards !important;
+}
+
+body.mobile-hishob-navbar .nav-links.active a {
+    color: white !important;
+    font-size: 24px !important;
+    padding: 15px 0 !important;
+    text-decoration: none !important;
+    width: 100% !important;
+    text-align: left !important;
+    border-bottom: 1px solid rgba(255,255,255,0.2) !important;
+    display: block !important;
+}
+
+body.mobile-hishob-navbar .nav-links.active a:last-child {
+    border-bottom: none !important;
 }
 

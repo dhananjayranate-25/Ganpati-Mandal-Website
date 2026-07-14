@@ -66,9 +66,7 @@
                     const links = navLinks.querySelectorAll('a');
                     links.forEach(link => {
                         link.addEventListener('click', () => {
-                            if (window.innerWidth <= 768) {
-                                navLinks.classList.remove('active');
-                            }
+                            navLinks.classList.remove('active');
                         });
                     });
                 }
