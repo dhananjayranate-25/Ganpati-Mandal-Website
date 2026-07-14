@@ -4392,6 +4392,34 @@ footer::after {
     .section-actions.mobile-only {
         display: none !important;
     }
+
+    /* Force Table to strictly fit screen width */
+    .table-scroll {
+        overflow-x: hidden !important; 
+        width: 100% !important;
+    }
+    .year-section table, .cashbook-card table {
+        width: 100% !important;
+        table-layout: fixed !important;
+    }
+    .year-section table th, .year-section table td,
+    .cashbook-card table th, .cashbook-card table td {
+        padding: 4px 2px !important;
+        font-size: 9px !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        white-space: normal !important;
+        text-align: left !important;
+    }
+    .mode-badge {
+        font-size: 8px !important;
+        padding: 2px 4px !important;
+    }
+    
+    /* Summary Cards layout - already vertical but let's ensure padding */
+    .year-section .summary-cards .card {
+        padding: 12px !important;
+    }
     .year-section .summary-cards .card .amount {
         font-size: 1.2rem !important;
     }
@@ -4599,61 +4627,4 @@ body.mobile-hishob-navbar .nav-links.active a.nav-donate-btn {
     border-bottom: none !important;
 }
 
-
-
-@media (max-width: 768px) {
-    .year-section table, .cashbook-card table {
-        display: table !important;
-        width: 100% !important;
-        table-layout: fixed !important;
-        box-sizing: border-box !important;
-    }
-    .year-section thead tr, .cashbook-card thead tr {
-        display: table-row !important;
-    }
-    .year-section tr, .cashbook-card tr {
-        display: table-row !important;
-        margin-bottom: 0 !important;
-        border: none !important;
-        background: transparent !important;
-        padding: 0 !important;
-    }
-    .year-section th, .cashbook-card th,
-    .year-section td, .cashbook-card td {
-        display: table-cell !important;
-        border-bottom: 1px solid rgba(255,255,255,0.06) !important;
-        padding: 6px 2px !important;
-        text-align: left !important;
-        font-size: 11px !important;
-        white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-    }
-    .year-section td:last-child, .cashbook-card td:last-child {
-        border-bottom: 1px solid rgba(255,255,255,0.06) !important;
-    }
-    
-    .year-section td::before, .cashbook-card td::before {
-        content: none !important;
-        display: none !important;
-    }
-    
-    /* Specific column widths to maximize space */
-    .year-section th:nth-child(1), .year-section td:nth-child(1) { width: 6% !important; padding: 2px 1px !important; text-align: center !important; }
-    .year-section th:nth-child(2), .year-section td:nth-child(2) { width: 24% !important; font-weight: 600 !important; }
-    .year-section th:nth-child(3), .year-section td:nth-child(3) { width: 14% !important; }
-    .year-section th:nth-child(4), .year-section td:nth-child(4) { width: 11% !important; text-align: center !important; }
-    .year-section th:nth-child(5), .year-section td:nth-child(5) { width: 15% !important; text-align: right !important; }
-    .year-section th:nth-child(6), .year-section td:nth-child(6) { width: 15% !important; text-align: right !important; }
-    .year-section th:nth-child(7), .year-section td:nth-child(7) { width: 15% !important; text-align: right !important; }
-    
-    .mode-badge {
-        font-size: 8.5px !important;
-        padding: 2px 3px !important;
-        white-space: nowrap;
-    }
-    .year-section .summary-cards .card {
-        padding: 12px !important;
-    }
-}
 
