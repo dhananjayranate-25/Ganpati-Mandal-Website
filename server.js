@@ -739,7 +739,7 @@ app.get('/api/uploaded-pdfs', async (req, res) => {
         if (!fs.existsSync(UPLOAD_DIR)) {
             return res.json({ success: true, data: [] });
         }
-        const files = fs.readdirSync(UPLOAD_DIR).filter(f => f.endsWith('.pdf') && !f.endsWith('.meta.json.pdf'));
+        const files = fs.readdirSync(UPLOAD_DIR).filter(f => f.endsWith('.pdf') && !f.endsWith('.meta.json.pdf') && !f.startsWith('aarti_'));
         
         const dbPdfs = await UploadedPDF.find({});
         const dbFilenames = dbPdfs.map(p => p.filename);
@@ -788,7 +788,7 @@ app.get('/api/uploaded-pdfs', async (req, res) => {
             };
         });
         
-        res.json({ success: true, data: pdfList });
+        res.json({ success: true, data: pdfList.filter(p => !p.filename.startsWith('aarti_')) });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }
