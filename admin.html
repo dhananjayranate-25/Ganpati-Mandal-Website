@@ -30,7 +30,7 @@
         </header>
         
         <div class="form-container animate-fade-up" style="animation-delay: 0.2s;">
-            <div class="form-grid" style="grid-template-columns: 1fr;">
+            <div class="form-grid">
                 <div class="form-group floating-label">
                     <input type="password" id="adminPassword" placeholder=" " required="">
                     <label for="adminPassword">Enter Password</label>
@@ -228,7 +228,7 @@
             <!-- Aarti Media Upload Section -->
             <div class="admin-card" style="padding: 20px; background: rgba(255,255,255,0.05); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top:20px; margin-bottom:20px;">
                 <h2 style="color: #ffeb3b; text-align:center; margin-bottom: 20px;"><i class="fas fa-music"></i> महाआरती मीडिया (ऑडिओ आणि PDF)</h2>
-                <form id="uploadAartiMediaForm" onsubmit="handleUploadAartiMedia(event)" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; align-items: end;">
+                <form id="uploadAartiMediaForm" onsubmit="handleUploadAartiMedia(event)" class="form-grid" style="align-items: end;">
                     <div class="form-group">
                         <label style="color:white; display:block; margin-bottom:5px;">आरती ऑडिओ (MP3/WAV)</label>
                         <input type="file" id="aartiAudioFile" accept="audio/*" style="width:100%; padding:10px; background: rgba(0,0,0,0.5); color:white; border-radius:8px; border:none; outline:none;">
@@ -248,7 +248,7 @@
 
             <div class="admin-card" style="padding: 20px; background: rgba(255,255,255,0.05); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top:20px;">
                 <h2 style="color: #ffeb3b; text-align:center; margin-bottom: 20px;"><i class="fas fa-om"></i> महाआरती बुकिंग व्यवस्थापन</h2>
-                <form id="addAartiForm" onsubmit="handleAddAarti(event)" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <form id="addAartiForm" onsubmit="handleAddAarti(event)" class="form-grid">
                     <div class="form-group">
                         <label style="color:white; display:block; margin-bottom:5px;">संपूर्ण नाव *</label>
                         <input type="text" id="aartiName" required="" placeholder="उदा. श्री. रमेश पाटील" style="width:100%; padding:10px; border-radius:8px; border:none; outline:none;">
@@ -270,8 +270,6 @@
                     <div class="form-group">
                         <label style="color:white; display:block; margin-bottom:5px;">मोबाईल नंबर</label>
                         <input type="text" id="aartiPhone" placeholder="उदा. 9876543210" style="width:100%; padding:10px; border-radius:8px; border:none; outline:none;">
-                    </div>
-                    
                     </div>
                     
                     <div class="form-group" style="grid-column: 1 / -1;">
@@ -524,7 +522,7 @@
                 <button class="year-tab active" data-year="all" onclick="switchYearTab('all')">All Years</button>
             </div>
             <div class="create-year-panel" style="margin-top: 20px;">
-                <div class="form-grid" style="grid-template-columns: 1fr auto auto auto;">
+                <div class="form-grid">
                     <div class="form-group floating-label">
                         <input type="number" id="customYearInput" placeholder=" " min="2021" max="2050" value="2026">
                         <label for="customYearInput">Enter Custom Year (2021-2050)</label>
