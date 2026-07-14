@@ -1509,18 +1509,6 @@ footer[style*="text-align: left"] {
         padding: 0 15px;
     }
     
-    #loginContainer .ganpati-image {
-    width: 240px;
-    height: 320px;
-    object-fit: cover;
-    border-radius: 20px;
-    border: 4px solid #fbbf24;
-    box-shadow: 0 10px 30px rgba(251, 191, 36, 0.5), 0 0 30px rgba(232, 121, 249, 0.15);
-    animation: float 4s ease-in-out infinite;
-    position: relative;
-    z-index: 1;
-}
-    
     .summary-cards {
         grid-template-columns: 1fr;
     }
@@ -1617,10 +1605,10 @@ footer[style*="text-align: left"] {
 }
 
 .ganpati-image {
-    width: 240px;
-    height: 320px;
+    width: 220px;
+    height: 220px;
     object-fit: cover;
-    border-radius: 20px;
+    border-radius: 50%;
     border: 4px solid #fbbf24;
     box-shadow: 0 10px 30px rgba(251, 191, 36, 0.5), 0 0 30px rgba(232, 121, 249, 0.15);
     animation: float 4s ease-in-out infinite;
@@ -1746,9 +1734,9 @@ footer[style*="text-align: left"] {
 
 @media (max-width: 768px){
     .ganpati-image {
-        width: 200px !important;
-        height: 266px !important;
-        border-radius: 20px !important;
+        width: 180px !important;
+        height: 180px !important;
+        border-radius: 50% !important;
     }
     
     .ganpati-image.fallback-icon {
@@ -1779,9 +1767,9 @@ footer[style*="text-align: left"] {
 
 @media (max-width: 480px){
     .ganpati-image {
-        width: 160px !important;
-        height: 213px !important;
-        border-radius: 20px !important;
+        width: 150px !important;
+        height: 150px !important;
+        border-radius: 50% !important;
     }
     
     .ganpati-image.fallback-icon {
@@ -2412,10 +2400,10 @@ body > .container {
     }
 
     .ganpati-image {
-    width: 240px;
-    height: 320px;
+    width: 220px;
+    height: 220px;
     object-fit: cover;
-    border-radius: 20px;
+    border-radius: 50%;
     border: 4px solid #fbbf24;
     box-shadow: 0 10px 30px rgba(251, 191, 36, 0.5), 0 0 30px rgba(232, 121, 249, 0.15);
     animation: float 4s ease-in-out infinite;
@@ -2629,10 +2617,10 @@ body > .container {
     }
 
     .ganpati-image {
-    width: 240px;
-    height: 320px;
+    width: 220px;
+    height: 220px;
     object-fit: cover;
-    border-radius: 20px;
+    border-radius: 50%;
     border: 4px solid #fbbf24;
     box-shadow: 0 10px 30px rgba(251, 191, 36, 0.5), 0 0 30px rgba(232, 121, 249, 0.15);
     animation: float 4s ease-in-out infinite;
