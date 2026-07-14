@@ -60,6 +60,19 @@
                     });
                     
                     loadGalleryAlbums();
+        
+    async function loadFooterQR() {
+        try {
+            const response = await fetch('/api/settings');
+            const result = await response.json();
+            if (result.success && result.data && result.data.donateQRCode) {
+                const footerQrImg = document.getElementById('footerDonationQRImg');
+                if (footerQrImg) footerQrImg.src = result.data.donateQRCode;
+            }
+        } catch(e) {}
+    }
+    loadFooterQR();
+
                     // Close menu when clicking a link
                     const links = navLinks.querySelectorAll('a');
                     links.forEach(link => {
@@ -404,6 +417,19 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         loadGalleryAlbums();
+        
+    async function loadFooterQR() {
+        try {
+            const response = await fetch('/api/settings');
+            const result = await response.json();
+            if (result.success && result.data && result.data.donateQRCode) {
+                const footerQrImg = document.getElementById('footerDonationQRImg');
+                if (footerQrImg) footerQrImg.src = result.data.donateQRCode;
+            }
+        } catch(e) {}
+    }
+    loadFooterQR();
+
         createSparkles();
 
         
