@@ -668,6 +668,16 @@
     });
 
     function switchTab(tabName, pushState = true) {
+        // Change viewport for Desktop-like layout on Hishob page
+        const viewportMeta = document.querySelector('meta[name="viewport"]');
+        if (viewportMeta) {
+            if (tabName === 'ganeshotsav') {
+                viewportMeta.setAttribute('content', 'width=1024');
+            } else {
+                viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1.0');
+            }
+        }
+        
         currentTab = tabName;
         window.scrollTo({top: 0, behavior: 'smooth'});
         
