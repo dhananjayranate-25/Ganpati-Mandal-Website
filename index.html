@@ -1604,18 +1604,22 @@ body{font-family:'Poppins','Noto Sans Devanagari',sans-serif;background:#f5f0eb;
     async function captureDonationPoster() {
     const card = document.querySelector('.donation-card');
     
-    // Create an off-screen clone so the mobile view does not jump
     const clone = card.cloneNode(true);
     clone.style.position = 'absolute';
     clone.style.left = '-9999px';
     clone.style.top = '-9999px';
-    // Force desktop width for capture
-    clone.style.width = '1000px';
-    clone.style.maxWidth = '1000px';
-    clone.style.display = 'flex';
-    clone.style.flexDirection = 'row';
+    
+    // Force dimensions to trigger desktop media queries in html2canvas
+    clone.style.width = '900px';
+    clone.style.maxWidth = '900px';
     clone.style.background = '#1a1a1a';
+    clone.style.padding = '30px';
+    
+    // Important: DO NOT make the main card row direction!
+    clone.style.display = 'flex';
+    clone.style.flexDirection = 'column';
     clone.style.alignItems = 'center';
+    
     document.body.appendChild(clone);
     
     const actions = clone.querySelector('#donationActions');
@@ -1623,6 +1627,16 @@ body{font-family:'Poppins','Noto Sans Devanagari',sans-serif;background:#f5f0eb;
     
     if(actions) actions.style.display = 'none';
     if(title) title.style.display = 'none';
+    
+    // The internal wrapper must be forced to row layout if media query doesn't trigger
+    const wrapper = clone.querySelector('.donation-content-wrapper');
+    if(wrapper) {
+        wrapper.style.display = 'flex';
+        wrapper.style.flexDirection = 'row';
+        wrapper.style.justifyContent = 'space-around';
+        wrapper.style.alignItems = 'flex-start';
+        wrapper.style.width = '100%';
+    }
     
     const mandalPoster = document.createElement('img');
     mandalPoster.style.width = '100%';
@@ -1640,11 +1654,11 @@ body{font-family:'Poppins','Noto Sans Devanagari',sans-serif;background:#f5f0eb;
     });
     
     const tempWebsiteUrl = document.createElement('div');
-    tempWebsiteUrl.style.color = '#fff';
+    tempWebsiteUrl.style.color = '#e0e0e0';
     tempWebsiteUrl.style.textAlign = 'center';
-    tempWebsiteUrl.style.fontSize = '16px';
+    tempWebsiteUrl.style.fontSize = '18px';
     tempWebsiteUrl.style.marginBottom = '25px';
-    tempWebsiteUrl.style.marginTop = '-5px';
+    tempWebsiteUrl.style.marginTop = '-10px';
     tempWebsiteUrl.style.fontFamily = "'Poppins', sans-serif";
     tempWebsiteUrl.innerHTML = 'अधिकृत वेबसाईट: <span style="color: #ffd700;">https://shivsrushti-utsav-mandal.onrender.com</span>';
     clone.insertBefore(tempWebsiteUrl, mandalPoster.nextSibling);
