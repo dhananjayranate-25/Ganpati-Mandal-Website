@@ -4265,29 +4265,20 @@ footer::after {
 }
 
 
+
+
 @media (min-width: 992px) {
-    /* Niyojan and Aarti Card Laptop View Adjustments */
-    .niyojan-item .glass-panel,
-    .aarti-item.glass-panel {
-        padding: 30px !important;
+    /* Increase width of Niyojan and Aarti cards on laptop */
+    #niyojanSection .container {
+        max-width: 1100px !important;
     }
-    
-    .niyojan-item h3,
-    .aarti-item h3 {
-        font-size: 1.8rem !important;
-        margin-bottom: 15px !important;
+    #aartiSection .aarti-card {
+        max-width: 1100px !important;
+        margin-left: auto;
+        margin-right: auto;
     }
-    
-    .niyojan-item .glass-panel > div,
-    .aarti-item.glass-panel > div {
-        font-size: 1.2rem !important;
-    }
-    
-    /* Make the time badge larger */
-    .niyojan-item .glass-panel span,
-    .aarti-item.glass-panel span {
-        padding: 4px 12px !important;
-        font-size: 1.1rem !important;
+    .niyojan-item .glass-panel {
+        width: 100% !important;
     }
 }
 
