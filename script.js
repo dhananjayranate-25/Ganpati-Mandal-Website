@@ -1244,11 +1244,11 @@ function animateValue(elementId, targetValue, formatter) {
 }
 
 function formatCurrency(amount) {
-    return '₹' + amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return '₹' + amount.toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 }
 
 function formatPDFCurrency(amount) {
-    const formatted = amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const formatted = amount.toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
     return 'Rs. ' + formatted;
 }
 
