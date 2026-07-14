@@ -4622,12 +4622,12 @@ body.mobile-hishob-navbar .nav-links.active a.nav-donate-btn {
     .year-section td, .cashbook-card td {
         display: table-cell !important;
         border-bottom: 1px solid rgba(255,255,255,0.06) !important;
-        padding: 4px 1px !important;
+        padding: 6px 2px !important;
         text-align: left !important;
-        font-size: 9px !important;
-        word-wrap: break-word !important;
-        overflow-wrap: break-word !important;
-        white-space: normal !important;
+        font-size: 11px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
     }
     .year-section td:last-child, .cashbook-card td:last-child {
         border-bottom: 1px solid rgba(255,255,255,0.06) !important;
@@ -4648,7 +4648,7 @@ body.mobile-hishob-navbar .nav-links.active a.nav-donate-btn {
     .year-section th:nth-child(7), .year-section td:nth-child(7) { width: 15% !important; text-align: right !important; }
     
     .mode-badge {
-        font-size: 7.5px !important;
+        font-size: 8.5px !important;
         padding: 2px 3px !important;
         white-space: nowrap;
     }
