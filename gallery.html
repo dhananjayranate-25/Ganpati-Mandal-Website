@@ -237,7 +237,7 @@
             </div>
 
             <!-- Committee Section -->
-            <footer class="new-site-footer-v6" id="siteFooter" style="display: block; margin-top: 50px;">
+            <footer class="new-site-footer-v6" id="siteFooter" style="display: none;">
             <div class="footer-v6-content">
                 <!-- Left: Mandal Name Photo -->
                 <div class="footer-v6-col brand-col">
@@ -249,16 +249,16 @@
                     <h3>महत्वाच्या लिंक</h3>
                     <div class="nav-links-v6-wrapper" style="display: flex; justify-content: center; gap: 30px; text-align: left; margin: 0 auto; flex-wrap: nowrap;">
                         <div class="nav-links-v6" style="display: flex !important; flex-direction: column !important; gap: 12px !important; align-items: flex-start !important; justify-items: start !important; margin: 0 !important;">
-                            <a href="index.html#home">मुखपृष्ठ</a>
-                            <a href="index.html#ganeshotsav">गणेशोत्सव हिशोब</a>
-                            <a href="index.html#committee">उत्सव कमिटी</a>
-                            <a href="index.html#niyojan">नियोजन</a>
-                            <a href="index.html#aarti">महाआरती</a>
+                            <a href="index.html">मुखपृष्ठ</a>
+                            <a href="index.html">गणेशोत्सव हिशोब</a>
+                            <a href="index.html">उत्सव कमिटी</a>
+                            <a href="index.html">नियोजन</a>
                         </div>
                         <div class="nav-links-v6" style="display: flex !important; flex-direction: column !important; gap: 12px !important; align-items: flex-start !important; justify-items: start !important; margin: 0 !important;">
-                            <a href="#">गणपती छायाचित्रे</a>
-                            <a href="index.html#contact">संपर्क</a>
-                            <a href="index.html#donate">देणगी</a>
+                            <a href="gallery.html">गणपती छायाचित्रे</a>
+                            <a href="index.html">संपर्क</a>
+                            <a href="index.html">देणगी</a>
+                            <a href="index.html">महाआरती</a>
                         </div>
                     </div>
                 </div>
@@ -279,16 +279,33 @@
 
                 <!-- Right: Donate & QR -->
                 <div class="footer-v6-col donate-col-v6">
-                    <h3 class="desktop-only-donate-title">देणगी</h3>
-                    <div class="donate-flex">
+                    <div class="donate-flex" style="align-items: center; justify-content: flex-start; gap: 20px;">
                         <h3 class="mobile-footer-qr-title">देणगी</h3>
                         <div class="qr-box-v6">
-                            <img src="uploads/donate_qr.jpg" alt="QR" id="footerDonationQRImg" onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'qr-fallback\'>QR</div>'">
+                            <img src="uploads/donate_qr.jpg" alt="QR" id="footerDonationQRImg" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'120\' height=\'120\'><rect width=\'120\' height=\'120\' fill=\'%23333\'/><text x=\'50%\' y=\'50%\' fill=\'%23888\' font-size=\'20\' font-family=\'sans-serif\' text-anchor=\'middle\' dy=\'.3em\'>QR</text></svg>';">
                         </div>
-                        <div class="payment-logos-v6">
-                            <span class="pay-logo gpay">GPay</span>
-                            <span class="pay-logo phonepe">PhonePe</span>
-                            <span class="pay-logo paytm">Paytm</span>
+                        <div class="payment-logos-v6" style="display: flex; flex-direction: column; align-items: center;">
+                            <h3 class="desktop-only-donate-title" style="align-self: flex-start; width: 100%; text-align: left;">देणगी</h3>
+                            <div style="display: flex; flex-direction: column; gap: 8px; align-items: center; justify-content: center; margin-top: 8px;">
+                                <p style="color: #333; font-size: 15px; font-weight: bold; margin: 0; letter-spacing: 1px;"><i class="fas fa-phone-alt" style="color: #d4af37; margin-right: 5px; font-size: 13px;"></i>मो.नं +91 9322134560</p>
+                                <p style="color: #555; font-size: 14px; margin: 0; letter-spacing: 0.5px;">UPI ID : dhananjayranate@ybl</p>
+                                <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 10px; margin-bottom: 10px;">
+                                    <div class="payment-logos-main" style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+                                        <div style="background: white; padding: 5px 8px; border-radius: 6px; display: flex; align-items: center; justify-content: center;">
+                                            <img src="https://upload.wikimedia.org/wikipedia/commons/7/71/PhonePe_Logo.svg" alt="PhonePe" style="height: 18px; width: auto;" loading="lazy">
+                                        </div>
+                                        <div style="background: white; padding: 5px 8px; border-radius: 6px; display: flex; align-items: center; justify-content: center;">
+                                            <img src="https://upload.wikimedia.org/wikipedia/commons/2/24/Paytm_Logo_%28standalone%29.svg" alt="Paytm" style="height: 12px; width: auto;" loading="lazy">
+                                        </div>
+                                        <div style="background: white; padding: 5px 8px; border-radius: 6px; display: flex; align-items: center; justify-content: center;">
+                                            <img src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg" alt="GPay" style="height: 18px; width: auto;" loading="lazy">
+                                        </div>
+                                    </div>
+                                    <div style="background: white; padding: 5px 12px; border-radius: 6px; display: flex; justify-content: center; align-items: center;">
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" alt="UPI" style="height: 20px; width: auto;" loading="lazy">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
