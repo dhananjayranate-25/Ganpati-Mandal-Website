@@ -223,10 +223,11 @@
 
                     <!-- Single Album Photos View (Hidden by Default) -->
                     <div id="photosView" style="display: none;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                            <button onclick="backToAlbums()" class="btn btn-primary ripple" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 8px 15px; border-radius: 8px;"><i class="fas fa-arrow-left"></i> मागे जा</button>
-                            <h3 id="currentAlbumTitle" style="color: #ffeb3b; margin: 0; font-size: 1.8rem; font-family: 'Khand', sans-serif;"></h3>
-                            <div style="width: 80px;"></div> <!-- Spacer for flex balance -->
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 15px; margin-bottom: 20px; position: relative;">
+                            <div style="width: 100%; display: flex; justify-content: flex-start;">
+                                <button onclick="backToAlbums()" class="btn btn-primary ripple" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 8px 15px; border-radius: 8px;"><i class="fas fa-arrow-left"></i> मागे जा</button>
+                            </div>
+                            <h3 id="currentAlbumTitle" style="color: #ffeb3b; margin: 0; font-size: 1.8rem; font-family: 'Khand', sans-serif; text-align: center; width: 100%; word-break: break-word;"></h3>
                         </div>
                         <div id="photosGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px;">
                             <!-- Photos will be injected here -->
