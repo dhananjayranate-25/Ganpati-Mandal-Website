@@ -4348,3 +4348,46 @@ footer::after {
     }
 }
 
+
+@media (max-width: 768px) {
+    /* Previous Year Cashbook: 2 cards per row */
+    .pdf-grid {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 10px !important;
+    }
+    
+    /* Footer 2x2 Grid Layout for Mobile */
+    .footer-v6-content {
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        align-items: flex-start !important;
+        gap: 15px !important;
+    }
+    .footer-v6-col {
+        min-width: 45% !important;
+        width: 45% !important;
+        margin-bottom: 15px !important;
+    }
+    .footer-v6-col h3 {
+        font-size: 14px !important;
+        text-align: center !important;
+    }
+    .footer-v6-col h3::after {
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+    }
+    .footer-v6-divider {
+        display: none !important;
+    }
+    .footer-v6-bottom {
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 10px !important;
+    }
+    .donate-flex {
+        flex-direction: row !important;
+    }
+}
+
