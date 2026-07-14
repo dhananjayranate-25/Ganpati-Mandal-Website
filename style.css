@@ -4549,3 +4549,34 @@ body.mobile-hishob-navbar .pdf-card-cover-mini .mini-year {
     padding: 8px 30px !important;
 }
 
+
+/* Hishob Mobile View (1024px viewport) Footer Scaling */
+body.mobile-hishob-navbar .footer-v6-col h3 {
+    font-size: 26px !important;
+    margin-bottom: 15px !important;
+}
+body.mobile-hishob-navbar .nav-links-v6 a {
+    font-size: 22px !important;
+}
+body.mobile-hishob-navbar .contact-list-v6 li,
+body.mobile-hishob-navbar .contact-list-v6 span {
+    font-size: 20px !important;
+    margin-bottom: 8px !important;
+}
+body.mobile-hishob-navbar .donate-flex p {
+    font-size: 22px !important;
+}
+body.mobile-hishob-navbar .donate-btn-v6 {
+    font-size: 20px !important;
+    padding: 12px 25px !important;
+}
+body.mobile-hishob-navbar .footer-v6-bottom {
+    font-size: 20px !important;
+    padding-bottom: 50px !important; /* Move 'Developed by' slightly up */
+    padding-top: 20px !important;
+}
+body.mobile-hishob-navbar .footer-copyright,
+body.mobile-hishob-navbar .footer-developer {
+    font-size: 18px !important;
+}
+
