@@ -4580,3 +4580,23 @@ body.mobile-hishob-navbar .footer-developer {
     font-size: 18px !important;
 }
 
+
+/* Fix white strip on Hishob mobile view by making navbar absolute and removing header padding */
+body.mobile-hishob-navbar header {
+    padding: 0 !important;
+}
+body.mobile-hishob-navbar .custom-navbar {
+    background: transparent !important;
+    box-shadow: none !important;
+    position: absolute !important;
+    top: 40px !important;
+    left: 20px !important;
+    padding: 0 !important;
+    width: auto !important;
+    z-index: 1000 !important;
+}
+body.mobile-hishob-navbar .hamburger div {
+    background-color: #5a2010 !important; /* Make hamburger lines visible on potentially white banner */
+    box-shadow: 0 0 5px rgba(255,255,255,0.8) !important;
+}
+
