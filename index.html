@@ -1606,81 +1606,63 @@ body{font-family:'Poppins','Noto Sans Devanagari',sans-serif;background:#f5f0eb;
     <!-- Donation Poster Script -->
     <script>
     async function captureDonationPoster() {
-        const card = document.querySelector('.donation-card');
-        const actions = document.getElementById('donationActions');
-        const title = card.querySelector('.section-title');
-        
-        // Hide actions
-        if(actions) actions.style.display = 'none';
-        
-        // Hide existing title ("à¤¦à¥‡à¤£à¤—à¥€ / à¤µà¤°à¥à¤—à¤£à¥€")
-        let originalTitleDisplay = title ? title.style.display : '';
-        if(title) title.style.display = 'none';
-        
-        // Add Mandal Poster Image
-        const mandalPoster = document.createElement('img');
-        mandalPoster.id = 'tempMandalPoster';
-        mandalPoster.style.width = '100%';
-        mandalPoster.style.height = 'auto';
-        mandalPoster.style.borderRadius = '15px';
-        mandalPoster.style.marginBottom = '25px';
-        mandalPoster.style.display = 'block';
-        mandalPoster.style.objectFit = 'contain';
+    const card = document.querySelector('.donation-card');
+    
+    // Create an off-screen clone so the mobile view does not jump
+    const clone = card.cloneNode(true);
+    clone.style.position = 'absolute';
+    clone.style.left = '-9999px';
+    clone.style.top = '-9999px';
+    // Force desktop width for capture
+    clone.style.width = '1000px';
+    clone.style.maxWidth = '1000px';
+    clone.style.display = 'flex';
+    clone.style.flexDirection = 'row';
+    clone.style.background = '#1a1a1a';
+    clone.style.alignItems = 'center';
+    document.body.appendChild(clone);
+    
+    const actions = clone.querySelector('#donationActions');
+    const title = clone.querySelector('.section-title');
+    
+    if(actions) actions.style.display = 'none';
+    if(title) title.style.display = 'none';
+    
+    const mandalPoster = document.createElement('img');
+    mandalPoster.style.width = '100%';
+    mandalPoster.style.height = 'auto';
+    mandalPoster.style.borderRadius = '15px';
+    mandalPoster.style.marginBottom = '25px';
+    mandalPoster.style.display = 'block';
+    mandalPoster.style.objectFit = 'contain';
 
-        // Wait for image to load to ensure it is captured in canvas
-        await new Promise((resolve) => {
-            mandalPoster.onload = resolve;
-            mandalPoster.onerror = resolve; // Continue even if missing
-            mandalPoster.src = 'logo/Receipt.jpeg'; 
-            card.insertBefore(mandalPoster, card.firstChild);
-        });
-        
-        // Add temporary website URL text just for the capture
-        const tempWebsiteUrl = document.createElement('div');
-        tempWebsiteUrl.id = 'tempWebsiteUrl';
-        tempWebsiteUrl.style.color = '#fff';
-        tempWebsiteUrl.style.textAlign = 'center';
-        tempWebsiteUrl.style.fontSize = '16px';
-        tempWebsiteUrl.style.marginBottom = '25px';
-        tempWebsiteUrl.style.marginTop = '-5px';
-        tempWebsiteUrl.style.fontFamily = "'Poppins', sans-serif";
-        tempWebsiteUrl.innerHTML = 'à¤…à¤§à¤¿à¤•à¥ƒà¤¤ à¤µà¥‡à¤¬à¤¸à¤¾à¤ˆà¤Ÿ: <span style="color: #ffd700;">https://shivsrushti-utsav-mandal.onrender.com</span>';
-        card.insertBefore(tempWebsiteUrl, mandalPoster.nextSibling);
-        
-        // Add a temporary solid background for better capture since glass-panel might capture poorly depending on background behind it
-        const originalBg = card.style.background;
-        card.style.background = '#1a1a1a'; // solid dark background
-        
-        // Force desktop width for mobile capture so the layout remains side-by-side
-        const originalWidth = card.style.width;
-        const originalMaxWidth = card.style.maxWidth;
-        if (window.innerWidth < 992) {
-            card.style.width = '900px';
-            card.style.maxWidth = '900px';
-        }
-        
-        const canvas = await html2canvas(card, {
-            scale: 2,
-            useCORS: true,
-            backgroundColor: '#1a1a1a',
-            windowWidth: window.innerWidth < 992 ? 1200 : window.innerWidth
-        });
-        
-        // Restore
-        if (window.innerWidth < 992) {
-            card.style.width = originalWidth;
-            card.style.maxWidth = originalMaxWidth;
-        }
-        card.style.background = originalBg;
-        mandalPoster.remove();
-        if(document.getElementById('tempWebsiteUrl')) {
-            document.getElementById('tempWebsiteUrl').remove();
-        }
-        if(title) title.style.display = originalTitleDisplay;
-        if(actions) actions.style.display = 'flex';
-        
-        return canvas;
-    }
+    await new Promise((resolve) => {
+        mandalPoster.onload = resolve;
+        mandalPoster.onerror = resolve;
+        mandalPoster.src = 'logo/Receipt.jpeg'; 
+        clone.insertBefore(mandalPoster, clone.firstChild);
+    });
+    
+    const tempWebsiteUrl = document.createElement('div');
+    tempWebsiteUrl.style.color = '#fff';
+    tempWebsiteUrl.style.textAlign = 'center';
+    tempWebsiteUrl.style.fontSize = '16px';
+    tempWebsiteUrl.style.marginBottom = '25px';
+    tempWebsiteUrl.style.marginTop = '-5px';
+    tempWebsiteUrl.style.fontFamily = "'Poppins', sans-serif";
+    tempWebsiteUrl.innerHTML = 'अधिकृत वेबसाईट: <span style="color: #ffd700;">https://shivsrushti-utsav-mandal.onrender.com</span>';
+    clone.insertBefore(tempWebsiteUrl, mandalPoster.nextSibling);
+    
+    const canvas = await html2canvas(clone, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#1a1a1a',
+        windowWidth: 1200
+    });
+    
+    document.body.removeChild(clone);
+    return canvas;
+}
 
     function downloadDonationImage() {
         captureDonationPoster().then(canvas => {
