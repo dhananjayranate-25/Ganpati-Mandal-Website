@@ -4323,21 +4323,10 @@ footer::after {
         font-size: 8px !important;
         padding: 2px 5px !important;
     }
-    .sum-card {
-        padding: 8px 4px !important;
-    }
-    .sum-card h4 {
-        font-size: 9px !important;
-    }
-    .sum-card .val {
-        font-size: 14px !important;
-    }
-    /* Fix buttons */
-    .section-actions, .pdf-btn-group, .table-header-actions {
-        flex-direction: row !important;
-        justify-content: space-between !important;
-        width: 100% !important;
-    }
+    
+    
+    
+    
     .btn-pdf-view, .btn-pdf-download {
         font-size: 11px !important;
         padding: 8px 10px !important;
@@ -4385,6 +4374,72 @@ footer::after {
     }
     .donate-flex {
         flex-direction: row !important;
+    }
+}
+
+
+@media (max-width: 768px) {
+    /* Cashbook Desktop-like Header Layout */
+    .year-section-header, .table-header {
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+    }
+    .year-section-header h2, .table-header h2 {
+        font-size: 14px !important;
+        white-space: nowrap !important;
+    }
+    .desktop-only {
+        display: flex !important;
+    }
+    .table-header-actions, .year-section-header .section-actions {
+        width: auto !important;
+        justify-content: flex-end !important;
+        gap: 5px !important;
+    }
+    .btn-pdf-view, .btn-pdf-download, .section-actions .btn {
+        padding: 5px 8px !important;
+        font-size: 9px !important;
+        width: auto !important;
+    }
+    .section-actions .btn svg {
+        width: 10px !important;
+        height: 10px !important;
+    }
+    /* Hide the duplicated buttons below cards */
+    .section-actions.mobile-only {
+        display: none !important;
+    }
+
+    /* Force Table to strictly fit screen width */
+    .table-scroll {
+        overflow-x: hidden !important; 
+        width: 100% !important;
+    }
+    .year-section table, .cashbook-card table {
+        width: 100% !important;
+        table-layout: fixed !important;
+    }
+    .year-section table th, .year-section table td,
+    .cashbook-card table th, .cashbook-card table td {
+        padding: 4px 2px !important;
+        font-size: 9px !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        white-space: normal !important;
+        text-align: left !important;
+    }
+    .mode-badge {
+        font-size: 8px !important;
+        padding: 2px 4px !important;
+    }
+    
+    /* Summary Cards layout - already vertical but let's ensure padding */
+    .year-section .summary-cards .card {
+        padding: 12px !important;
+    }
+    .year-section .summary-cards .card .amount {
+        font-size: 1.2rem !important;
     }
 }
 
