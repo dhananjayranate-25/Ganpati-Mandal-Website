@@ -4392,34 +4392,6 @@ footer::after {
     .section-actions.mobile-only {
         display: none !important;
     }
-
-    /* Force Table to strictly fit screen width */
-    .table-scroll {
-        overflow-x: hidden !important; 
-        width: 100% !important;
-    }
-    .year-section table, .cashbook-card table {
-        width: 100% !important;
-        table-layout: fixed !important;
-    }
-    .year-section table th, .year-section table td,
-    .cashbook-card table th, .cashbook-card table td {
-        padding: 4px 2px !important;
-        font-size: 9px !important;
-        word-wrap: break-word !important;
-        overflow-wrap: break-word !important;
-        white-space: normal !important;
-        text-align: left !important;
-    }
-    .mode-badge {
-        font-size: 8px !important;
-        padding: 2px 4px !important;
-    }
-    
-    /* Summary Cards layout - already vertical but let's ensure padding */
-    .year-section .summary-cards .card {
-        padding: 12px !important;
-    }
     .year-section .summary-cards .card .amount {
         font-size: 1.2rem !important;
     }
@@ -4627,4 +4599,31 @@ body.mobile-hishob-navbar .nav-links.active a.nav-donate-btn {
     border-bottom: none !important;
 }
 
+
+
+@media (max-width: 768px) {
+    .year-section table, .cashbook-card table {
+        display: block !important;
+        width: 100% !important;
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        -webkit-overflow-scrolling: touch !important;
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 8px;
+    }
+    .year-section table th, .year-section table td,
+    .cashbook-card table th, .cashbook-card table td {
+        padding: 12px 15px !important;
+        font-size: 15px !important;
+        white-space: nowrap !important;
+        text-align: left !important;
+    }
+    .mode-badge {
+        font-size: 12px !important;
+        padding: 4px 8px !important;
+    }
+    .year-section .summary-cards .card {
+        padding: 12px !important;
+    }
+}
 
