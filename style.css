@@ -4601,36 +4601,46 @@ body.mobile-hishob-navbar .hamburger div {
 }
 
 
-/* Mobile Hishob Nav Links Dropdown and white hamburger */
-
+/* Mobile Hishob Nav Links Dropdown */
 body.mobile-hishob-navbar .nav-links.active {
     display: flex !important;
     flex-direction: column !important;
-    position: absolute !important;
+    position: fixed !important;
     top: 60px !important;
-    left: 20px !important;
-    background: linear-gradient(135deg, #b8860b, #d4a017) !important;
-    padding: 20px 30px !important;
+    right: 20px !important;
+    left: auto !important;
+    background: rgba(10, 2, 20, 0.95) !important;
+    border: 1px solid rgba(232, 121, 249, 0.3) !important;
+    padding: 10px !important;
     border-radius: 12px !important;
     box-shadow: 0 10px 30px rgba(0,0,0,0.6) !important;
     z-index: 2000 !important;
-    min-width: 280px !important;
+    min-width: 250px !important;
     align-items: flex-start !important;
     animation: fadeInDown 0.3s ease forwards !important;
 }
 
 body.mobile-hishob-navbar .nav-links.active a {
-    color: white !important;
-    font-size: 24px !important;
-    padding: 15px 0 !important;
+    color: #cccccc !important;
+    font-size: 20px !important;
+    padding: 18px 15px !important;
     text-decoration: none !important;
     width: 100% !important;
     text-align: left !important;
-    border-bottom: 1px solid rgba(255,255,255,0.2) !important;
+    border-bottom: 1px solid rgba(255,255,255,0.05) !important;
     display: block !important;
 }
 
 body.mobile-hishob-navbar .nav-links.active a:last-child {
+    border-bottom: none !important;
+}
+
+body.mobile-hishob-navbar .nav-links.active a.nav-donate-btn {
+    background-color: #e53935 !important;
+    color: white !important;
+    text-align: center !important;
+    border-radius: 6px !important;
+    margin-top: 5px !important;
     border-bottom: none !important;
 }
 
