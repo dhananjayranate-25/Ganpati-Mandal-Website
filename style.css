@@ -4602,22 +4602,52 @@ body.mobile-hishob-navbar .nav-links.active a.nav-donate-btn {
 
 
 @media (max-width: 768px) {
-    .year-section table, .cashbook-card table {
+    .year-section table, .year-section thead, .year-section tbody, .year-section th, .year-section td, .year-section tr,
+    .cashbook-card table, .cashbook-card thead, .cashbook-card tbody, .cashbook-card th, .cashbook-card td, .cashbook-card tr {
         display: block !important;
         width: 100% !important;
-        overflow-x: auto !important;
-        white-space: nowrap !important;
-        -webkit-overflow-scrolling: touch !important;
-        border: 1px solid rgba(255,255,255,0.06);
-        border-radius: 8px;
+        box-sizing: border-box !important;
+        white-space: normal !important;
     }
-    .year-section table th, .year-section table td,
-    .cashbook-card table th, .cashbook-card table td {
-        padding: 12px 15px !important;
+    .year-section thead tr, .cashbook-card thead tr {
+        display: none !important;
+    }
+    .year-section tr, .cashbook-card tr {
+        margin-bottom: 15px !important;
+        border: 1px solid rgba(255,255,255,0.1) !important;
+        border-radius: 8px !important;
+        background: rgba(255,255,255,0.02) !important;
+        padding: 10px !important;
+    }
+    .year-section td, .cashbook-card td {
+        border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+        padding: 8px 5px !important;
+        text-align: right !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
         font-size: 15px !important;
-        white-space: nowrap !important;
-        text-align: left !important;
     }
+    .year-section td:last-child, .cashbook-card td:last-child {
+        border-bottom: none !important;
+    }
+    
+    .year-section td::before, .cashbook-card td::before {
+        font-weight: bold;
+        color: var(--gold);
+        text-align: left;
+        padding-right: 15px;
+    }
+    
+    .year-section td:nth-child(1)::before, .cashbook-card td:nth-child(1)::before { content: "Sr. No:"; }
+    .year-section td:nth-child(2)::before, .cashbook-card td:nth-child(2)::before { content: "Remark:"; }
+    .year-section td:nth-child(3)::before, .cashbook-card td:nth-child(3)::before { content: "Date:"; }
+    .year-section td:nth-child(4)::before, .cashbook-card td:nth-child(4)::before { content: "Mode:"; }
+    .year-section td:nth-child(5)::before, .cashbook-card td:nth-child(5)::before { content: "Cash In (+):"; }
+    .year-section td:nth-child(6)::before, .cashbook-card td:nth-child(6)::before { content: "Cash Out (-):"; }
+    .year-section td:nth-child(7)::before, .cashbook-card td:nth-child(7)::before { content: "Balance:"; }
+    .year-section td:nth-child(8)::before, .cashbook-card td:nth-child(8)::before { content: "Actions:"; }
+
     .mode-badge {
         font-size: 12px !important;
         padding: 4px 8px !important;
