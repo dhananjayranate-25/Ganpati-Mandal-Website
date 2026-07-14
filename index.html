@@ -714,7 +714,7 @@
             if(ganeshotsavHeader) ganeshotsavHeader.style.display = 'block';
             if(cashbookContainer) cashbookContainer.style.display = 'block';
             if(prevYearsContainer) prevYearsContainer.style.display = 'block';
-            if(siteFooter) siteFooter.style.display = 'none'; // Hidden on Hishob page as requested
+            if(siteFooter) siteFooter.style.display = 'block';
             if(mainContainer) mainContainer.style.display = 'block';
         } else if (tabName === 'donate') {
             if(siteFooter) siteFooter.style.display = 'block';
@@ -1210,7 +1210,7 @@
         });
 
         const isMobile = window.innerWidth <= 768;
-        const TRANSACTIONS_PER_PAGE = isMobile ? 5 : entries.length || 1;
+        const TRANSACTIONS_PER_PAGE = 10;
         const totalPages = Math.ceil(entries.length / TRANSACTIONS_PER_PAGE) || 1;
         
         if (currentYearPage > totalPages) currentYearPage = totalPages;
@@ -1256,7 +1256,7 @@
 
         html += '<div class="table-scroll"><table><thead><tr><th>Sr. No</th><th>Remark</th><th>Date</th><th>Mode</th><th>Cash In (+)</th><th>Cash Out (-)</th><th>Balance</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
         
-        if (isMobile && totalPages > 1) {
+        if (totalPages > 1) {
             html += '<div class="pdf-pagination table-pagination">';
             html += '<button class="btn btn-secondary" onclick="changeYearPage(-1)" ' + (currentYearPage === 1 ? 'disabled' : '') + '>Previous</button>';
             html += '<span class="pdf-page-info">Page ' + currentYearPage + ' / ' + totalPages + '</span>';

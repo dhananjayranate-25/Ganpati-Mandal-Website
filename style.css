@@ -2093,7 +2093,8 @@ footer[style*="text-align: left"] {
 }
 .pdf-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(320px, 400px));
+    justify-content: center;
     gap: 22px;
     margin-top: 18px;
     position: relative;
@@ -3869,8 +3870,8 @@ footer::after {
 
 /* Added for main banner image */
 .main-title-image {
-    width: 100vw;
-    margin-left: calc(-50vw + 50%);
+    width: 100%;
+    margin-left: 0;
     height: clamp(60px, 12vw, 180px); /* Reduces height by cropping top/bottom space */
     object-fit: cover; /* Crops the extra white space without squashing text */
     object-position: center;
@@ -3879,8 +3880,8 @@ footer::after {
 
 /* NEW FULL WIDTH FOOTER CSS V2 */
 .new-site-footer-v2 {
-    width: 100vw;
-    margin-left: calc(-50vw + 50%); /* Makes it span full width ignoring container */
+    width: 100%;
+    margin-left: 0; /* Makes it span full width ignoring container */
     background: #ffffff; /* White background as in image */
     font-family: 'Poppins', 'Noto Sans Devanagari', sans-serif;
     color: #333;
@@ -3891,8 +3892,8 @@ footer::after {
 
 /* PREMIUM HORIZONTAL FOOTER V6 */
 .new-site-footer-v6 {
-    width: 100vw;
-    margin-left: calc(-50vw + 50%);
+    width: 100%;
+    margin-left: 0;
     background: #fbf5eb; /* Exact warm cream color from the poster background */
     border-top: 2px solid #d4af37; /* Gold top border */
     font-family: 'Poppins', 'Noto Sans Devanagari', sans-serif;
