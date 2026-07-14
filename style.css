@@ -4286,3 +4286,12 @@ footer::after {
     }
 }
 
+
+@media (max-width: 768px) {
+    .main-title-image,
+    .new-site-footer-v6 {
+        width: 100% !important;
+        margin-left: 0 !important;
+    }
+}
+
