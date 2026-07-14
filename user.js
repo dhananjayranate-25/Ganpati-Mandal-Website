@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function createParticles() {
     const container = document.getElementById('particles');
     if (!container) return;
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 75; i++) {
         const particle = document.createElement('div');
         particle.classList.add('particle');
         particle.style.left = Math.random() * 100 + '%';

@@ -3324,7 +3324,7 @@ footer::after {
         padding: 0;
     }
     
-    .floating-decor, .particles {
+    .floating-decor {
         display: none !important;
     }
 
