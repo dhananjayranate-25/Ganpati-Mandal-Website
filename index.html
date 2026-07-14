@@ -1166,7 +1166,7 @@
             const visible = isYearVisible(year);
 
             if (!visible) {
-                container.innerHTML = '<div class="year-section"><div class="year-section-header"><h2>' + year + ' - Cashbook</h2><div class="section-actions desktop-only"><button class="btn btn-pdf-view disabled" disabled>View PDF</button><button class="btn btn-pdf-download disabled" disabled>Download PDF</button></div></div><div class="empty-state"><p style="color:var(--text-secondary);">This Year Cashbook Hide By Admin | This Cashbook Visible Soon!!!</p></div><div class="section-actions mobile-only"><button class="btn btn-pdf-view disabled" disabled>View PDF</button><button class="btn btn-pdf-download disabled" disabled>Download PDF</button></div></div>';
+                container.innerHTML = '<div class="year-section"><div class="year-section-header"><h2>' + year + ' - Cashbook</h2><div class="section-actions"><button class="btn btn-pdf-view disabled" disabled>View PDF</button><button class="btn btn-pdf-download disabled" disabled>Download PDF</button></div></div><div class="empty-state"><p style="color:var(--text-secondary);">This Year Cashbook Hide By Admin | This Cashbook Visible Soon!!!</p></div></div>';
                 return;
             }
 
@@ -1228,7 +1228,7 @@
         }
 
         let html = '<div class="year-section">';
-        html += '<div class="year-section-header"><h2>' + year + ' - Cashbook</h2><div class="section-actions desktop-only">';
+        html += '<div class="year-section-header"><h2>' + year + ' - Cashbook</h2><div class="section-actions">';
         html += '<button class="btn btn-pdf-view" onclick="viewPDFYear(\'' + year + '\', this)">View PDF</button>';
         html += '<button class="btn btn-pdf-download" onclick="downloadPDFYear(\'' + year + '\', this)">Download PDF</button>';
         html += '</div></div>';
