@@ -4602,55 +4602,55 @@ body.mobile-hishob-navbar .nav-links.active a.nav-donate-btn {
 
 
 @media (max-width: 768px) {
-    .year-section table, .year-section thead, .year-section tbody, .year-section th, .year-section td, .year-section tr,
-    .cashbook-card table, .cashbook-card thead, .cashbook-card tbody, .cashbook-card th, .cashbook-card td, .cashbook-card tr {
-        display: block !important;
+    .year-section table, .cashbook-card table {
+        display: table !important;
         width: 100% !important;
+        table-layout: fixed !important;
         box-sizing: border-box !important;
-        white-space: normal !important;
     }
     .year-section thead tr, .cashbook-card thead tr {
-        display: none !important;
+        display: table-row !important;
     }
     .year-section tr, .cashbook-card tr {
-        margin-bottom: 15px !important;
-        border: 1px solid rgba(255,255,255,0.1) !important;
-        border-radius: 8px !important;
-        background: rgba(255,255,255,0.02) !important;
-        padding: 10px !important;
+        display: table-row !important;
+        margin-bottom: 0 !important;
+        border: none !important;
+        background: transparent !important;
+        padding: 0 !important;
     }
+    .year-section th, .cashbook-card th,
     .year-section td, .cashbook-card td {
-        border-bottom: 1px solid rgba(255,255,255,0.05) !important;
-        padding: 8px 5px !important;
-        text-align: right !important;
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        font-size: 15px !important;
+        display: table-cell !important;
+        border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+        padding: 4px 1px !important;
+        text-align: left !important;
+        font-size: 9px !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        white-space: normal !important;
     }
     .year-section td:last-child, .cashbook-card td:last-child {
-        border-bottom: none !important;
+        border-bottom: 1px solid rgba(255,255,255,0.06) !important;
     }
     
     .year-section td::before, .cashbook-card td::before {
-        font-weight: bold;
-        color: var(--gold);
-        text-align: left;
-        padding-right: 15px;
+        content: none !important;
+        display: none !important;
     }
     
-    .year-section td:nth-child(1)::before, .cashbook-card td:nth-child(1)::before { content: "Sr. No:"; }
-    .year-section td:nth-child(2)::before, .cashbook-card td:nth-child(2)::before { content: "Remark:"; }
-    .year-section td:nth-child(3)::before, .cashbook-card td:nth-child(3)::before { content: "Date:"; }
-    .year-section td:nth-child(4)::before, .cashbook-card td:nth-child(4)::before { content: "Mode:"; }
-    .year-section td:nth-child(5)::before, .cashbook-card td:nth-child(5)::before { content: "Cash In (+):"; }
-    .year-section td:nth-child(6)::before, .cashbook-card td:nth-child(6)::before { content: "Cash Out (-):"; }
-    .year-section td:nth-child(7)::before, .cashbook-card td:nth-child(7)::before { content: "Balance:"; }
-    .year-section td:nth-child(8)::before, .cashbook-card td:nth-child(8)::before { content: "Actions:"; }
-
+    /* Specific column widths to maximize space */
+    .year-section th:nth-child(1), .year-section td:nth-child(1) { width: 6% !important; padding: 2px 1px !important; text-align: center !important; }
+    .year-section th:nth-child(2), .year-section td:nth-child(2) { width: 24% !important; font-weight: 600 !important; }
+    .year-section th:nth-child(3), .year-section td:nth-child(3) { width: 14% !important; }
+    .year-section th:nth-child(4), .year-section td:nth-child(4) { width: 11% !important; text-align: center !important; }
+    .year-section th:nth-child(5), .year-section td:nth-child(5) { width: 15% !important; text-align: right !important; }
+    .year-section th:nth-child(6), .year-section td:nth-child(6) { width: 15% !important; text-align: right !important; }
+    .year-section th:nth-child(7), .year-section td:nth-child(7) { width: 15% !important; text-align: right !important; }
+    
     .mode-badge {
-        font-size: 12px !important;
-        padding: 4px 8px !important;
+        font-size: 7.5px !important;
+        padding: 2px 3px !important;
+        white-space: nowrap;
     }
     .year-section .summary-cards .card {
         padding: 12px !important;
