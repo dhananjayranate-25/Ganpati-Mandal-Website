@@ -40,14 +40,14 @@
                     <div style="width: 25px; height: 3px; background-color: white;"></div>
                 </div>
                 <div class="nav-links" id="navLinks">
-                    <a href="javascript:void(0)" id="nav-home">मुखपृष्ठ</a>
-                    <a href="javascript:void(0)" id="nav-ganeshotsav">गणेशोत्सव हिशोब</a>
-                    <a href="javascript:void(0)" id="nav-committee">उत्सव कमिटी</a>
-                    <a href="javascript:void(0)" id="nav-niyojan">उत्सव नियोजन</a>
-                    <a href="javascript:void(0)" id="nav-aarti">महाआरती</a>
-                    <a href="gallery.html" id="nav-gallery">गणपती छायाचित्रे</a>
-                    <a href="javascript:void(0)" id="nav-contact">संपर्क</a>
-                    <a href="javascript:void(0)" class="nav-donate-btn" id="nav-donate">देणगी</a>
+                    <a href="javascript:void(0)" id="nav-home" onclick="switchTab('home'); navLinks.classList.remove('active'); return false;" style="display: block !important;">मुखपृष्ठ</a>
+                    <a href="javascript:void(0)" id="nav-ganeshotsav" onclick="switchTab('ganeshotsav'); navLinks.classList.remove('active'); return false;" style="display: block !important;">गणेशोत्सव हिशोब</a>
+                    <a href="javascript:void(0)" id="nav-committee" onclick="switchTab('committee'); navLinks.classList.remove('active'); return false;" style="display: block !important;">उत्सव कमिटी</a>
+                    <a href="javascript:void(0)" id="nav-niyojan" onclick="switchTab('niyojan'); navLinks.classList.remove('active'); return false;" style="display: block !important;">उत्सव नियोजन</a>
+                    <a href="javascript:void(0)" id="nav-aarti" onclick="switchTab('aarti'); navLinks.classList.remove('active'); return false;" style="display: block !important;">महाआरती</a>
+                    <a href="gallery.html" id="nav-gallery" style="display: block !important;">गणपती छायाचित्रे</a>
+                    <a href="javascript:void(0)" id="nav-contact" onclick="switchTab('contact'); navLinks.classList.remove('active'); return false;" style="display: block !important;">संपर्क</a>
+                    <a href="javascript:void(0)" id="nav-donate" class="nav-donate-btn" onclick="switchTab('donate'); navLinks.classList.remove('active'); return false;" style="display: block !important;">देणगी</a>
                 </div>
             </nav>
         </header>
@@ -202,12 +202,10 @@
                     <h2>Year-wise Cashbook</h2>
                     <div class="header-line"></div>
                 </div>
-                <div class="year-selector-container" style="justify-content:center;margin-bottom:20px;">
-                    <div class="form-group floating-label" style="flex: 0 1 250px;">
-                        <select id="visibleYearSelect">
-                            <option value="">Select Year</option>
-                        </select>
-                    </div>
+                <div class="year-selector-container" style="justify-content:center;margin-bottom:20px; display:flex;">
+                    <select id="visibleYearSelect" style="padding: 12px 20px; font-size: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.5); color: white; outline: none; cursor: pointer; min-width: 200px;">
+                        <option value="">Select Year</option>
+                    </select>
                 </div>
                 <div id="visibleYearsContent"></div>
             </div>
