@@ -4496,3 +4496,56 @@ body.mobile-hishob-navbar .mode-badge {
     padding: 5px 12px !important;
 }
 
+
+/* Mobile Hishob View (1024px viewport) Previous Year Cashbooks Layout and Scaling */
+body.mobile-hishob-navbar .pdf-grid {
+    grid-template-columns: repeat(2, 380px) !important;
+    justify-content: center !important;
+    gap: 50px !important;
+    margin-top: 30px !important;
+}
+body.mobile-hishob-navbar .pdf-card-home {
+    aspect-ratio: 1 / 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    padding: 20px !important;
+}
+body.mobile-hishob-navbar .pdf-card-cover-mini {
+    flex-grow: 1 !important;
+    min-height: 0 !important;
+    padding: 20px !important;
+}
+body.mobile-hishob-navbar .pdf-card-title {
+    font-size: 26px !important;
+    margin: 20px 0 !important;
+}
+body.mobile-hishob-navbar .pdf-card-btn {
+    font-size: 22px !important;
+    padding: 15px !important;
+}
+body.mobile-hishob-navbar .pdf-card-cover-mini .mini-om {
+    font-size: 36px !important;
+    margin-bottom: 8px !important;
+}
+body.mobile-hishob-navbar .pdf-card-cover-mini .mini-mandal {
+    font-size: 16px !important;
+}
+body.mobile-hishob-navbar .pdf-card-cover-mini .mini-divider {
+    width: 120px !important;
+    height: 3px !important;
+    margin: 15px auto !important;
+}
+body.mobile-hishob-navbar .pdf-card-cover-mini .mini-subtitle {
+    font-size: 18px !important;
+    margin-bottom: 5px !important;
+}
+body.mobile-hishob-navbar .pdf-card-cover-mini .mini-tagline {
+    font-size: 14px !important;
+    margin-bottom: 12px !important;
+}
+body.mobile-hishob-navbar .pdf-card-cover-mini .mini-year {
+    font-size: 42px !important;
+    padding: 8px 30px !important;
+}
+
