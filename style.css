@@ -4254,3 +4254,13 @@ footer::after {
     transform: translateY(-3px);
     box-shadow: 0 8px 20px rgba(0,0,0,0.4);
 }
+
+#mainContent {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+.new-site-footer-v6 {
+    margin-top: auto !important;
+}
+
