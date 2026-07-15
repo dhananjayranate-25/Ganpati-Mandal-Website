@@ -745,7 +745,7 @@ app.post('/api/portal/login', async (req, res) => {
 
 app.get('/api/portal/users', async (req, res) => {
     try {
-        const users = await PortalUser.find({ role: 'member' }).select('-password');
+        const users = await PortalUser.find({ role: 'member' });
         res.json({ success: true, users });
     } catch(err) {
         res.status(500).json({ success: false, message: err.message });
@@ -754,7 +754,7 @@ app.get('/api/portal/users', async (req, res) => {
 
 app.get('/api/portal/users/:id', async (req, res) => {
     try {
-        const user = await PortalUser.findById(req.params.id).select('-password');
+        const user = await PortalUser.findById(req.params.id);
         if (!user) return res.status(404).json({ success: false, message: 'User not found' });
         res.json({ success: true, user });
     } catch(err) {
@@ -774,6 +774,32 @@ app.post('/api/portal/users', async (req, res) => {
         });
         await newUser.save();
         res.json({ success: true, user: newUser });
+    } catch(err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+
+app.put('/api/portal/users/:id', async (req, res) => {
+    try {
+        const { name, username, password } = req.body;
+        const existing = await PortalUser.findOne({ username, _id: { $ne: req.params.id } });
+        if (existing) {
+            return res.status(400).json({ success: false, message: 'Username already exists' });
+        }
+        const user = await PortalUser.findByIdAndUpdate(req.params.id, { name, username, password }, { new: true });
+        res.json({ success: true, user });
+    } catch(err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+app.delete('/api/portal/users/:id', async (req, res) => {
+    try {
+        await PortalUser.findByIdAndDelete(req.params.id);
+        await PortalTask.deleteMany({ userId: req.params.id });
+        await PortalExpense.deleteMany({ userId: req.params.id });
+        res.json({ success: true });
     } catch(err) {
         res.status(500).json({ success: false, message: err.message });
     }
