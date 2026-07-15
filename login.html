@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Shivsrushti Boyz</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Noto+Sans+Devanagari:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ffcc00;
+            --secondary: #d4af37;
+            --dark: #121212;
+            --darker: #0a0a0a;
+            --light: #f4f4f4;
+            --text-muted: #888;
+            --danger: #ff4444;
+            --success: #00C851;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+        body {
+            margin: 0;
+            font-family: 'Poppins', 'Noto Sans Devanagari', sans-serif;
+            background-color: var(--darker);
+            color: var(--light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at top right, rgba(212,175,55,0.1), transparent 40%),
+                              radial-gradient(circle at bottom left, rgba(212,175,55,0.05), transparent 40%);
+        }
+        .container {
+            width: 100%;
+            max-width: 450px;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin: 0;
+            text-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
+        }
+        .header p {
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+        
+        .role-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .role-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .role-card:hover {
+            background: rgba(255, 204, 0, 0.1);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+        .role-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--darker);
+        }
+        .role-info h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: white;
+        }
+        .role-info p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .login-form-container {
+            display: none;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+        .login-form-container.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 20px;
+            padding: 0;
+            transition: color 0.3s;
+        }
+        .back-btn:hover {
+            color: white;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ddd;
+            font-size: 0.9rem;
+        }
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: white;
+            font-family: inherit;
+            box-sizing: border-box;
+            transition: all 0.3s;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(255, 204, 0, 0.2);
+        }
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--darker);
+            font-weight: 600;
+            font-size: 1rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+        }
+        .btn:active {
+            transform: scale(0.98);
+        }
+        .error-msg {
+            color: var(--danger);
+            font-size: 0.85rem;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>लॉगिन (Login)</h1>
+        <p>शिवसृष्टी बॉईज मंडळ</p>
+    </div>
+
+    <!-- Role Selection -->
+    <div id="roleSelection" class="role-selector">
+        <div class="role-card" onclick="window.location.href='admin.html'">
+            <div class="role-icon"><i class="fas fa-globe"></i></div>
+            <div class="role-info">
+                <h3>Website Admin</h3>
+                <p>Manage Homepage, Cashbook & Gallery</p>
+            </div>
+        </div>
+        
+        <div class="role-card" onclick="showLoginForm('superadmin')">
+            <div class="role-icon"><i class="fas fa-crown"></i></div>
+            <div class="role-info">
+                <h3>Super Admin</h3>
+                <p>Manage Members, Tasks & Funds</p>
+            </div>
+        </div>
+
+        <div class="role-card" onclick="showLoginForm('member')">
+            <div class="role-icon"><i class="fas fa-user-friends"></i></div>
+            <div class="role-info">
+                <h3>Member</h3>
+                <p>Update Tasks & Log Expenses</p>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="index.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;"><i class="fas fa-arrow-left"></i> Back to Website</a>
+        </div>
+    </div>
+
+    <!-- Login Form -->
+    <div id="loginFormContainer" class="login-form-container">
+        <button class="back-btn" onclick="showRoleSelection()"><i class="fas fa-arrow-left"></i> Back</button>
+        <h2 id="loginTitle" style="margin-top: 0; color: white;">Login</h2>
+        
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <input type="hidden" id="loginRole">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="username" class="form-control" required placeholder="Enter username">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" class="form-control" required placeholder="Enter password">
+            </div>
+            <button type="submit" class="btn" id="loginBtn">Login <i class="fas fa-sign-in-alt"></i></button>
+            <div id="errorMsg" class="error-msg">Invalid credentials</div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Assuming API_URL is empty if backend runs on same domain
+    const API_URL = '';
+
+    function showLoginForm(role) {
+        document.getElementById('roleSelection').style.display = 'none';
+        document.getElementById('loginFormContainer').classList.add('active');
+        document.getElementById('loginRole').value = role;
+        document.getElementById('loginTitle').innerText = role === 'superadmin' ? 'Super Admin Login' : 'Member Login';
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
+        document.getElementById('errorMsg').style.display = 'none';
+        
+        if(role === 'superadmin') {
+            document.getElementById('username').value = 'admin'; // Hint for default
+        }
+    }
+
+    function showRoleSelection() {
+        document.getElementById('loginFormContainer').classList.remove('active');
+        setTimeout(() => {
+            document.getElementById('roleSelection').style.display = 'flex';
+        }, 300);
+    }
+
+    async function handleLogin(e) {
+        e.preventDefault();
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const role = document.getElementById('loginRole').value;
+        const btn = document.getElementById('loginBtn');
+        const errorMsg = document.getElementById('errorMsg');
+        
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Please wait...';
+        btn.disabled = true;
+        errorMsg.style.display = 'none';
+        
+        try {
+            const res = await fetch(API_URL + '/api/portal/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            const data = await res.json();
+            
+            if(data.success) {
+                // Ensure correct role logged in
+                if(data.user.role !== role) {
+                    throw new Error(`Please login using the ${data.user.role} portal instead.`);
+                }
+                
+                // Store auth
+                localStorage.setItem('portalUser', JSON.stringify(data.user));
+                
+                // Redirect
+                if(role === 'superadmin') {
+                    window.location.href = 'superadmin.html';
+                } else {
+                    window.location.href = 'member.html';
+                }
+            } else {
+                throw new Error(data.message || 'Login failed');
+            }
+        } catch(err) {
+            errorMsg.innerText = err.message || 'Network error';
+            errorMsg.style.display = 'block';
+        } finally {
+            btn.innerHTML = 'Login <i class="fas fa-sign-in-alt"></i>';
+            btn.disabled = false;
+        }
+    }
+</script>
+
+</body>
+</html>

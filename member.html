@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Portal - Shivsrushti Boyz</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ffcc00;
+            --secondary: #d4af37;
+            --dark: #121212;
+            --darker: #0a0a0a;
+            --light: #f4f4f4;
+            --danger: #ff4444;
+            --success: #00C851;
+            --info: #33b5e5;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--darker);
+            color: var(--light);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .navbar {
+            background: var(--dark);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .navbar h2 { margin: 0; color: var(--primary); }
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        @media (max-width: 768px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+        }
+        .card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .card h3 {
+            margin-top: 0;
+            color: #ccc;
+            font-size: 1rem;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 10px 0 0 0;
+        }
+
+        .lists-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        @media (max-width: 900px) {
+            .lists-grid { grid-template-columns: 1fr; }
+        }
+
+        .list-container {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .list-header h3 { margin: 0; color: #ccc; }
+
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .badge.pending { background: rgba(255,68,68,0.2); color: var(--danger); }
+        .badge.process { background: rgba(51,181,229,0.2); color: var(--info); }
+        .badge.done { background: rgba(0,200,81,0.2); color: var(--success); }
+
+        .btn {
+            background: var(--primary);
+            color: var(--darker);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .btn:hover { opacity: 0.9; }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+        .btn-outline:hover {
+            background: var(--primary);
+            color: var(--darker);
+        }
+        .btn-small { padding: 4px 8px; font-size: 0.8rem; }
+        
+        select.form-control {
+            background: var(--dark);
+            color: white;
+            border: 1px solid var(--glass-border);
+            padding: 5px;
+            border-radius: 4px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: var(--dark);
+            border: 1px solid var(--glass-border);
+            padding: 25px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 400px;
+        }
+        .modal-title { margin-top: 0; color: var(--primary); }
+        .form-control-full {
+            width: 100%;
+            padding: 10px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--glass-border);
+            border-radius: 6px;
+            color: white;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+        .empty-state { text-align: center; color: #666; margin: 20px 0; }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <h2><i class="fas fa-user"></i> <span id="welcomeName">Member</span></h2>
+        <button class="btn btn-outline" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+
+    <div class="main-content">
+        <!-- Accounts Summary -->
+        <div class="dashboard-grid">
+            <div class="card">
+                <h3>Total Funds Given <i class="fas fa-wallet text-muted"></i></h3>
+                <p class="stat-value" id="statTotalFunds">₹0</p>
+            </div>
+            <div class="card">
+                <h3>Total Spent <i class="fas fa-shopping-cart text-muted"></i></h3>
+                <p class="stat-value" id="statTotalSpent" style="color: var(--danger);">₹0</p>
+            </div>
+            <div class="card">
+                <h3>Remaining Balance <i class="fas fa-piggy-bank text-muted"></i></h3>
+                <p class="stat-value" id="statBalance" style="color: var(--success);">₹0</p>
+            </div>
+        </div>
+
+        <div class="lists-grid">
+            <!-- Tasks List -->
+            <div class="list-container">
+                <div class="list-header">
+                    <h3>My Tasks (काय काम आहे)</h3>
+                </div>
+                <div id="tasksList">
+                    <!-- Tasks load here -->
+                </div>
+            </div>
+
+            <!-- Expenses List -->
+            <div class="list-container">
+                <div class="list-header">
+                    <h3>My Expenses (खर्च)</h3>
+                    <button class="btn btn-small" onclick="openModal('addExpenseModal')"><i class="fas fa-plus"></i> Log Expense</button>
+                </div>
+                <div id="expensesList">
+                    <!-- Expenses load here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Expense Modal -->
+    <div class="modal" id="addExpenseModal">
+        <div class="modal-content">
+            <h3 class="modal-title">Log New Expense</h3>
+            <p style="font-size:0.85rem; color:#888;">This will be deducted from your remaining balance.</p>
+            <form onsubmit="addExpense(event)">
+                <input type="text" id="expItem" class="form-control-full" placeholder="Item Name (वस्तूचे नाव)" required>
+                <input type="number" id="expPrice" class="form-control-full" placeholder="Price / Amount (₹)" required min="1">
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px;">
+                    <button type="button" class="btn btn-outline" onclick="closeModals()">Cancel</button>
+                    <button type="submit" class="btn">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = '';
+        let currentUser = null;
+
+        window.onload = () => {
+            const userStr = localStorage.getItem('portalUser');
+            if(!userStr) return window.location.href = 'login.html';
+            currentUser = JSON.parse(userStr);
+            if(currentUser.role !== 'member') return window.location.href = 'login.html';
+            
+            document.getElementById('welcomeName').innerText = currentUser.name;
+            refreshData();
+        };
+
+        function logout() {
+            localStorage.removeItem('portalUser');
+            window.location.href = 'login.html';
+        }
+
+        function openModal(id) {
+            closeModals();
+            document.getElementById(id).classList.add('active');
+        }
+        function closeModals() {
+            document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
+        }
+
+        async function refreshData() {
+            try {
+                // Fetch user data for balance
+                let res = await fetch(API_URL + '/api/portal/users/' + currentUser.id);
+                let data = await res.json();
+                if(data.success) {
+                    document.getElementById('statTotalFunds').innerText = '₹' + data.user.totalFunds;
+                    document.getElementById('statTotalSpent').innerText = '₹' + data.user.totalSpent;
+                    document.getElementById('statBalance').innerText = '₹' + data.user.balance;
+                }
+
+                // Fetch tasks
+                res = await fetch(API_URL + '/api/portal/tasks/' + currentUser.id);
+                data = await res.json();
+                if(data.success) {
+                    document.getElementById('tasksList').innerHTML = data.tasks.length ? data.tasks.map(t => `
+                        <div class="item-row">
+                            <div>
+                                <div style="font-weight:500;">${t.title}</div>
+                                <div style="font-size:0.75rem; color:#888;">${new Date(t.date).toLocaleDateString()}</div>
+                            </div>
+                            <div>
+                                <select class="form-control" onchange="updateTaskStatus('${t._id}', this.value)">
+                                    <option value="Pending" ${t.status==='Pending'?'selected':''}>Pending</option>
+                                    <option value="In Process" ${t.status==='In Process'?'selected':''}>In Process</option>
+                                    <option value="Done" ${t.status==='Done'?'selected':''}>Done</option>
+                                </select>
+                            </div>
+                        </div>
+                    `).join('') : '<p class="empty-state">No tasks assigned to you yet.</p>';
+                }
+
+                // Fetch expenses
+                res = await fetch(API_URL + '/api/portal/expenses/' + currentUser.id);
+                data = await res.json();
+                if(data.success) {
+                    document.getElementById('expensesList').innerHTML = data.expenses.length ? data.expenses.map(e => `
+                        <div class="item-row">
+                            <div>
+                                <div style="font-weight:500;">${e.item}</div>
+                                <div style="font-size:0.75rem; color:#888;">${new Date(e.date).toLocaleDateString()}</div>
+                            </div>
+                            <span style="color:var(--danger); font-weight:bold;">₹${e.price}</span>
+                        </div>
+                    `).join('') : '<p class="empty-state">No expenses logged yet.</p>';
+                }
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        async function updateTaskStatus(taskId, status) {
+            try {
+                await fetch(API_URL + '/api/portal/tasks/' + taskId, {
+                    method: 'PUT',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ status })
+                });
+                // Optional: show a small toast notification here
+            } catch(err) {
+                alert('Failed to update status');
+            }
+        }
+
+        async function addExpense(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            try {
+                const res = await fetch(API_URL + '/api/portal/expenses', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        userId: currentUser.id,
+                        item: document.getElementById('expItem').value,
+                        price: document.getElementById('expPrice').value
+                    })
+                });
+                const data = await res.json();
+                if(data.success) {
+                    closeModals();
+                    e.target.reset();
+                    refreshData(); // updates the balance and list
+                } else alert(data.message);
+            } catch(err) { alert('Error logging expense'); }
+            btn.disabled = false;
+        }
+    </script>
+</body>
+</html>
