@@ -811,7 +811,7 @@
         html += '<div class="card card-balance"><div class="card-glass"><div class="card-header"><div class="card-icon-wrapper icon-purple"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><h3>Final Balance</h3></div><p class="amount">\u20B9' + finalBalance.toFixed(2) + '</p></div></div>';
         html += '</div>';
 
-        html += '<div class="table-scroll"><table><thead><tr><th>Sr. No</th><th>Name</th><th>Date</th><th>Mode</th><th>Cash In (+)</th><th>Cash Out (-)</th><th>Balance</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+        html += '<div class="table-scroll"><table><thead><tr><th>Sr. No</th><th>Name</th><th>Date</th><th>Mode</th><th>Cash<br>In</th><th>Cash<br>Out</th><th>Balance</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
         
         html += '</div>';
         container.innerHTML = html;
