@@ -301,7 +301,7 @@ function updateDateForYear(year) {
             const monthDay = currentDate.substring(5);
             dateInput.value = year + '-' + (monthDay || getTodayDateString().substring(5));
         } else {
-            dateInput.value = getTodayDateString();
+            dateInput.value = year + '-' + getTodayDateString().substring(5);
         }
     }
 }
@@ -671,7 +671,7 @@ function createYearPanel(year) {
 
     const dateInput = panel.querySelector(`#date-${year}`);
     if (dateInput) {
-        dateInput.value = getTodayDateString();
+        dateInput.value = year + '-' + getTodayDateString().substring(5);
     }
 
     yearPanels[year] = panel;
@@ -921,7 +921,7 @@ function resetFormForYear(year) {
     if (modeSelect) modeSelect.value = '';
     if (cashInInput) cashInInput.value = '';
     if (cashOutInput) cashOutInput.value = '';
-    if (dateInput) dateInput.value = getTodayDateString();
+    if (dateInput) dateInput.value = year + '-' + getTodayDateString().substring(5);
 }
 
 async function deleteEntry(id, year) {
