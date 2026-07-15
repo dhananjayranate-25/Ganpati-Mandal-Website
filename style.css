@@ -4681,3 +4681,20 @@ body.mobile-hishob-navbar .nav-links.active a.nav-donate-btn {
     .year-section th:nth-child(7), .year-section td:nth-child(7) { width: 10% !important; text-align: right !important; }
     .date-y { display: inline !important; }
 }
+
+/* Fixes for Cash In gap and Summary text */
+.year-section th:nth-child(5), .year-section td:nth-child(5) {
+    padding-right: 15px !important;
+}
+
+.year-section .summary-cards .card .card-header h3 {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+}
+
+.year-section .summary-cards .card .amount {
+    color: #ffffff !important;
+    background: none !important;
+    -webkit-text-fill-color: #ffffff !important;
+    font-weight: 800 !important;
+}
