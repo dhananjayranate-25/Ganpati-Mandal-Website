@@ -794,7 +794,7 @@ async function renderHomeTable(entries) {
             <tr>
                 <td style="text-align:center;font-weight:600">${index + 1}</td>
                 <td>${entry.name}</td>
-                <td>${formatDate(entry.date)}</td>
+                <td>${formatHTMLDate(entry.date)}</td>
                 <td style="text-align:center">${entry.mode}</td>
                 <td style="text-align:right;color:#10b981;font-weight:600">${entry.cash_in > 0 ? formatPDFCurrency(entry.cash_in) : '-'}</td>
                 <td style="text-align:right;color:#ef4444;font-weight:600">${entry.cash_out > 0 ? formatPDFCurrency(entry.cash_out) : '-'}</td>
@@ -1194,7 +1194,7 @@ function renderTable(year, entries) {
         row.innerHTML = `
             <td>${index + 1}</td>
             <td><strong>${escapeHtml(entry.name)}</strong></td>
-            <td>${formatDate(entry.date)}</td>
+            <td>${formatHTMLDate(entry.date)}</td>
             <td><span class="mode-badge ${entry.mode === 'Online' ? 'mode-online' : 'mode-cash'}">${entry.mode}</span></td>
             <td class="cash-in">${entry.cash_in > 0 ? formatCurrency(entry.cash_in) : '-'}</td>
             <td class="cash-out">${entry.cash_out > 0 ? formatCurrency(entry.cash_out) : '-'}</td>
@@ -1250,6 +1250,16 @@ function formatCurrency(amount) {
 function formatPDFCurrency(amount) {
     const formatted = amount.toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
     return '₹' + formatted;
+}
+
+function formatHTMLDate(dateStr) {
+    const date = new Date(dateStr);
+    if (isNaN(date)) return dateStr;
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+    return `<span class="date-dm">${day} ${month}</span><span class="date-y"> ${year}</span>`;
 }
 
 function formatDate(dateStr) {
