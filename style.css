@@ -4411,6 +4411,16 @@ footer::after {
         white-space: normal !important;
         text-align: left !important;
     }
+    
+    /* Explicit mobile column widths to minimize gaps */
+    .year-section th:nth-child(1), .year-section td:nth-child(1) { width: 5% !important; text-align: center !important; }
+    .year-section th:nth-child(2), .year-section td:nth-child(2) { width: 28% !important; }
+    .year-section th:nth-child(3), .year-section td:nth-child(3) { width: 15% !important; }
+    .year-section th:nth-child(4), .year-section td:nth-child(4) { width: 10% !important; text-align: center !important; }
+    .year-section th:nth-child(5), .year-section td:nth-child(5) { width: 14% !important; text-align: right !important; }
+    .year-section th:nth-child(6), .year-section td:nth-child(6) { width: 14% !important; text-align: right !important; }
+    .year-section th:nth-child(7), .year-section td:nth-child(7) { width: 14% !important; text-align: right !important; }
+
     .mode-badge {
         font-size: 8px !important;
         padding: 2px 4px !important;
