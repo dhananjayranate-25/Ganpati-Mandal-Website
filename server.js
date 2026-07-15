@@ -88,6 +88,7 @@ const niyojanSchema = new mongoose.Schema({
     time: { type: String, required: true },
     title: { type: String, required: true },
     description: { type: String },
+    addedBy: { type: String },
     createdAt: { type: Date, default: Date.now }
 });
 const Niyojan = mongoose.model('Niyojan', niyojanSchema);
@@ -144,6 +145,7 @@ const aartiSchema = new mongoose.Schema({
     date: { type: String, required: true }, // e.g. "2026-09-07"
     phone: { type: String },
     pujaDetails: { type: String },
+    addedBy: { type: String },
     createdAt: { type: Date, default: Date.now }
 });
 const Aarti = mongoose.model('Aarti', aartiSchema);

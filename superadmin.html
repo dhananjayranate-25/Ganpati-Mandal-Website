@@ -574,6 +574,60 @@
             } catch(err) { alert('Error deleting member'); }
         }
 
+        
+        async function addNiyojan(e) {
+            e.preventDefault();
+            if(!selectedMemberData) return;
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            try {
+                const res = await fetch(API_URL + '/api/niyojan', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        date: document.getElementById('saNiyojanDate').value,
+                        time: document.getElementById('saNiyojanTime').value,
+                        title: document.getElementById('saNiyojanTitle').value,
+                        description: document.getElementById('saNiyojanDesc').value,
+                        addedBy: selectedMemberData.name
+                    })
+                });
+                const data = await res.json();
+                if(data.success) {
+                    alert('Niyojan added successfully on behalf of ' + selectedMemberData.name + '!');
+                    e.target.reset();
+                } else alert(data.message);
+            } catch(err) { alert('Error adding niyojan'); }
+            btn.disabled = false;
+        }
+
+        async function addAarti(e) {
+            e.preventDefault();
+            if(!selectedMemberData) return;
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            try {
+                const res = await fetch(API_URL + '/api/aarti', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        name: document.getElementById('saAartiName').value,
+                        date: document.getElementById('saAartiDate').value,
+                        timeOfDay: document.getElementById('saAartiTime').value,
+                        phone: document.getElementById('saAartiPhone').value,
+                        pujaDetails: document.getElementById('saAartiDetails').value,
+                        addedBy: selectedMemberData.name
+                    })
+                });
+                const data = await res.json();
+                if(data.success) {
+                    alert('Maha Aarti added successfully on behalf of ' + selectedMemberData.name + '!');
+                    e.target.reset();
+                } else alert(data.message);
+            } catch(err) { alert('Error adding aarti'); }
+            btn.disabled = false;
+        }
+
         async function addFunds(e) {
             e.preventDefault();
             if(!selectedMemberId) return;
