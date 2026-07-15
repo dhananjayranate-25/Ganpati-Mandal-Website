@@ -587,8 +587,9 @@
                 // Fetch Niyojan
                 let res = await fetch(API_URL + '/api/niyojan');
                 let data = await res.json();
-                if(data.success) {
-                    let myNiyojan = data.niyojan.filter(n => n.addedBy === currentUser.name);
+                if(Array.isArray(data) || data.success) {
+                    let niyojanList = Array.isArray(data) ? data : data.niyojan;
+                    let myNiyojan = niyojanList.filter(n => n.addedBy === currentUser.name);
                     let niyojanHtml = '';
                     myNiyojan.forEach((n, index) => {
                         let formattedDate = new Date(n.date).toLocaleDateString('mr-IN', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -626,8 +627,9 @@
                 // Fetch Aarti
                 res = await fetch(API_URL + '/api/aarti');
                 data = await res.json();
-                if(data.success) {
-                    let myAarti = data.aarti.filter(a => a.addedBy === currentUser.name);
+                if(Array.isArray(data) || data.success) {
+                    let aartiList = Array.isArray(data) ? data : data.aarti;
+                    let myAarti = aartiList.filter(a => a.addedBy === currentUser.name);
                     let aartiHtml = '';
                     myAarti.forEach((a, index) => {
                         let formattedDate = new Date(a.date).toLocaleDateString('mr-IN', { day: 'numeric', month: 'short', year: 'numeric' });
