@@ -1787,7 +1787,7 @@ body{font-family:"Poppins","Noto Sans Devanagari",sans-serif;background:#f5f0eb;
                 doc.setFontSize(8);
                 doc.setFont('helvetica', 'italic');
                 doc.setTextColor(150);
-                doc.text('ShivSrushti Boyz Notepad | ' + new Date().toLocaleDateString('en-IN'), mg, pageH - 8);
+                doc.text('ShivSrushti Boyz Notepad | ' + formatDate(new Date()), mg, pageH - 8);
                 doc.text('Page ' + p + ' of ' + totalPages, pw / 2 + mg, pageH - 8, { align: 'center' });
                 doc.setTextColor(0);
             }
@@ -1982,8 +1982,7 @@ async function loadAartiData() {
         aartis.forEach(aarti => {
             const tr = document.createElement('tr');
             
-            const d = new Date(aarti.date);
-            const formattedDate = d.toLocaleDateString('mr-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+            const formattedDate = formatDate(aarti.date);
             
             tr.innerHTML = `
                 <td>${formattedDate}</td>
@@ -2223,8 +2222,7 @@ async function loadNiyojanAdmin() {
         list.forEach(item => {
             const tr = document.createElement('tr');
             
-            const d = new Date(item.date);
-            const formattedDate = d.toLocaleDateString('mr-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+            const formattedDate = formatDate(item.date);
             
             tr.innerHTML = `
                 <td>${formattedDate}</td>

@@ -798,7 +798,7 @@
             const co = parseFloat(e.cash_out) || 0;
             runningBalance += ci - co;
             const modeClass = e.mode === 'Online' ? 'online' : 'cash';
-            rows += '<tr><td>' + (i + 1) + '</td><td class="remark">' + e.name + '</td><td class="date">' + e.date + '</td><td><span class="mode-badge ' + modeClass + '">' + e.mode + '</span></td><td class="cash-in-cell">' + (ci ? '\u20B9' + ci.toFixed(2) : '-') + '</td><td class="cash-out-cell">' + (co ? '\u20B9' + co.toFixed(2) : '-') + '</td><td class="balance-cell">\u20B9' + runningBalance.toFixed(2) + '</td></tr>';
+            rows += '<tr><td>' + (i + 1) + '</td><td class="remark">' + e.name + '</td><td class="date">' + formatDate(e.date) + '</td><td><span class="mode-badge ' + modeClass + '">' + e.mode + '</span></td><td class="cash-in-cell">' + (ci ? '\u20B9' + ci.toFixed(2) : '-') + '</td><td class="cash-out-cell">' + (co ? '\u20B9' + co.toFixed(2) : '-') + '</td><td class="balance-cell">\u20B9' + runningBalance.toFixed(2) + '</td></tr>';
         }
 
         let html = '<div class="year-section">';
@@ -886,7 +886,12 @@
 
     function formatDate(dateStr) {
         const date = new Date(dateStr);
-        return date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+        if (isNaN(date)) return dateStr;
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = months[date.getMonth()];
+        const year = date.getFullYear();
+        return `${day} ${month} ${year}`;
     }
 
     async function generatePDFHTML(entries, year, logoDataURL) {
