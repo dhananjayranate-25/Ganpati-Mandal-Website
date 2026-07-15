@@ -1551,7 +1551,7 @@ body{font-family:'Poppins','Noto Sans Devanagari',sans-serif;background:#f5f0eb;
             coverDoc.addImage(canvas.toDataURL('image/jpeg', 0.6), 'JPEG', 0, 0, pgW, imgH);
             const coverBytes = coverDoc.output('arraybuffer');
             
-            const resp = await fetch('/uploads/' + filename);
+            const resp = await fetch((typeof API_URL !== 'undefined' ? API_URL : '') + '/uploads/' + filename);
             const uploadBytes = await resp.arrayBuffer();
             
             const { PDFDocument } = window.PDFLib;
