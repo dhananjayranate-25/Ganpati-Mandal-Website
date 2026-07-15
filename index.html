@@ -803,9 +803,9 @@
                             
                             <!-- Content Card -->
                             <div class="glass-panel" style="flex: 1; padding: 15px 20px; border-left: 3px solid #d4af37; background: rgba(255,255,255,0.05);">
-                                <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 8px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 8px;">
                                     <span style="color: #ffcc00; font-weight: bold; font-size: 1.1rem;">${formattedDate}</span>
-                                    <span style="background: rgba(212,175,55,0.2); color: #ffeb3b; padding: 2px 10px; border-radius: 20px; font-size: 0.9rem;"><i class="far fa-clock"></i> ${time12}</span>
+                                    <span style="background: rgba(212,175,55,0.2); color: #ffeb3b; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 5px; height: fit-content; line-height: 1;"><i class="far fa-clock"></i>${time12}</span>
                                 </div>
                                 <h3 style="color: #fff; font-family: 'Khand', sans-serif; font-size: 1.25rem; margin: 0 0 5px 0;">${item.title}</h3>
                                 ${item.description ? `<p style="color: #ccc; font-size: 0.9rem; margin: 0; line-height: 1.4;">${item.description}</p>` : ''}

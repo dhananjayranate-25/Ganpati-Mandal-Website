@@ -4701,3 +4701,19 @@ body.mobile-hishob-navbar .nav-links.active a.nav-donate-btn {
 .year-section table td:nth-child(3) {
     color: #ffffff !important;
 }
+
+
+@media (max-width: 768px) {
+    .niyojan-item .glass-panel {
+        padding: 10px 15px !important;
+    }
+    .niyojan-item .glass-panel h3 {
+        font-size: 1.1rem !important;
+    }
+    .niyojan-item .glass-panel p {
+        font-size: 0.85rem !important;
+    }
+    .niyojan-item .glass-panel span {
+        font-size: 0.85rem !important;
+    }
+}
