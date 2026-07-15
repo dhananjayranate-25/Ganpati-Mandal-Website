@@ -1103,7 +1103,88 @@ body{font-family:"Poppins","Noto Sans Devanagari",sans-serif;background:#f5f0eb;
 .cover-footer{position:absolute;bottom:15mm;left:0;right:0;text-align:center;z-index:10;}
 .cover-footer-om{font-size:20px;color:#ffd700;margin-bottom:8px;letter-spacing:3px;}
 .cover-footer p{font-size:10px;color:#8b7355;letter-spacing:1.5px;line-height:1.6;}
-</style></head><body>
+
+        /* Premium Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 15px;
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            .navbar h2 {
+                font-size: 1.5rem;
+            }
+            .main-content {
+                padding: 15px;
+                gap: 20px;
+            }
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            .lists-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .list-container {
+                padding: 15px;
+            }
+            .list-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .list-header .btn {
+                width: 100%;
+                text-align: center;
+            }
+            .item-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .item-row > div:first-child {
+                width: 100%;
+                word-wrap: break-word;
+            }
+            .item-row select, .item-row .badge {
+                width: 100%;
+                text-align: center;
+                box-sizing: border-box;
+            }
+            .floating-label input,
+            .floating-label select,
+            .floating-label textarea {
+                padding: 22px 12px 6px;
+                font-size: 0.95rem;
+            }
+            .form-grid {
+                gap: 15px;
+            }
+            /* Make buttons inside cards full width on mobile */
+            div[style*="justify-content:flex-end"] {
+                flex-direction: column;
+                gap: 10px !important;
+            }
+            div[style*="justify-content:flex-end"] button {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            /* Responsive timeline layout for mobile */
+            div[style*="border-left: 3px solid"] {
+                padding: 12px !important;
+                margin-bottom: 12px !important;
+            }
+            div[style*="justify-content: space-between"] {
+                flex-direction: column;
+                align-items: flex-start !important;
+                gap: 8px;
+            }
+        }
+
+    </style></head><body>
 <div class="cover-page">
   <div class="cover-outer-border"></div>
   <div class="cover-inner-border"></div>
