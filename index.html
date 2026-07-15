@@ -1219,7 +1219,7 @@
             const co = parseFloat(e.cash_out) || 0;
             runningBalance += ci - co;
             const modeClass = e.mode === 'Online' ? 'online' : 'cash';
-            rows += '<tr><td>' + (i + 1) + '</td><td class="remark">' + e.name + '</td><td class="date">' + e.date + '</td><td><span class="mode-badge ' + modeClass + '">' + e.mode + '</span></td><td class="cash-in-cell">' + (ci ? '\u20B9' + ci.toFixed(2) : '-') + '</td><td class="cash-out-cell">' + (co ? '\u20B9' + co.toFixed(2) : '-') + '</td><td class="balance-cell">\u20B9' + runningBalance.toFixed(2) + '</td></tr>';
+            rows += '<tr><td>' + (i + 1) + '</td><td class="remark">' + e.name + '</td><td class="date">' + e.date + '</td><td><span class="mode-badge ' + modeClass + '">' + e.mode + '</span></td><td class="cash-in-cell">' + (ci ? '\u20B9' + ci : '-') + '</td><td class="cash-out-cell">' + (co ? '\u20B9' + co : '-') + '</td><td class="balance-cell">\u20B9' + runningBalance + '</td></tr>';
         }
 
         let html = '<div class="year-section">';
@@ -1229,9 +1229,9 @@
         html += '</div></div>';
 
         html += '<div class="summary-cards">';
-        html += '<div class="card card-cash-in"><div class="card-glass"><div class="card-header"><div class="card-icon-wrapper icon-green"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><h3>Total Cash In</h3></div><p class="amount">\u20B9' + totalIn.toFixed(2) + '</p></div></div>';
-        html += '<div class="card card-cash-out"><div class="card-glass"><div class="card-header"><div class="card-icon-wrapper icon-red"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 1 0 7H6"/></svg></div><h3>Total Cash Out</h3></div><p class="amount">\u20B9' + totalOut.toFixed(2) + '</p></div></div>';
-        html += '<div class="card card-balance"><div class="card-glass"><div class="card-header"><div class="card-icon-wrapper icon-purple"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><h3>Final Balance</h3></div><p class="amount">\u20B9' + finalBalance.toFixed(2) + '</p></div></div>';
+        html += '<div class="card card-cash-in"><div class="card-glass"><div class="card-header"><h3>Total Cash In</h3></div><p class="amount">\u20B9' + totalIn + '</p></div></div>';
+        html += '<div class="card card-cash-out"><div class="card-glass"><div class="card-header"><h3>Total Cash Out</h3></div><p class="amount">\u20B9' + totalOut + '</p></div></div>';
+        html += '<div class="card card-balance"><div class="card-glass"><div class="card-header"><h3>Final Balance</h3></div><p class="amount">\u20B9' + finalBalance + '</p></div></div>';
         html += '</div>';
 
         html += '<div class="section-actions mobile-only">';
