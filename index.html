@@ -1152,14 +1152,14 @@
             const r = await fetch(API_URL + '/api/entries?year=' + year);
             const d = await r.json();
             if (!d.success || !d.data.length) {
-                container.innerHTML = '<div class="empty-state"><p>No entries found for ${year}.</p></div>';
+                container.innerHTML = `<div class="empty-state"><p>No entries found for ${year}.</p></div>`;
                 return;
             }
             const entries = d.data;
             const visible = isYearVisible(year);
 
             if (!visible) {
-                container.innerHTML = '<div class="year-section"><div class="year-section-header"><h2>${year} - Cashbook</h2><div class="section-actions"><button class="btn btn-pdf-view disabled" disabled>View PDF</button><button class="btn btn-pdf-download disabled" disabled>Download PDF</button></div></div><div class="empty-state"><p style="color:var(--text-secondary);">This Year Cashbook Hide By Admin | This Cashbook Visible Soon!!!</p></div></div>';
+                container.innerHTML = `<div class="year-section"><div class="year-section-header"><h2>${year} - Cashbook</h2><div class="section-actions"><button class="btn btn-pdf-view disabled" disabled>View PDF</button><button class="btn btn-pdf-download disabled" disabled>Download PDF</button></div></div><div class="empty-state"><p style="color:var(--text-secondary);">This Year Cashbook Hide By Admin | This Cashbook Visible Soon!!!</p></div></div>`;
                 return;
             }
 
@@ -1169,7 +1169,7 @@
             renderVisibleYearData(container);
         } catch (e) {
             console.error('Error loading year ' + year, e);
-            container.innerHTML = '<div class="empty-state"><p>Error loading data for ${year}.</p></div>';
+            container.innerHTML = `<div class="empty-state"><p>Error loading data for ${year}.</p></div>`;
         }
     }
 
@@ -1221,9 +1221,9 @@
         }
 
         let html = '<div class="year-section">';
-        html += '<div class="year-section-header"><h2>${year} - Cashbook</h2><div class="section-actions">';
-        html += '<button class="btn btn-pdf-view" onclick="viewPDFYear(\'${year}\', this)">View PDF</button>';
-        html += '<button class="btn btn-pdf-download" onclick="downloadPDFYear(\'${year}\', this)">Download PDF</button>';
+        html += `<div class="year-section-header"><h2>${year} - Cashbook</h2><div class="section-actions">`;
+        html += `<button class="btn btn-pdf-view" onclick="viewPDFYear(\'${year}\', this)">View PDF</button>`;
+        html += `<button class="btn btn-pdf-download" onclick="downloadPDFYear(\'${year}\', this)">Download PDF</button>`;
         html += '</div></div>';
 
         html += '<div class="summary-cards">';
@@ -1233,11 +1233,11 @@
         html += '</div>';
 
         html += '<div class="section-actions mobile-only">';
-        html += '<button class="btn btn-pdf-view" onclick="viewPDFYear(\'${year}\', this)">View PDF</button>';
-        html += '<button class="btn btn-pdf-download" onclick="downloadPDFYear(\'${year}\', this)">Download PDF</button>';
+        html += `<button class="btn btn-pdf-view" onclick="viewPDFYear(\'${year}\', this)">View PDF</button>`;
+        html += `<button class="btn btn-pdf-download" onclick="downloadPDFYear(\'${year}\', this)">Download PDF</button>`;
         html += '</div>';
 
-        html += '<div class="table-scroll"><table><thead><tr><th>#</th><th>Name</th><th>Date</th><th>Mode</th><th>Cash In</th><th>Cash Out</th><th>Balance</th></tr></thead><tbody>${rows}</tbody></table></div>';
+        html += `<div class="table-scroll"><table><thead><tr><th>#</th><th>Name</th><th>Date</th><th>Mode</th><th>Cash In</th><th>Cash Out</th><th>Balance</th></tr></thead><tbody>${rows}</tbody></table></div>`;
         
         if (totalPages > 1) {
             html += '<div class="pdf-pagination table-pagination">';
@@ -1309,7 +1309,7 @@
             }
             const logoDataURL = await loadLogoForCover();
             const html = await generatePDFHTML(entries, year, logoDataURL);
-            await generatePDFFromHTML(html, true, 'Cashbook_${year}.pdf');
+            await generatePDFFromHTML(html, true, `Cashbook_${year}.pdf`);
         } catch(e) { alert('Error: ' + e.message); }
         if (btn) btn.innerHTML = originalText;
     }
@@ -1573,7 +1573,7 @@ body{font-family:'Poppins','Noto Sans Devanagari',sans-serif;background:#f5f0eb;
             if (download) {
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = 'Ganpati_Cashbook_${year}.pdf';
+                a.download = `Ganpati_Cashbook_${year}.pdf`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
