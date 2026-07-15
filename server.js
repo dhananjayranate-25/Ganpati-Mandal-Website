@@ -676,12 +676,12 @@ app.get('/api/aarti', async (req, res) => {
 
 app.post('/api/aarti', async (req, res) => {
     try {
-        const { name, timeOfDay, date, phone, pujaDetails } = req.body;
-        const newAarti = new Aarti({ name, timeOfDay, date, phone, pujaDetails });
+        const { name, timeOfDay, date, phone, pujaDetails, addedBy } = req.body;
+        const newAarti = new Aarti({ name, timeOfDay, date, phone, pujaDetails, addedBy });
         await newAarti.save();
-        res.status(201).json(newAarti);
+        res.status(201).json({ success: true, ...newAarti._doc });
     } catch (error) {
-        res.status(500).json({ error: 'Failed to add aarti details' });
+        res.status(500).json({ success: false, message: 'Failed to add aarti details' });
     }
 });
 
@@ -710,12 +710,12 @@ app.get('/api/niyojan', async (req, res) => {
 
 app.post('/api/niyojan', async (req, res) => {
     try {
-        const { date, time, title, description } = req.body;
-        const newNiyojan = new Niyojan({ date, time, title, description });
+        const { date, time, title, description, addedBy } = req.body;
+        const newNiyojan = new Niyojan({ date, time, title, description, addedBy });
         await newNiyojan.save();
-        res.status(201).json(newNiyojan);
+        res.status(201).json({ success: true, ...newNiyojan._doc });
     } catch (error) {
-        res.status(500).json({ error: 'Failed to add niyojan' });
+        res.status(500).json({ success: false, message: 'Failed to add niyojan' });
     }
 });
 

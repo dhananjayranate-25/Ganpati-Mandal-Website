@@ -301,11 +301,23 @@
                         <h3>उत्सव नियोजन जोडा (Add Niyojan)</h3>
                     </div>
                     <div style="padding: 15px;">
-                        <form onsubmit="addNiyojan(event)" style="display: flex; flex-direction: column; gap: 10px;">
-                            <input type="date" id="saNiyojanDate" class="form-control-full" required>
-                            <input type="time" id="saNiyojanTime" class="form-control-full" required>
-                            <input type="text" id="saNiyojanTitle" class="form-control-full" placeholder="शीर्षक (Title)" required>
-                            <textarea id="saNiyojanDesc" class="form-control-full" placeholder="वर्णन (Description)" style="min-height:80px; resize:vertical;"></textarea>
+                        <form onsubmit="addNiyojan(event)">
+                            <div class="form-group floating-label">
+                                <input type="date" id="saNiyojanDate" placeholder=" " required>
+                                <label for="saNiyojanDate">तारीख</label>
+                            </div>
+                            <div class="form-group floating-label">
+                                <input type="time" id="saNiyojanTime" placeholder=" " required>
+                                <label for="saNiyojanTime">वेळ</label>
+                            </div>
+                            <div class="form-group floating-label">
+                                <input type="text" id="saNiyojanTitle" placeholder=" " required>
+                                <label for="saNiyojanTitle">कार्यक्रमाचे नाव</label>
+                            </div>
+                            <div class="form-group floating-label">
+                                <textarea id="saNiyojanDesc" placeholder=" " rows="3"></textarea>
+                                <label for="saNiyojanDesc">अधिक माहिती (पर्यायी)</label>
+                            </div>
                             <button type="submit" class="btn">नियोजन जोडा</button>
                         </form>
                     </div>
@@ -317,15 +329,30 @@
                         <h3>महाआरती जोडा (Add Aarti)</h3>
                     </div>
                     <div style="padding: 15px;">
-                        <form onsubmit="addAarti(event)" style="display: flex; flex-direction: column; gap: 10px;">
-                            <input type="text" id="saAartiName" class="form-control-full" placeholder="नाव (Name)" required>
-                            <input type="date" id="saAartiDate" class="form-control-full" required>
-                            <select id="saAartiTime" class="form-control-full" required>
-                                <option value="सकाळ">सकाळ</option>
-                                <option value="संध्याकाळ">संध्याकाळ</option>
-                            </select>
-                            <input type="text" id="saAartiPhone" class="form-control-full" placeholder="फोन नंबर (Phone)">
-                            <input type="text" id="saAartiDetails" class="form-control-full" placeholder="पूजा माहिती (Details)">
+                        <form onsubmit="addAarti(event)">
+                            <div class="form-group floating-label">
+                                <input type="text" id="saAartiName" placeholder=" " required>
+                                <label for="saAartiName">नाव</label>
+                            </div>
+                            <div class="form-group floating-label">
+                                <input type="date" id="saAartiDate" placeholder=" " required>
+                                <label for="saAartiDate">तारीख</label>
+                            </div>
+                            <div class="form-group floating-label select-group">
+                                <select id="saAartiTime" required>
+                                    <option value="सकाळ">सकाळ</option>
+                                    <option value="संध्याकाळ">संध्याकाळ</option>
+                                </select>
+                                <label for="saAartiTime">वेळ (सकाळ/संध्याकाळ)</label>
+                            </div>
+                            <div class="form-group floating-label">
+                                <input type="text" id="saAartiPhone" placeholder=" ">
+                                <label for="saAartiPhone">फोन नंबर</label>
+                            </div>
+                            <div class="form-group floating-label">
+                                <textarea id="saAartiDetails" placeholder=" " rows="3"></textarea>
+                                <label for="saAartiDetails">पूजा माहिती</label>
+                            </div>
                             <button type="submit" class="btn">आरती जोडा</button>
                         </form>
                     </div>
