@@ -1548,7 +1548,7 @@ body{font-family:'Poppins','Noto Sans Devanagari',sans-serif;background:#f5f0eb;
             const coverDoc = new jsPDF('p', 'mm', 'a4');
             const pgW = coverDoc.internal.pageSize.getWidth();
             const imgH = (canvas.height * pgW) / canvas.width;
-            coverDoc.addImage(canvas, 'PNG', 0, 0, pgW, imgH);
+            coverDoc.addImage(canvas.toDataURL('image/jpeg', 0.6), 'JPEG', 0, 0, pgW, imgH);
             const coverBytes = coverDoc.output('arraybuffer');
             
             const resp = await fetch('/uploads/' + filename);
