@@ -293,6 +293,44 @@
                     </div>
                 </div>
             </div>
+
+            <div class="lists-grid" style="margin-top: 30px;">
+                <!-- Add Niyojan Card -->
+                <div class="list-container">
+                    <div class="list-header">
+                        <h3>उत्सव नियोजन जोडा (Add Niyojan)</h3>
+                    </div>
+                    <div style="padding: 15px;">
+                        <form onsubmit="addNiyojan(event)" style="display: flex; flex-direction: column; gap: 10px;">
+                            <input type="date" id="saNiyojanDate" class="form-control-full" required>
+                            <input type="time" id="saNiyojanTime" class="form-control-full" required>
+                            <input type="text" id="saNiyojanTitle" class="form-control-full" placeholder="शीर्षक (Title)" required>
+                            <textarea id="saNiyojanDesc" class="form-control-full" placeholder="वर्णन (Description)" style="min-height:80px; resize:vertical;"></textarea>
+                            <button type="submit" class="btn">नियोजन जोडा</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Add Aarti Card -->
+                <div class="list-container">
+                    <div class="list-header">
+                        <h3>महाआरती जोडा (Add Aarti)</h3>
+                    </div>
+                    <div style="padding: 15px;">
+                        <form onsubmit="addAarti(event)" style="display: flex; flex-direction: column; gap: 10px;">
+                            <input type="text" id="saAartiName" class="form-control-full" placeholder="नाव (Name)" required>
+                            <input type="date" id="saAartiDate" class="form-control-full" required>
+                            <select id="saAartiTime" class="form-control-full" required>
+                                <option value="सकाळ">सकाळ</option>
+                                <option value="संध्याकाळ">संध्याकाळ</option>
+                            </select>
+                            <input type="text" id="saAartiPhone" class="form-control-full" placeholder="फोन नंबर (Phone)">
+                            <input type="text" id="saAartiDetails" class="form-control-full" placeholder="पूजा माहिती (Details)">
+                            <button type="submit" class="btn">आरती जोडा</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
