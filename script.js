@@ -1814,10 +1814,10 @@ function createPDFHTML(rows, yearLabel, totalCashIn, totalCashOut, finalBalance,
             }
             .data-table tbody tr:nth-child(odd) { background: #ffffff; }
             .data-table tbody tr:nth-child(even) { background: #fafafa; }
-            .data-table .sr-no { text-align: center; font-weight: 900; color: #000000; width: 7%; }
-            .data-table .remark { font-weight: 900; color: #000000; width: 30%; }
-            .data-table .date { color: #000000; font-weight: 900; width: 14%; }
-            .data-table .mode { text-align: center; font-weight: 900; width: 9%; color: #000000; }
+            .data-table .sr-no { text-align: center; font-weight: 600; color: #000000; width: 7%; }
+            .data-table .remark { font-weight: 600; color: #000000; width: 30%; }
+            .data-table .date { color: #000000; font-weight: 500; width: 14%; }
+            .data-table .mode { text-align: center; font-weight: 600; width: 9%; color: #000000; }
             .data-table .cash-in-cell { text-align: right; font-weight: 800; color: #444444; width: 13%; }
             .data-table .cash-out-cell { text-align: right; font-weight: 800; color: #444444; width: 13%; }
             .data-table .balance-cell { text-align: right; font-weight: 900; color: #444444; width: 14%; }
