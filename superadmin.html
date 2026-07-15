@@ -217,6 +217,63 @@
 
         #memberDashboard { display: none; }
         .empty-state { text-align: center; color: #666; margin-top: 50px; }
+    
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 768px) {
+            .form-grid { grid-template-columns: 1fr; }
+        }
+        .floating-label {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .floating-label input,
+        .floating-label select,
+        .floating-label textarea {
+            width: 100%;
+            padding: 24px 16px 8px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+        .floating-label label {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+            pointer-events: none;
+            font-size: 1rem;
+        }
+        .floating-label textarea ~ label {
+            top: 24px;
+        }
+        .floating-label input:focus,
+        .floating-label select:focus,
+        .floating-label textarea:focus {
+            outline: none;
+            border-color: #ffcc00;
+            background: rgba(255, 204, 0, 0.05);
+        }
+        .floating-label input:focus + label,
+        .floating-label input:not(:placeholder-shown) + label,
+        .floating-label select:focus + label,
+        .floating-label select:not([value=""]) + label,
+        .floating-label textarea:focus + label,
+        .floating-label textarea:not(:placeholder-shown) + label {
+            top: 8px;
+            font-size: 0.75rem;
+            color: #ffcc00;
+        }
+
     </style>
 </head>
 <body>
@@ -302,23 +359,25 @@
                     </div>
                     <div style="padding: 15px;">
                         <form onsubmit="addNiyojan(event)">
-                            <div class="form-group floating-label">
-                                <input type="date" id="saNiyojanDate" placeholder=" " required>
-                                <label for="saNiyojanDate">तारीख</label>
+                            <div class="form-grid">
+                                <div class="form-group floating-label">
+                                    <input type="date" id="saNiyojanDate" placeholder=" " required>
+                                    <label for="saNiyojanDate">तारीख</label>
+                                </div>
+                                <div class="form-group floating-label">
+                                    <input type="time" id="saNiyojanTime" placeholder=" " required>
+                                    <label for="saNiyojanTime">वेळ</label>
+                                </div>
+                                <div class="form-group floating-label" style="grid-column: 1 / -1;">
+                                    <input type="text" id="saNiyojanTitle" placeholder=" " required>
+                                    <label for="saNiyojanTitle">कार्यक्रमाचे नाव</label>
+                                </div>
+                                <div class="form-group floating-label" style="grid-column: 1 / -1;">
+                                    <textarea id="saNiyojanDesc" placeholder=" " rows="3"></textarea>
+                                    <label for="saNiyojanDesc">अधिक माहिती (पर्यायी)</label>
+                                </div>
                             </div>
-                            <div class="form-group floating-label">
-                                <input type="time" id="saNiyojanTime" placeholder=" " required>
-                                <label for="saNiyojanTime">वेळ</label>
-                            </div>
-                            <div class="form-group floating-label">
-                                <input type="text" id="saNiyojanTitle" placeholder=" " required>
-                                <label for="saNiyojanTitle">कार्यक्रमाचे नाव</label>
-                            </div>
-                            <div class="form-group floating-label">
-                                <textarea id="saNiyojanDesc" placeholder=" " rows="3"></textarea>
-                                <label for="saNiyojanDesc">अधिक माहिती (पर्यायी)</label>
-                            </div>
-                            <button type="submit" class="btn">नियोजन जोडा</button>
+                            <button type="submit" class="btn" style="width: 100%; margin-top: 15px; padding: 12px; font-size: 1.1rem; border-radius: 8px;">नियोजन जोडा</button>
                         </form>
                     </div>
                 </div>
@@ -329,7 +388,7 @@
                         <h3>महाआरती जोडा (Add Aarti)</h3>
                     </div>
                     <div style="padding: 15px;">
-                        <form onsubmit="addAarti(event)">
+                        <form onsubmit="addAarti(event)" class="form-grid">
                             <div class="form-group floating-label">
                                 <input type="text" id="saAartiName" placeholder=" " required>
                                 <label for="saAartiName">नाव</label>
@@ -349,11 +408,13 @@
                                 <input type="text" id="saAartiPhone" placeholder=" ">
                                 <label for="saAartiPhone">फोन नंबर</label>
                             </div>
-                            <div class="form-group floating-label">
-                                <textarea id="saAartiDetails" placeholder=" " rows="3"></textarea>
-                                <label for="saAartiDetails">पूजा माहिती</label>
+                            <div class="form-group floating-label" style="grid-column: 1 / -1;">
+                                <textarea id="saAartiDetails" placeholder=" " rows="2"></textarea>
+                                <label for="saAartiDetails">पूजा माहिती (ऐच्छिक)</label>
                             </div>
-                            <button type="submit" class="btn">आरती जोडा</button>
+                            <div style="grid-column: 1 / -1;">
+                                <button type="submit" class="btn" style="width: 100%; margin-top: 5px; padding: 12px; font-size: 1.1rem; border-radius: 8px;">आरती जोडा</button>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -640,58 +701,9 @@
         }
 
         
-        async function addNiyojan(e) {
-            e.preventDefault();
-            if(!selectedMemberData) return;
-            const btn = e.target.querySelector('button[type="submit"]');
-            btn.disabled = true;
-            try {
-                const res = await fetch(API_URL + '/api/niyojan', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        date: document.getElementById('saNiyojanDate').value,
-                        time: document.getElementById('saNiyojanTime').value,
-                        title: document.getElementById('saNiyojanTitle').value,
-                        description: document.getElementById('saNiyojanDesc').value,
-                        addedBy: selectedMemberData.name
-                    })
-                });
-                const data = await res.json();
-                if(data.success) {
-                    alert('Niyojan added successfully on behalf of ' + selectedMemberData.name + '!');
-                    e.target.reset();
-                } else alert(data.message);
-            } catch(err) { alert('Error adding niyojan'); }
-            btn.disabled = false;
-        }
+        
 
-        async function addAarti(e) {
-            e.preventDefault();
-            if(!selectedMemberData) return;
-            const btn = e.target.querySelector('button[type="submit"]');
-            btn.disabled = true;
-            try {
-                const res = await fetch(API_URL + '/api/aarti', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        name: document.getElementById('saAartiName').value,
-                        date: document.getElementById('saAartiDate').value,
-                        timeOfDay: document.getElementById('saAartiTime').value,
-                        phone: document.getElementById('saAartiPhone').value,
-                        pujaDetails: document.getElementById('saAartiDetails').value,
-                        addedBy: selectedMemberData.name
-                    })
-                });
-                const data = await res.json();
-                if(data.success) {
-                    alert('Maha Aarti added successfully on behalf of ' + selectedMemberData.name + '!');
-                    e.target.reset();
-                } else alert(data.message);
-            } catch(err) { alert('Error adding aarti'); }
-            btn.disabled = false;
-        }
+        
 
         async function addFunds(e) {
             e.preventDefault();
@@ -716,6 +728,73 @@
             } catch(err) {}
             btn.disabled = false;
         }
+    
+        async function addNiyojan(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            try {
+                const date = document.getElementById('saNiyojanDate').value;
+                const time = document.getElementById('saNiyojanTime').value;
+                const title = document.getElementById('saNiyojanTitle').value;
+                const description = document.getElementById('saNiyojanDesc').value;
+                
+                // Get name based on page
+                let addedByName = '';
+                if(typeof currentUser !== 'undefined' && currentUser.name) {
+                    addedByName = currentUser.name;
+                } else if(typeof selectedMember !== 'undefined' && selectedMember.name) {
+                    addedByName = selectedMember.name; // Superadmin portal
+                }
+
+                const res = await fetch(API_URL + '/api/niyojan', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ date, time, title, description, addedBy: addedByName })
+                });
+                const data = await res.json();
+                if(data.success) {
+                    e.target.reset();
+                    alert('Niyojan added successfully!');
+                    if(typeof loadMyData === 'function') loadMyData();
+                } else alert('Error adding niyojan');
+            } catch(err) { alert('Server error'); }
+            btn.disabled = false;
+        }
+
+        async function addAarti(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            try {
+                const name = document.getElementById('saAartiName').value;
+                const date = document.getElementById('saAartiDate').value;
+                const timeOfDay = document.getElementById('saAartiTime').value;
+                const phone = document.getElementById('saAartiPhone').value;
+                const pujaDetails = document.getElementById('saAartiDetails').value;
+                
+                let addedByName = '';
+                if(typeof currentUser !== 'undefined' && currentUser.name) {
+                    addedByName = currentUser.name;
+                } else if(typeof selectedMember !== 'undefined' && selectedMember.name) {
+                    addedByName = selectedMember.name;
+                }
+
+                const res = await fetch(API_URL + '/api/aarti', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ name, date, timeOfDay, phone, pujaDetails, addedBy: addedByName })
+                });
+                const data = await res.json();
+                if(data.success) {
+                    e.target.reset();
+                    alert('Maha Aarti added successfully!');
+                    if(typeof loadMyData === 'function') loadMyData();
+                } else alert('Error adding aarti');
+            } catch(err) { alert('Server error'); }
+            btn.disabled = false;
+        }
+
     </script>
 </body>
 </html>
