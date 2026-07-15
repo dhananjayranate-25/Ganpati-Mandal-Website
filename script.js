@@ -567,12 +567,12 @@ function createYearPanel(year) {
                     </div>
                     <div class="form-group floating-label">
                         <input type="number" id="cashIn-${year}" placeholder=" " min="0" step="0.01">
-                        <label for="cashIn-${year}">Cash In (+)</label>
+                        <label for="cashIn-${year}">Cash In</label>
                         <div class="input-focus-line"></div>
                     </div>
                     <div class="form-group floating-label">
                         <input type="number" id="cashOut-${year}" placeholder=" " min="0" step="0.01">
-                        <label for="cashOut-${year}">Cash Out (-)</label>
+                        <label for="cashOut-${year}">Cash Out</label>
                         <div class="input-focus-line"></div>
                     </div>
                 </div>
@@ -624,12 +624,12 @@ function createYearPanel(year) {
                 <table id="cashbookTable-${year}">
                     <thead>
                         <tr>
-                            <th>Sr. No</th>
+                            <th>#</th>
                             <th>Remark</th>
                             <th>Date</th>
                             <th>Mode</th>
-                            <th>Cash In (+)</th>
-                            <th>Cash Out (-)</th>
+                            <th>Cash In</th>
+                            <th>Cash Out</th>
                             <th>Balance</th>
                             <th>Action</th>
                         </tr>
@@ -1249,12 +1249,17 @@ function formatCurrency(amount) {
 
 function formatPDFCurrency(amount) {
     const formatted = amount.toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-    return 'Rs. ' + formatted;
+    return '₹' + formatted;
 }
 
 function formatDate(dateStr) {
     const date = new Date(dateStr);
-    return date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+    if (isNaN(date)) return dateStr;
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+    return `${day} ${month} ${year}`;
 }
 
 async function viewPDF() {
@@ -1874,11 +1879,11 @@ function createPDFHTML(rows, yearLabel, totalCashIn, totalCashOut, finalBalance,
                     <div class="summary-title">Financial Summary</div>
                     <div class="summary-row">
                         <div class="sum-card green">
-                            <h4>Total Cash In (+)</h4>
+                            <h4>Total Cash In</h4>
                             <div class="val">${formatPDFCurrency(totalCashIn)}</div>
                         </div>
                         <div class="sum-card red">
-                            <h4>Total Cash Out (-)</h4>
+                            <h4>Total Cash Out</h4>
                             <div class="val">${formatPDFCurrency(totalCashOut)}</div>
                         </div>
                         <div class="sum-card purple">
@@ -1897,8 +1902,8 @@ function createPDFHTML(rows, yearLabel, totalCashIn, totalCashOut, finalBalance,
                                 <th class="remark">Remark</th>
                                 <th class="date">Date</th>
                                 <th class="mode">Mode</th>
-                                <th class="right-align">Cash In (+)</th>
-                                <th class="right-align">Cash Out (-)</th>
+                                <th class="right-align">Cash In</th>
+                                <th class="right-align">Cash Out</th>
                                 <th class="right-align">Balance</th>
                             </tr>
                         </thead>
