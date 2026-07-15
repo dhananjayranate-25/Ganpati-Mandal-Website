@@ -4421,12 +4421,12 @@ footer::after {
     
     /* Explicit mobile column widths to minimize gaps and fit exactly 100% */
     .year-section th:nth-child(1), .year-section td:nth-child(1) { width: 5% !important; text-align: center !important; }
-    .year-section th:nth-child(2), .year-section td:nth-child(2) { width: 32% !important; min-width: unset !important; }
-    .year-section th:nth-child(3), .year-section td:nth-child(3) { width: 11% !important; text-align: center !important; }
-    .year-section th:nth-child(4), .year-section td:nth-child(4) { width: 9% !important; text-align: center !important; }
-    .year-section th:nth-child(5), .year-section td:nth-child(5) { width: 13% !important; text-align: right !important; }
-    .year-section th:nth-child(6), .year-section td:nth-child(6) { width: 13% !important; text-align: right !important; }
-    .year-section th:nth-child(7), .year-section td:nth-child(7) { width: 17% !important; text-align: right !important; }
+    .year-section th:nth-child(2), .year-section td:nth-child(2) { width: 28% !important; min-width: unset !important; }
+    .year-section th:nth-child(3), .year-section td:nth-child(3) { width: 12% !important; text-align: center !important; }
+    .year-section th:nth-child(4), .year-section td:nth-child(4) { width: 10% !important; text-align: center !important; }
+    .year-section th:nth-child(5), .year-section td:nth-child(5) { width: 15% !important; text-align: right !important; white-space: nowrap !important; }
+    .year-section th:nth-child(6), .year-section td:nth-child(6) { width: 15% !important; text-align: right !important; white-space: nowrap !important; }
+    .year-section th:nth-child(7), .year-section td:nth-child(7) { width: 15% !important; text-align: right !important; white-space: nowrap !important; }
 
     .date-dm { white-space: nowrap !important; }
     .date-y { display: block !important; margin-top: 1px; }
@@ -4682,9 +4682,14 @@ body.mobile-hishob-navbar .nav-links.active a.nav-donate-btn {
     .date-y { display: inline !important; }
 }
 
-/* Fixes for Cash In gap and Summary text */
+/* Fixes for Cash In gap */
 .year-section th:nth-child(5), .year-section td:nth-child(5) {
-    padding-right: 15px !important;
+    padding-right: 5px !important;
+}
+@media (min-width: 769px) {
+    .year-section th:nth-child(5), .year-section td:nth-child(5) {
+        padding-right: 15px !important;
+    }
 }
 
 /* Bold white text for table details (except colored cells) */
