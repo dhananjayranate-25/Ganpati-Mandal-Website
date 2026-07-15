@@ -625,7 +625,7 @@ function createYearPanel(year) {
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Remark</th>
+                            <th>Name</th>
                             <th>Date</th>
                             <th>Mode</th>
                             <th>Cash In</th>
@@ -1899,7 +1899,7 @@ function createPDFHTML(rows, yearLabel, totalCashIn, totalCashOut, finalBalance,
                         <thead>
                             <tr>
                                 <th class="sr-no">#</th>
-                                <th class="remark">Remark</th>
+                                <th class="remark">Name</th>
                                 <th class="date">Date</th>
                                 <th class="mode">Mode</th>
                                 <th class="right-align">Cash In</th>
