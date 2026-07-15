@@ -4687,14 +4687,12 @@ body.mobile-hishob-navbar .nav-links.active a.nav-donate-btn {
     padding-right: 15px !important;
 }
 
-.year-section .summary-cards .card .card-header h3 {
-    color: #ffffff !important;
-    font-weight: 700 !important;
+/* Bold white text for table details (except colored cells) */
+.year-section table td {
+    font-weight: 600 !important;
 }
-
-.year-section .summary-cards .card .amount {
+.year-section table td:nth-child(1),
+.year-section table td:nth-child(2),
+.year-section table td:nth-child(3) {
     color: #ffffff !important;
-    background: none !important;
-    -webkit-text-fill-color: #ffffff !important;
-    font-weight: 800 !important;
 }
