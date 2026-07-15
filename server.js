@@ -685,6 +685,16 @@ app.post('/api/aarti', async (req, res) => {
     }
 });
 
+
+app.put('/api/aarti/:id', async (req, res) => {
+    try {
+        const updatedAarti = await Aarti.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        res.json({ success: true, ...updatedAarti._doc });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Failed to update aarti' });
+    }
+});
+
 app.delete('/api/aarti/:id', async (req, res) => {
     try {
         await Aarti.findByIdAndDelete(req.params.id);
@@ -716,6 +726,16 @@ app.post('/api/niyojan', async (req, res) => {
         res.status(201).json({ success: true, ...newNiyojan._doc });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Failed to add niyojan' });
+    }
+});
+
+
+app.put('/api/niyojan/:id', async (req, res) => {
+    try {
+        const updatedNiyojan = await Niyojan.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        res.json({ success: true, ...updatedNiyojan._doc });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Failed to update niyojan' });
     }
 });
 

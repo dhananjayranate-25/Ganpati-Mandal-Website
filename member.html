@@ -297,6 +297,28 @@
                 </div>
             </div>
         </div>
+
+            <div class="lists-grid" style="margin-top: 30px;">
+                <!-- My Niyojan List -->
+                <div class="list-container">
+                    <div class="list-header">
+                        <h3>मी जोडलेले उत्सव नियोजन</h3>
+                    </div>
+                    <div style="flex:1; overflow-y:auto;" id="myNiyojanList">
+                        <!-- load here -->
+                    </div>
+                </div>
+
+                <!-- My Aarti List -->
+                <div class="list-container">
+                    <div class="list-header">
+                        <h3>मी जोडलेली महाआरती</h3>
+                    </div>
+                    <div style="flex:1; overflow-y:auto;" id="myAartiList">
+                        <!-- load here -->
+                    </div>
+                </div>
+            </div>
     </div>
 
     <!-- Add Expense Modal -->
@@ -327,6 +349,7 @@
             
             document.getElementById('welcomeName').innerText = currentUser.name;
             refreshData();
+                loadMyData();
         };
 
         function logout() {
@@ -424,7 +447,8 @@
                 if(data.success) {
                     closeModals();
                     e.target.reset();
-                    refreshData(); // updates the balance and list
+                    refreshData();
+                loadMyData(); // updates the balance and list
                 } else alert(data.message);
             } catch(err) { alert('Error logging expense'); }
             btn.disabled = false;

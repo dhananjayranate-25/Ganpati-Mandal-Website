@@ -810,7 +810,7 @@
                                 </div>
                                 <h3 style="color: #fff; font-family: 'Khand', sans-serif; font-size: 1.25rem; margin: 0 0 5px 0;">${item.title}</h3>
                                 ${item.description ? `<p style="color: #ccc; font-size: 0.9rem; margin: 0; line-height: 1.4;">${item.description}</p>` : ''}
-                                ${item.addedBy ? `<div style="text-align: right; font-size: 0.8rem; color: #888; font-style: italic; margin-top: 10px;">Added by: ${item.addedBy}</div>` : ''}
+                                ${item.addedBy ? `<div style="display:flex; justify-content:flex-end; margin-top: 10px;"><span style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); padding: 3px 10px; border-radius: 15px; font-size: 0.75rem; color:#aaa;"><i class="fas fa-user-edit" style="margin-right:5px; color:#d4af37;"></i>${item.addedBy}</span></div>` : ''}
                             </div>
                         </div>
                     `;
@@ -847,7 +847,7 @@
                                 <div><strong style="color: #ffcc00;">वेळ:</strong> ${aarti.timeOfDay}</div>
                             </div>
                             ${aarti.pujaDetails ? `<div style="margin-top: 10px; color: #eee; font-size: 0.85rem;"><strong style="color: #ffcc00;">पूजा माहिती:</strong> ${aarti.pujaDetails}</div>` : ''}
-                            ${aarti.addedBy ? `<div style="text-align: right; font-size: 0.8rem; color: #ff5722; font-style: italic; margin-top: 10px;">Added by: ${aarti.addedBy}</div>` : ''}
+                            ${aarti.addedBy ? `<div style="display:flex; justify-content:flex-end; margin-top: 12px; grid-column: 1 / -1;"><span style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); padding: 3px 10px; border-radius: 15px; font-size: 0.75rem; color:#aaa;"><i class="fas fa-user-edit" style="margin-right:5px; color:#ffcc00;"></i>${aarti.addedBy}</span></div>` : ''}
                         </div>
                     `;
                 });
