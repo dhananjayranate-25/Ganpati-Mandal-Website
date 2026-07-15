@@ -1796,10 +1796,10 @@ function createPDFHTML(rows, yearLabel, totalCashIn, totalCashOut, finalBalance,
                 background: #ffffff;
             }
             .data-table th {
-                color: #444444;
+                color: #000000 !important;
                 padding: 12px 10px;
                 font-size: 13px;
-                font-weight: 800;
+                font-weight: 900 !important;
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
                 border: 1px solid #cccccc;
