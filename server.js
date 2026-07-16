@@ -894,7 +894,7 @@ app.post('/api/portal/expenses', async (req, res) => {
 app.put('/api/portal/expenses/:id', async (req, res) => {
     try {
         const { item, price } = req.body;
-        const updatedExpense = await Expense.findByIdAndUpdate(req.params.id, { item, price }, { new: true });
+        const updatedExpense = await PortalExpense.findByIdAndUpdate(req.params.id, { item, price }, { new: true });
         if(!updatedExpense) return res.status(404).json({error: 'Expense not found'});
         res.json({ success: true, expense: updatedExpense });
     } catch(e) {
@@ -906,7 +906,7 @@ app.put('/api/portal/expenses/:id', async (req, res) => {
 // Delete expense
 app.delete('/api/portal/expenses/:id', async (req, res) => {
     try {
-        const deletedExpense = await Expense.findByIdAndDelete(req.params.id);
+        const deletedExpense = await PortalExpense.findByIdAndDelete(req.params.id);
         if(!deletedExpense) return res.status(404).json({error: 'Expense not found'});
         res.json({ success: true });
     } catch(e) {
