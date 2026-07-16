@@ -904,7 +904,25 @@ app.post('/api/portal/expenses', async (req, res) => {
 });
 
 
-app.listen(PORT, () => {
+
+// Add Endpoint for User Profile Photo
+app.post('/api/users/:id/photo', upload.single('photo'), async (req, res) => {
+    try {
+        if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+        const photoUrl = 'uploads/' + req.file.filename;
+        const user = await PortalUser.findByIdAndUpdate(req.params.id, { photoUrl }, { new: true });
+        if (!user) return res.status(404).json({ error: 'User not found' });
+        
+        // Auto update CommitteeMember with the same name
+        await CommitteeMember.updateMany({ name: user.name }, { photoUrl, base64Data: '' });
+        
+        res.json({ success: true, photoUrl, user });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: 'Failed to update photo' });
+    }
+});
+\napp.listen(PORT, () => {
     console.log(`Ganpati Vargani Cashbook running at http://localhost:${PORT}`);
     console.log(`Database: MongoDB`);
     console.log(`Uploads directory: ${UPLOAD_DIR}`);
