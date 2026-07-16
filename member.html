@@ -49,13 +49,9 @@
             gap: 30px;
         }
         
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-        }
+        .dashboard-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:20px;}
         @media (max-width: 768px) {
-            .dashboard-grid { grid-template-columns: 1fr; }
+            .dashboard-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:20px;}
         }
         .card {
             background: var(--glass-bg);
@@ -164,14 +160,14 @@
             z-index: 1000;
         }
         .modal.active { display: flex; }
-        .modal-content {
+        .modal-content{
             background: var(--dark);
             border: 1px solid var(--glass-border);
             padding: 25px;
             border-radius: 12px;
             width: 100%;
             max-width: 400px;
-        }
+        max-height:90vh;overflow-y:auto;}
         .modal-title { margin-top: 0; color: var(--primary); }
         .form-control-full {
             width: 100%;
@@ -257,10 +253,7 @@
                 padding: 15px;
                 gap: 20px;
             }
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
+            .dashboard-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:20px;}
             .lists-grid {
                 grid-template-columns: 1fr;
                 gap: 20px;
@@ -322,7 +315,29 @@
             }
         }
 
-    </style>
+    
+/* Premium Aesthetic Enhancements */
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(255, 204, 0, 0.2);
+    border-color: var(--primary);
+}
+.btn, .btn-outline {
+    transition: all 0.2s ease;
+}
+.btn:active, .btn-outline:active {
+    transform: scale(0.95);
+}
+.item-row {
+    transition: background 0.2s;
+}
+.item-row:hover {
+    background: rgba(255, 204, 0, 0.1);
+}
+\n</style>
 </head>
 <body>
 
