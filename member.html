@@ -820,7 +820,7 @@ table {
                 // Show loading on image
                 document.getElementById('profilePhotoPreview').style.opacity = '0.5';
                 
-                const res = await fetch(`${API_URL}/users/${currentUser._id}/photo`, {
+                const res = await fetch(`${API_URL}/api/users/${currentUser._id}/photo`, {
                     method: 'POST',
                     body: formData
                 });
