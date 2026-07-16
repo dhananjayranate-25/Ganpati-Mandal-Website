@@ -991,9 +991,12 @@
                 let html = '';
                 
                 const generateMemberHTML = (member) => {
-                    let roleName = 'सदस्य';
-                    if (member.role === 'president') roleName = 'अध्यक्ष';
-                    else if (member.role === 'treasurer') roleName = 'खजिनदार';
+                    let roleName = member.designation;
+                    if (!roleName) {
+                        roleName = 'सदस्य';
+                        if (member.role === 'president') roleName = 'अध्यक्ष';
+                        else if (member.role === 'treasurer') roleName = 'खजिनदार';
+                    }
                     
                     let photoUrl = member.photoUrl;
                     if (photoUrl) {

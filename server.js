@@ -129,7 +129,8 @@ const committeeSchema = new mongoose.Schema({
     name: { type: String, required: true },
     mobile: { type: String, required: true },
     photoUrl: { type: String, default: '' },
-    base64Data: { type: String, default: '' } // For backward compatibility or fallback
+    base64Data: { type: String, default: '' },
+    designation: { type: String, default: '' }
 });
 const CommitteeMember = mongoose.model('CommitteeMember', committeeSchema);
 
@@ -494,13 +495,14 @@ app.post('/api/committee', (req, res, next) => {
     });
 }, async (req, res) => {
     try {
-        const { role, name, mobile, order } = req.body;
+        const { role, name, mobile, order, designation } = req.body;
         if (!role || !name || !mobile) {
             return res.status(400).json({ success: false, error: 'Role, Name, and Mobile are required' });
         }
         
         let updateData = { name, mobile };
         if (order !== undefined) updateData.order = parseInt(order, 10);
+        if (designation !== undefined) updateData.designation = designation;
         
         if (req.file) {
             // Convert buffer to base64
