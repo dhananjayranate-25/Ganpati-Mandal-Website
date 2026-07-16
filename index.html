@@ -886,6 +886,7 @@
             const result = await response.json();
             if (result.success) {
                 const settings = result.data;
+                window.appSettings = settings;
                 if (settings.estYear) document.getElementById('displayEstYear').textContent = settings.estYear;
                 const regNoElem = document.getElementById('displayRegNo');
                 if (settings.regNo && regNoElem) regNoElem.textContent = settings.regNo;
