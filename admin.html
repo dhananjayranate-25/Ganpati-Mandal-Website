@@ -405,6 +405,11 @@
                             <label for="presidentMobile">Mobile Number</label>
                             <div class="input-focus-line"></div>
                         </div>
+                        <div class="form-group floating-label">
+                            <input type="text" id="presidentDesignation" placeholder=" ">
+                            <label for="presidentDesignation">Post / Designation (उदा. अध्यक्ष)</label>
+                            <div class="input-focus-line"></div>
+                        </div>
                     </div>
                     <div style="margin-top: 15px;">
                         <label style="color: var(--text-secondary); font-size: 12px; display: block; margin-bottom: 5px;">President Photo</label>
@@ -428,6 +433,11 @@
                         <div class="form-group floating-label">
                             <input type="text" id="treasurerMobile" placeholder=" ">
                             <label for="treasurerMobile">Mobile Number</label>
+                            <div class="input-focus-line"></div>
+                        </div>
+                        <div class="form-group floating-label">
+                            <input type="text" id="treasurerDesignation" placeholder=" ">
+                            <label for="treasurerDesignation">Post / Designation (उदा. खजिनदार)</label>
                             <div class="input-focus-line"></div>
                         </div>
                     </div>
@@ -462,6 +472,11 @@
                                 <div class="form-group floating-label">
                                     <input type="text" id="member${i}Mobile" placeholder=" ">
                                     <label for="member${i}Mobile">Mobile Number</label>
+                                    <div class="input-focus-line"></div>
+                                </div>
+                                <div class="form-group floating-label">
+                                    <input type="text" id="member${i}Designation" placeholder=" ">
+                                    <label for="member${i}Designation">Post / Designation (उदा. सचिव)</label>
                                     <div class="input-focus-line"></div>
                                 </div>
                             </div>
@@ -2042,6 +2057,8 @@ table {
             
             const name = document.getElementById(role + 'Name').value.trim();
             const mobile = document.getElementById(role + 'Mobile').value.trim();
+            const designationElem = document.getElementById(role + 'Designation');
+            const designation = designationElem ? designationElem.value.trim() : '';
             const photoInput = document.getElementById(role + 'PhotoInput');
             
             if (!name || !mobile) {
@@ -2059,6 +2076,7 @@ table {
             formData.append('role', role);
             formData.append('name', name);
             formData.append('mobile', mobile);
+            formData.append('designation', designation);
             formData.append('order', orderNum);
             
             if (photoInput.files.length > 0) {
@@ -2146,6 +2164,9 @@ table {
                         }
                         if (document.getElementById(role + 'Mobile')) {
                             document.getElementById(role + 'Mobile').value = member.mobile || '';
+                        }
+                        if (document.getElementById(role + 'Designation')) {
+                            document.getElementById(role + 'Designation').value = member.designation || '';
                         }
                     });
                 }
