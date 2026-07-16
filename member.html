@@ -541,6 +541,34 @@ table {
             </form>
         </div>
     </div>
+    <!-- Edit Niyojan Modal -->
+    <div class="modal" id="editNiyojanModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('editNiyojanModal')">&times;</span>
+            <h3 class="modal-title">Edit Niyojan</h3>
+            <form onsubmit="updateNiyojan(event)">
+                <input type="hidden" id="editNiyojanId">
+                <div class="form-group">
+                    <label>तारीख (Date)</label>
+                    <input type="date" id="editNiyojanDate" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>वेळ (Time)</label>
+                    <input type="time" id="editNiyojanTime" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>कार्यक्रमाचे नाव (Title)</label>
+                    <input type="text" id="editNiyojanTitle" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>अधिक माहिती (Description)</label>
+                    <textarea id="editNiyojanDesc" class="form-control" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn">Update Niyojan (अपडेट करा)</button>
+            </form>
+        </div>
+    </div>
+    
     <!-- Edit Expense Modal -->
     <div class="modal" id="editExpenseModal">
         <div class="modal-content">
@@ -850,6 +878,7 @@ table {
                 let data = await res.json();
                 if(Array.isArray(data) || data.success) {
                     let niyojanList = Array.isArray(data) ? data : data.niyojan;
+                    window.allNiyojan = niyojanList;
                     let myNiyojan = niyojanList.filter(n => n.addedBy === currentUser.name);
                     let niyojanHtml = '';
                     myNiyojan.forEach((n, index) => {
@@ -876,7 +905,7 @@ table {
                             ${n.description ? `<p style="color: #ccc; font-size: 0.85rem; margin: 0 0 10px 0;">${n.description}</p>` : ''}
                             
                             <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:10px; border-top: 1px solid rgba(255,255,255,0.1); padding-top:10px;">
-                                <button class="btn btn-outline btn-small" onclick="editNiyojan('${n._id}', '${n.title.replace(/'/g, "\'")}')"><i class="fas fa-edit"></i> Edit</button>
+                                <button class="btn btn-outline btn-small" onclick="editNiyojan('${n._id}')"><i class="fas fa-edit"></i> Edit</button>
                                 <button class="btn btn-small" style="background:#ff4444; color:white; border:none;" onclick="deleteNiyojan('${n._id}')"><i class="fas fa-trash"></i> Delete</button>
                             </div>
                         </div>
@@ -949,24 +978,36 @@ table {
             } catch(e) { alert('Server error'); }
         }
 
-        async function editNiyojan(id, oldName) {
-            const newName = prompt('Enter new title for Niyojan:', oldName);
-            if(!newName || newName === oldName) return;
-            // For simplicity, we only update title here, but real edit could open a modal
+        function editNiyojan(id) {
+            const n = window.allNiyojan.find(x => x._id === id);
+            if (!n) return;
+            document.getElementById('editNiyojanId').value = n._id;
+            document.getElementById('editNiyojanDate').value = n.date || '';
+            document.getElementById('editNiyojanTime').value = n.time || '';
+            document.getElementById('editNiyojanTitle').value = n.title || '';
+            document.getElementById('editNiyojanDesc').value = n.description || '';
+            openModal('editNiyojanModal');
+        }
+
+        async function updateNiyojan(e) {
+            e.preventDefault();
+            const id = document.getElementById('editNiyojanId').value;
+            const title = document.getElementById('editNiyojanTitle').value;
+            const description = document.getElementById('editNiyojanDesc').value;
+            const date = document.getElementById('editNiyojanDate').value;
+            const time = document.getElementById('editNiyojanTime').value;
+
             try {
                 const res = await fetch(API_URL + '/api/niyojan/' + id, {
                     method: 'PUT',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ title: newName })
+                    body: JSON.stringify({ title, description, date, time })
                 });
                 const data = await res.json();
                 if(data.success) {
                     alert('Updated successfully');
-        
-            if(currentUser.photoUrl) {
-                document.getElementById('profilePhotoPreview').src = currentUser.photoUrl;
-            }
-            loadMyData();
+                    closeModal('editNiyojanModal');
+                    loadMyData();
                 } else alert('Error updating');
             } catch(e) { alert('Server error'); }
         }
