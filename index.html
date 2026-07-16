@@ -1944,6 +1944,16 @@ table {
     tempWebsiteUrl.innerHTML = 'अधिकृत वेबसाईट: <span style="color: #ffd700;">https://shivsrushti-utsav-mandal.onrender.com</span>';
     clone.insertBefore(tempWebsiteUrl, mandalPoster.nextSibling);
     
+    const devWatermark1 = document.createElement('div');
+    devWatermark1.style.color = '#777';
+    devWatermark1.style.textAlign = 'center';
+    devWatermark1.style.fontSize = '14px';
+    devWatermark1.style.marginTop = '20px';
+    devWatermark1.style.width = '100%';
+    devWatermark1.style.fontFamily = "'Poppins', sans-serif";
+    devWatermark1.innerHTML = 'Developed by | Dhananjay Ranate';
+    clone.appendChild(devWatermark1);
+    
     const canvas = await html2canvas(clone, {
         scale: 2,
         useCORS: true,
@@ -2029,6 +2039,16 @@ table {
         textContainer.style.fontFamily = "'Poppins', sans-serif";
         textContainer.textContent = customText;
         clone.appendChild(textContainer);
+        
+        const devWatermark2 = document.createElement('div');
+        devWatermark2.style.color = '#777';
+        devWatermark2.style.textAlign = 'center';
+        devWatermark2.style.fontSize = '14px';
+        devWatermark2.style.marginTop = '20px';
+        devWatermark2.style.width = '100%';
+        devWatermark2.style.fontFamily = "'Poppins', sans-serif";
+        devWatermark2.innerHTML = 'Developed by | Dhananjay Ranate';
+        clone.appendChild(devWatermark2);
 
         // Capture with html2canvas
         const canvas = await html2canvas(clone, {
@@ -2057,7 +2077,7 @@ table {
                 
                 const shareData = {
                     title: orgName + ' - ' + shareTitle,
-                    text: customText + '\n\n🌐 अधिकृत वेबसाईट:\nhttps://shivsrushti-utsav-mandal.onrender.com\n\n✨ ही वेबसाईट Dhananjay Ranate ने बनवली आहे. ✨',
+                    text: customText + '\n\n🌐 अधिकृत वेबसाईट:\nhttps://shivsrushti-utsav-mandal.onrender.com',
                     files: [file]
                 };
 
