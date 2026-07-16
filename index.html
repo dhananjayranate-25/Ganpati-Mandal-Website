@@ -8,7 +8,20 @@
     <title>Ganpati Vargani Cashbook - Shivsrushti</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Noto+Sans+Devanagari:wght@300;400;500;600;700;900&family=Yatra+One&family=Amita:wght@700&family=Eczar:wght@800&family=Khand:wght@800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css?v=4">
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
+    // Auto-wrap tables for mobile responsiveness
+    document.addEventListener('DOMContentLoaded', function() {
+        const tables = document.querySelectorAll('table');
+        tables.forEach(table => {
+            if (!table.parentElement.classList.contains('table-responsive')) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'table-responsive';
+                table.parentNode.insertBefore(wrapper, table);
+                wrapper.appendChild(table);
+            }
+        });
+    });
+    \n</script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
@@ -1424,6 +1437,44 @@
 .btn:active, .action-btn:active {
     transform: scale(0.95);
 }
+\n
+/* Premium Aesthetic Enhancements */
+.card, .list-container, .event-card, .committee-card, .expense-card {
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+}
+.card:hover, .list-container:hover, .event-card:hover, .committee-card:hover, .expense-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(255, 204, 0, 0.15);
+    border-color: var(--primary);
+}
+.btn, .btn-outline, .action-btn {
+    transition: all 0.2s ease;
+}
+.btn:active, .btn-outline:active, .action-btn:active {
+    transform: scale(0.95);
+}
+.item-row {
+    transition: background 0.2s;
+}
+.item-row:hover {
+    background: rgba(255, 204, 0, 0.1);
+}
+/* Responsive Tables */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+}
+table {
+    width: 100%;
+    min-width: 500px; /* Ensures table doesn't squish too much on mobile */
+}
+/* Form Grid Mobile Fix */
+@media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
 \n</style></head><body><div class="cover-page"><div class="cover-outer-border"></div><div class="cover-inner-border"></div><div class="cover-corner tl"></div><div class="cover-corner tr"></div><div class="cover-corner bl"></div><div class="cover-corner br"></div><div class="cover-content"><div class="cover-logo-wrap"><div class="cover-logo-glow"></div><div class="cover-logo-ring"></div><div class="cover-logo-ring2"></div><div class="cover-logo" style="background-image: url('${logoSrc}');"></div></div><div class="cover-mandal-name">${s.orgName.includes('शिवसृष्टी') ? '<div style="font-size:1.9em; font-weight:900; color:#ffd700; text-shadow:0 0 25px rgba(255,140,0,1); line-height:1.2; margin-bottom:12px;">शिवसृष्टी</div><div style="font-size:1.1em; font-weight:800; color:#ffcc00; margin-bottom:5px;">सार्वजनिक उत्सव मंडळ</div><div style="font-size:1.1em; font-weight:800; color:#ffcc00;">संगमनेर <span style="color:#d32f2f;">🚩</span></div>' : s.orgName}</div><div class="cover-divider"></div><div class="cover-subtitle">${s.subtitle}</div><div class="cover-tagline">${s.tagline}</div><div class="cover-year-box"><span class="cover-year-label">\u0935\u0930\u094D\u0937 / Year</span><span class="cover-year-val">${year}</span></div></div><div class="cover-footer"><div class="cover-footer-om">ॐ गण गणपतये नमः</div><p>Developed by | Dhananjay Ranate</p></div></div><div class="inner-page"><div class="page-header-bar"><div class="header-info"><h1>${s.headerOrgName || s.orgName}</h1><p>${s.headerSubtitle || s.subtitle} \u2014 \u0935\u0930\u094D\u0937: ${year}</p></div></div><div class="page-body"><div class="summary-section"><div class="summary-title">Financial Summary</div><div class="summary-row"><div class="sum-card green"><h4>Total Cash In</h4><div class="val">${formatPDFCurrency(totalCashIn)}</div></div><div class="sum-card red"><h4>Total Cash Out</h4><div class="val">${formatPDFCurrency(totalCashOut)}</div></div><div class="sum-card purple"><h4>Final Balance</h4><div class="val">${formatPDFCurrency(finalBalance)}</div></div></div></div><div class="table-section"><div class="table-heading">Transaction Records</div><table class="data-table"><thead><tr><th class="sr-no">#</th><th class="remark">Name</th><th class="date">Date</th><th class="mode">Mode</th><th class="right-align">Cash In</th><th class="right-align">Cash Out</th><th class="right-align">Balance</th></tr></thead><tbody>${rows}</tbody></table><div style=\"height:1.5px;background:linear-gradient(90deg,#ff8c00,#ffd700,#ff8c00);margin:12px 0 8px 0;border-radius:2px;\"></div><div style=\"display:flex; justify-content:space-between; margin-top:30px; padding:0 30px;\"><div style=\"text-align:center;\"><div style=\"font-weight:800; font-size:15px; color:#5a2010; margin-bottom:5px;\">अध्यक्ष</div><div style=\"font-weight:700; font-size:16px; color:#1a1a2e;\">तेजस फटांगरे</div><div style=\"font-size:13px; color:#555555; margin-top:3px;\">मो. नं - 9370599259</div></div><div style=\"text-align:center;\"><div style=\"font-weight:800; font-size:15px; color:#5a2010; margin-bottom:5px;\">खजिनदार</div><div style=\"font-weight:700; font-size:16px; color:#1a1a2e;\">धनंजय रणाते</div><div style=\"font-size:13px; color:#555555; margin-top:3px;\">मो. नं - 9322134560</div></div></div></div><div class="page-footer" style=\"margin-top:40px; padding-bottom:20px;\"><div style=\"margin-bottom:8px; font-weight:600; font-size:13px; color:#1a1a2e; text-align:center;\">अधिकृत वेबसाईट : <a href=\"https://shivsrushti-utsav-mandal.onrender.com\" target=\"_blank\" style=\"color:#0000ee; text-decoration:none;\">https://shivsrushti-utsav-mandal.onrender.com</a></div><div class="dev" style=\"font-size:13px; color:#475569; font-weight:600; text-align:center;\">Developed by | Dhananjay Ranate</div></div></div></div></body></html>`;
     }
 
@@ -1650,6 +1701,44 @@ body{font-family:'Poppins','Noto Sans Devanagari',sans-serif;background:#f5f0eb;
 }
 .btn:active, .action-btn:active {
     transform: scale(0.95);
+}
+\n
+/* Premium Aesthetic Enhancements */
+.card, .list-container, .event-card, .committee-card, .expense-card {
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+}
+.card:hover, .list-container:hover, .event-card:hover, .committee-card:hover, .expense-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(255, 204, 0, 0.15);
+    border-color: var(--primary);
+}
+.btn, .btn-outline, .action-btn {
+    transition: all 0.2s ease;
+}
+.btn:active, .btn-outline:active, .action-btn:active {
+    transform: scale(0.95);
+}
+.item-row {
+    transition: background 0.2s;
+}
+.item-row:hover {
+    background: rgba(255, 204, 0, 0.1);
+}
+/* Responsive Tables */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+}
+table {
+    width: 100%;
+    min-width: 500px; /* Ensures table doesn't squish too much on mobile */
+}
+/* Form Grid Mobile Fix */
+@media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr !important;
+    }
 }
 \n</style></head><body>
 <div class="cover-page">

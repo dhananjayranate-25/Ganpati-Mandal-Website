@@ -318,6 +318,19 @@
         </div>
     </div>
 
-    <script src="user.js"></script>
+    <script src="user.js">
+    // Auto-wrap tables for mobile responsiveness
+    document.addEventListener('DOMContentLoaded', function() {
+        const tables = document.querySelectorAll('table');
+        tables.forEach(table => {
+            if (!table.parentElement.classList.contains('table-responsive')) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'table-responsive';
+                table.parentNode.insertBefore(wrapper, table);
+                wrapper.appendChild(table);
+            }
+        });
+    });
+    \n</script>
 </body>
 </html>

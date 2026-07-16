@@ -77,7 +77,7 @@
 
         .lists-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 30px;
         }
         @media (max-width: 900px) {
@@ -183,7 +183,7 @@
     
         .form-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
         }
         @media (max-width: 768px) {
@@ -336,6 +336,44 @@
 }
 .item-row:hover {
     background: rgba(255, 204, 0, 0.1);
+}
+\n
+/* Premium Aesthetic Enhancements */
+.card, .list-container, .event-card, .committee-card, .expense-card {
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+}
+.card:hover, .list-container:hover, .event-card:hover, .committee-card:hover, .expense-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(255, 204, 0, 0.15);
+    border-color: var(--primary);
+}
+.btn, .btn-outline, .action-btn {
+    transition: all 0.2s ease;
+}
+.btn:active, .btn-outline:active, .action-btn:active {
+    transform: scale(0.95);
+}
+.item-row {
+    transition: background 0.2s;
+}
+.item-row:hover {
+    background: rgba(255, 204, 0, 0.1);
+}
+/* Responsive Tables */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+}
+table {
+    width: 100%;
+    min-width: 500px; /* Ensures table doesn't squish too much on mobile */
+}
+/* Form Grid Mobile Fix */
+@media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr !important;
+    }
 }
 \n</style>
 </head>
@@ -784,7 +822,7 @@
                         aartiHtml += `
                         <div style="background: rgba(255,255,255,0.05); border-left: 3px solid #ffcc00; padding: 15px; border-radius: 8px; margin-bottom: 15px; position:relative;">
                             <h3 style="color: #ffeb3b; margin: 0 0 10px 0; font-size: 1.1rem;">${a.name}</h3>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; color: #fff; font-size: 0.85rem; margin-bottom: 10px;">
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 8px; color: #fff; font-size: 0.85rem; margin-bottom: 10px;">
                                 <div><i class="far fa-calendar-alt" style="color: #d4af37;"></i> ${formattedDate}</div>
                                 <div><i class="far fa-clock" style="color: #d4af37;"></i> ${a.timeOfDay}</div>
                                 ${a.phone ? `<div style="grid-column: 1 / -1;"><i class="fas fa-phone-alt" style="color: #d4af37;"></i> ${a.phone}</div>` : ''}
@@ -878,6 +916,19 @@
             } catch(e) { alert('Server error'); }
         }
 
-    </script>
+    
+    // Auto-wrap tables for mobile responsiveness
+    document.addEventListener('DOMContentLoaded', function() {
+        const tables = document.querySelectorAll('table');
+        tables.forEach(table => {
+            if (!table.parentElement.classList.contains('table-responsive')) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'table-responsive';
+                table.parentNode.insertBefore(wrapper, table);
+                wrapper.appendChild(table);
+            }
+        });
+    });
+    \n</script>
 </body>
 </html>
