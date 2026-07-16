@@ -549,15 +549,18 @@
         grid.innerHTML = '<p style="text-align: center; color: white; width: 100%; grid-column: 1 / -1;">अल्बम लोड होत आहेत...</p>';
         try {
             const res = await fetch('/api/gallery');
+            if (!res.ok) {
+                throw new Error('Server returned ' + res.status);
+            }
             const data = await res.json();
             if (data.success) {
-                galleryAlbumsCache = data.albums;
-                if (data.albums.length === 0) {
+                galleryAlbumsCache = data.albums || [];
+                if (galleryAlbumsCache.length === 0) {
                     grid.innerHTML = '<p style="text-align: center; color: white; width: 100%; grid-column: 1 / -1;">कोणतेही अल्बम उपलब्ध नाहीत.</p>';
                     return;
                 }
                 
-                grid.innerHTML = data.albums.map(album => {
+                grid.innerHTML = galleryAlbumsCache.map(album => {
                     const coverPhoto = album.photos.length > 0 ? '/' + album.photos[0] : 'logo/logo.jpeg';
                     return `
                         <div class="album-card" onclick="openAlbum('${album._id}')" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; overflow: hidden; cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease;">
@@ -571,10 +574,12 @@
                         </div>
                     `;
                 }).join('');
+            } else {
+                grid.innerHTML = '<p style="text-align: center; color: #ff5252; width: 100%; grid-column: 1 / -1;">माहिती लोड करण्यात त्रुटी: ' + (data.error || 'अज्ञात त्रुटी') + '</p>';
             }
         } catch (e) {
-            console.error(e);
-            grid.innerHTML = '<p style="text-align: center; color: #ff5252; width: 100%; grid-column: 1 / -1;">माहिती लोड करण्यात त्रुटी आली.</p>';
+            console.error('Gallery API Error:', e);
+            grid.innerHTML = '<p style="text-align: center; color: #ff5252; width: 100%; grid-column: 1 / -1;">माहिती लोड करण्यात त्रुटी आली. कृपया इंटरनेट तपासा.</p>';
         }
     }
 
