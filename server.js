@@ -922,7 +922,8 @@ app.post('/api/users/:id/photo', upload.single('photo'), async (req, res) => {
         res.status(500).json({ error: 'Failed to update photo' });
     }
 });
-\napp.listen(PORT, () => {
+
+app.listen(PORT, () => {
     console.log(`Ganpati Vargani Cashbook running at http://localhost:${PORT}`);
     console.log(`Database: MongoDB`);
     console.log(`Uploads directory: ${UPLOAD_DIR}`);
