@@ -621,6 +621,9 @@ table {
         function closeModals() {
             document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
         }
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
 
         async function refreshData() {
             try {

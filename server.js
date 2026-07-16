@@ -782,8 +782,22 @@ app.get('/api/portal/users', async (req, res) => {
 app.put('/api/portal/expenses/:id', async (req, res) => {
     try {
         const { item, price } = req.body;
-        const updatedExpense = await PortalExpense.findByIdAndUpdate(req.params.id, { item, price }, { new: true });
-        if(!updatedExpense) return res.status(404).json({error: 'Expense not found'});
+        const numPrice = Number(price);
+        
+        const oldExpense = await PortalExpense.findById(req.params.id);
+        if(!oldExpense) return res.status(404).json({error: 'Expense not found'});
+        
+        const priceDiff = numPrice - oldExpense.price;
+        
+        const updatedExpense = await PortalExpense.findByIdAndUpdate(req.params.id, { item, price: numPrice }, { new: true });
+        
+        const user = await PortalUser.findById(oldExpense.userId);
+        if (user) {
+            user.totalSpent += priceDiff;
+            user.balance -= priceDiff;
+            await user.save();
+        }
+        
         res.json({ success: true, expense: updatedExpense });
     } catch(e) {
         console.error(e);
@@ -796,6 +810,14 @@ app.delete('/api/portal/expenses/:id', async (req, res) => {
     try {
         const deletedExpense = await PortalExpense.findByIdAndDelete(req.params.id);
         if(!deletedExpense) return res.status(404).json({error: 'Expense not found'});
+        
+        const user = await PortalUser.findById(deletedExpense.userId);
+        if (user) {
+            user.totalSpent -= deletedExpense.price;
+            user.balance += deletedExpense.price;
+            await user.save();
+        }
+        
         res.json({ success: true });
     } catch(e) {
         console.error(e);
@@ -814,29 +836,8 @@ app.get('/api/portal/users/:id', async (req, res) => {
 });
 
 // Update expense
-app.put('/api/portal/expenses/:id', async (req, res) => {
-    try {
-        const { item, price } = req.body;
-        const updatedExpense = await PortalExpense.findByIdAndUpdate(req.params.id, { item, price }, { new: true });
-        if(!updatedExpense) return res.status(404).json({error: 'Expense not found'});
-        res.json({ success: true, expense: updatedExpense });
-    } catch(e) {
-        console.error(e);
-        res.status(500).json({ error: 'Failed to update expense' });
-    }
-});
 
 // Delete expense
-app.delete('/api/portal/expenses/:id', async (req, res) => {
-    try {
-        const deletedExpense = await PortalExpense.findByIdAndDelete(req.params.id);
-        if(!deletedExpense) return res.status(404).json({error: 'Expense not found'});
-        res.json({ success: true });
-    } catch(e) {
-        console.error(e);
-        res.status(500).json({ error: 'Failed to delete expense' });
-    }
-});
 
 app.post('/api/portal/users', async (req, res) => {
     try {
@@ -856,29 +857,8 @@ app.post('/api/portal/users', async (req, res) => {
 });
 
 // Update expense
-app.put('/api/portal/expenses/:id', async (req, res) => {
-    try {
-        const { item, price } = req.body;
-        const updatedExpense = await PortalExpense.findByIdAndUpdate(req.params.id, { item, price }, { new: true });
-        if(!updatedExpense) return res.status(404).json({error: 'Expense not found'});
-        res.json({ success: true, expense: updatedExpense });
-    } catch(e) {
-        console.error(e);
-        res.status(500).json({ error: 'Failed to update expense' });
-    }
-});
 
 // Delete expense
-app.delete('/api/portal/expenses/:id', async (req, res) => {
-    try {
-        const deletedExpense = await PortalExpense.findByIdAndDelete(req.params.id);
-        if(!deletedExpense) return res.status(404).json({error: 'Expense not found'});
-        res.json({ success: true });
-    } catch(e) {
-        console.error(e);
-        res.status(500).json({ error: 'Failed to delete expense' });
-    }
-});
 
 
 app.put('/api/portal/users/:id', async (req, res) => {
@@ -896,29 +876,8 @@ app.put('/api/portal/users/:id', async (req, res) => {
 });
 
 // Update expense
-app.put('/api/portal/expenses/:id', async (req, res) => {
-    try {
-        const { item, price } = req.body;
-        const updatedExpense = await PortalExpense.findByIdAndUpdate(req.params.id, { item, price }, { new: true });
-        if(!updatedExpense) return res.status(404).json({error: 'Expense not found'});
-        res.json({ success: true, expense: updatedExpense });
-    } catch(e) {
-        console.error(e);
-        res.status(500).json({ error: 'Failed to update expense' });
-    }
-});
 
 // Delete expense
-app.delete('/api/portal/expenses/:id', async (req, res) => {
-    try {
-        const deletedExpense = await PortalExpense.findByIdAndDelete(req.params.id);
-        if(!deletedExpense) return res.status(404).json({error: 'Expense not found'});
-        res.json({ success: true });
-    } catch(e) {
-        console.error(e);
-        res.status(500).json({ error: 'Failed to delete expense' });
-    }
-});
 
 app.delete('/api/portal/users/:id', async (req, res) => {
     try {
@@ -932,29 +891,8 @@ app.delete('/api/portal/users/:id', async (req, res) => {
 });
 
 // Update expense
-app.put('/api/portal/expenses/:id', async (req, res) => {
-    try {
-        const { item, price } = req.body;
-        const updatedExpense = await PortalExpense.findByIdAndUpdate(req.params.id, { item, price }, { new: true });
-        if(!updatedExpense) return res.status(404).json({error: 'Expense not found'});
-        res.json({ success: true, expense: updatedExpense });
-    } catch(e) {
-        console.error(e);
-        res.status(500).json({ error: 'Failed to update expense' });
-    }
-});
 
 // Delete expense
-app.delete('/api/portal/expenses/:id', async (req, res) => {
-    try {
-        const deletedExpense = await PortalExpense.findByIdAndDelete(req.params.id);
-        if(!deletedExpense) return res.status(404).json({error: 'Expense not found'});
-        res.json({ success: true });
-    } catch(e) {
-        console.error(e);
-        res.status(500).json({ error: 'Failed to delete expense' });
-    }
-});
 
 app.post('/api/portal/funds', async (req, res) => {
     try {
@@ -973,29 +911,8 @@ app.post('/api/portal/funds', async (req, res) => {
 });
 
 // Update expense
-app.put('/api/portal/expenses/:id', async (req, res) => {
-    try {
-        const { item, price } = req.body;
-        const updatedExpense = await PortalExpense.findByIdAndUpdate(req.params.id, { item, price }, { new: true });
-        if(!updatedExpense) return res.status(404).json({error: 'Expense not found'});
-        res.json({ success: true, expense: updatedExpense });
-    } catch(e) {
-        console.error(e);
-        res.status(500).json({ error: 'Failed to update expense' });
-    }
-});
 
 // Delete expense
-app.delete('/api/portal/expenses/:id', async (req, res) => {
-    try {
-        const deletedExpense = await PortalExpense.findByIdAndDelete(req.params.id);
-        if(!deletedExpense) return res.status(404).json({error: 'Expense not found'});
-        res.json({ success: true });
-    } catch(e) {
-        console.error(e);
-        res.status(500).json({ error: 'Failed to delete expense' });
-    }
-});
 
 app.get('/api/portal/tasks/:userId', async (req, res) => {
     try {
@@ -1007,29 +924,8 @@ app.get('/api/portal/tasks/:userId', async (req, res) => {
 });
 
 // Update expense
-app.put('/api/portal/expenses/:id', async (req, res) => {
-    try {
-        const { item, price } = req.body;
-        const updatedExpense = await PortalExpense.findByIdAndUpdate(req.params.id, { item, price }, { new: true });
-        if(!updatedExpense) return res.status(404).json({error: 'Expense not found'});
-        res.json({ success: true, expense: updatedExpense });
-    } catch(e) {
-        console.error(e);
-        res.status(500).json({ error: 'Failed to update expense' });
-    }
-});
 
 // Delete expense
-app.delete('/api/portal/expenses/:id', async (req, res) => {
-    try {
-        const deletedExpense = await PortalExpense.findByIdAndDelete(req.params.id);
-        if(!deletedExpense) return res.status(404).json({error: 'Expense not found'});
-        res.json({ success: true });
-    } catch(e) {
-        console.error(e);
-        res.status(500).json({ error: 'Failed to delete expense' });
-    }
-});
 
 app.post('/api/portal/tasks', async (req, res) => {
     try {
@@ -1043,29 +939,8 @@ app.post('/api/portal/tasks', async (req, res) => {
 });
 
 // Update expense
-app.put('/api/portal/expenses/:id', async (req, res) => {
-    try {
-        const { item, price } = req.body;
-        const updatedExpense = await PortalExpense.findByIdAndUpdate(req.params.id, { item, price }, { new: true });
-        if(!updatedExpense) return res.status(404).json({error: 'Expense not found'});
-        res.json({ success: true, expense: updatedExpense });
-    } catch(e) {
-        console.error(e);
-        res.status(500).json({ error: 'Failed to update expense' });
-    }
-});
 
 // Delete expense
-app.delete('/api/portal/expenses/:id', async (req, res) => {
-    try {
-        const deletedExpense = await PortalExpense.findByIdAndDelete(req.params.id);
-        if(!deletedExpense) return res.status(404).json({error: 'Expense not found'});
-        res.json({ success: true });
-    } catch(e) {
-        console.error(e);
-        res.status(500).json({ error: 'Failed to delete expense' });
-    }
-});
 
 app.put('/api/portal/tasks/:id', async (req, res) => {
     try {
@@ -1078,29 +953,8 @@ app.put('/api/portal/tasks/:id', async (req, res) => {
 });
 
 // Update expense
-app.put('/api/portal/expenses/:id', async (req, res) => {
-    try {
-        const { item, price } = req.body;
-        const updatedExpense = await PortalExpense.findByIdAndUpdate(req.params.id, { item, price }, { new: true });
-        if(!updatedExpense) return res.status(404).json({error: 'Expense not found'});
-        res.json({ success: true, expense: updatedExpense });
-    } catch(e) {
-        console.error(e);
-        res.status(500).json({ error: 'Failed to update expense' });
-    }
-});
 
 // Delete expense
-app.delete('/api/portal/expenses/:id', async (req, res) => {
-    try {
-        const deletedExpense = await PortalExpense.findByIdAndDelete(req.params.id);
-        if(!deletedExpense) return res.status(404).json({error: 'Expense not found'});
-        res.json({ success: true });
-    } catch(e) {
-        console.error(e);
-        res.status(500).json({ error: 'Failed to delete expense' });
-    }
-});
 
 app.get('/api/portal/expenses/:userId', async (req, res) => {
     try {
@@ -1112,29 +966,8 @@ app.get('/api/portal/expenses/:userId', async (req, res) => {
 });
 
 // Update expense
-app.put('/api/portal/expenses/:id', async (req, res) => {
-    try {
-        const { item, price } = req.body;
-        const updatedExpense = await PortalExpense.findByIdAndUpdate(req.params.id, { item, price }, { new: true });
-        if(!updatedExpense) return res.status(404).json({error: 'Expense not found'});
-        res.json({ success: true, expense: updatedExpense });
-    } catch(e) {
-        console.error(e);
-        res.status(500).json({ error: 'Failed to update expense' });
-    }
-});
 
 // Delete expense
-app.delete('/api/portal/expenses/:id', async (req, res) => {
-    try {
-        const deletedExpense = await PortalExpense.findByIdAndDelete(req.params.id);
-        if(!deletedExpense) return res.status(404).json({error: 'Expense not found'});
-        res.json({ success: true });
-    } catch(e) {
-        console.error(e);
-        res.status(500).json({ error: 'Failed to delete expense' });
-    }
-});
 
 app.post('/api/portal/expenses', async (req, res) => {
     try {
@@ -1161,29 +994,8 @@ app.post('/api/portal/expenses', async (req, res) => {
 });
 
 // Update expense
-app.put('/api/portal/expenses/:id', async (req, res) => {
-    try {
-        const { item, price } = req.body;
-        const updatedExpense = await PortalExpense.findByIdAndUpdate(req.params.id, { item, price }, { new: true });
-        if(!updatedExpense) return res.status(404).json({error: 'Expense not found'});
-        res.json({ success: true, expense: updatedExpense });
-    } catch(e) {
-        console.error(e);
-        res.status(500).json({ error: 'Failed to update expense' });
-    }
-});
 
 // Delete expense
-app.delete('/api/portal/expenses/:id', async (req, res) => {
-    try {
-        const deletedExpense = await PortalExpense.findByIdAndDelete(req.params.id);
-        if(!deletedExpense) return res.status(404).json({error: 'Expense not found'});
-        res.json({ success: true });
-    } catch(e) {
-        console.error(e);
-        res.status(500).json({ error: 'Failed to delete expense' });
-    }
-});
 
 
 
