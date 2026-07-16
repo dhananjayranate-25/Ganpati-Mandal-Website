@@ -163,17 +163,19 @@
                     </div>
                     
                     <!-- Share and Download Buttons -->
-                    <div class="donation-actions" id="donationActions" style="flex-wrap: wrap;">
-                        <button onclick="downloadDonationImage()" class="donation-action-btn donation-download-btn" style="flex: 1 1 45%;">
+                    <div class="donation-actions" id="donationActions">
+                        <button onclick="downloadDonationImage()" class="donation-action-btn donation-download-btn">
                             <i class="fas fa-download"></i> डाउनलोड करा
                         </button>
-                        <button onclick="shareDonationImage()" class="donation-action-btn donation-share-btn" style="flex: 1 1 45%;">
+                        <button onclick="shareDonationImage()" class="donation-action-btn donation-share-btn">
                             <i class="fas fa-share-alt"></i> शेअर करा
                         </button>
-                        <button onclick="shareCustomPoster('vargani')" class="donation-action-btn donation-share-btn" style="background: linear-gradient(135deg, #10b981, #059669); flex: 1 1 45%;">
+                    </div>
+                    <div class="donation-actions" id="customPosterActions" style="margin-top: 15px;">
+                        <button onclick="shareCustomPoster('vargani')" class="donation-action-btn" style="background: linear-gradient(135deg, #10b981, #059669); color: white;">
                             <i class="fas fa-share-alt"></i> वर्गणी आभार
                         </button>
-                        <button onclick="shareCustomPoster('mahaprasad')" class="donation-action-btn donation-share-btn" style="background: linear-gradient(135deg, #f59e0b, #d97706); flex: 1 1 45%;">
+                        <button onclick="shareCustomPoster('mahaprasad')" class="donation-action-btn" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white;">
                             <i class="fas fa-share-alt"></i> महाप्रसाद निमंत्रण
                         </button>
                     </div>
@@ -1899,9 +1901,11 @@ table {
     document.body.appendChild(clone);
     
     const actions = clone.querySelector('#donationActions');
+    const customActions = clone.querySelector('#customPosterActions');
     const title = clone.querySelector('.section-title');
     
     if(actions) actions.style.display = 'none';
+    if(customActions) customActions.style.display = 'none';
     if(title) title.style.display = 'none';
     
     // The internal wrapper must be forced to row layout if media query doesn't trigger
