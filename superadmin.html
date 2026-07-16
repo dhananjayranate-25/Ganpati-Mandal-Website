@@ -468,15 +468,11 @@ table {
                 <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
                 <div>
                     <h2 id="dashboardTitle" style="margin-bottom: 5px;">Select a Member</h2>
-                <div id="dashboardCreds" style="display:none; font-size: 0.85rem; color: #aaa;">
-                    <i class="fas fa-user"></i> <span id="credUser"></span> &nbsp;|&nbsp; 
-                    <i class="fas fa-key"></i> <span id="credPass"></span>
+                    <div id="dashboardCreds" style="display:none; font-size: 0.85rem; color: #aaa;">
+                        <i class="fas fa-user"></i> <span id="credUser"></span> &nbsp;|&nbsp; 
+                        <i class="fas fa-key"></i> <span id="credPass"></span>
+                    </div>
                 </div>
-            </div>
-            <div id="dashboardActions" style="display:none; display: flex; gap: 10px;">
-                <button class="btn btn-outline" onclick="openEditModal()"><i class="fas fa-edit"></i> Edit</button>
-                <button class="btn btn-outline" style="color: var(--danger); border-color: var(--danger);" onclick="deleteMember()"><i class="fas fa-trash"></i> Delete</button>
-                <button class="btn" onclick="openModal('addFundsModal')"><i class="fas fa-rupee-sign"></i> Add Funds</button>
             </div>
         </div>
 
@@ -486,6 +482,11 @@ table {
         </div>
 
         <div id="memberDashboard">
+            <div id="dashboardActions" style="display:none; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+                <button class="btn btn-outline" style="flex:1; min-width:100px; justify-content:center; display:flex; align-items:center;" onclick="openEditModal()"><i class="fas fa-edit"></i> Edit</button>
+                <button class="btn btn-outline" style="flex:1; min-width:100px; justify-content:center; display:flex; align-items:center; color: var(--danger); border-color: var(--danger);" onclick="deleteMember()"><i class="fas fa-trash"></i> Delete</button>
+                <button class="btn" style="flex:1; min-width:140px; justify-content:center; display:flex; align-items:center;" onclick="openModal('addFundsModal')"><i class="fas fa-rupee-sign"></i> Add Funds</button>
+            </div>
             <div class="dashboard-grid">
                 <div class="card">
                     <h3>Total Funds Given <i class="fas fa-wallet text-muted"></i></h3>
