@@ -476,10 +476,7 @@ table {
             </div>
         </div>
 
-        <div id="noSelection" class="empty-state">
-            <i class="fas fa-hand-pointer fa-3x" style="margin-bottom: 15px;"></i>
-            <h3>Please select a member from the sidebar to view details.</h3>
-        </div>
+        <div id="noSelection" style="display:none;"></div>
 
         <div id="memberDashboard">
             <div id="dashboardActions" style="display:none; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
@@ -698,6 +695,10 @@ table {
                             <span style="font-size:0.8rem; color:var(--text-muted);">₹${u.balance} left</span>
                         </div>
                     `).join('');
+                    
+                    if (!selectedMemberId && data.users.length > 0) {
+                        selectMember(data.users[0]._id, data.users[0].name);
+                    }
                 }
             } catch(e) {
                 console.error(e);
