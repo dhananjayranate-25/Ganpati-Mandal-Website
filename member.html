@@ -597,7 +597,7 @@ table {
         async function refreshData() {
             try {
                 // Fetch user data for balance
-                let res = await fetch(API_URL + '/api/portal/users/' + currentUser.id);
+                let res = await fetch(API_URL + '/api/portal/users/' + currentUser._id);
                 let data = await res.json();
                 if(data.success) {
                     document.getElementById('statTotalFunds').innerText = '₹' + data.user.totalFunds;
@@ -606,7 +606,7 @@ table {
                 }
 
                 // Fetch tasks
-                res = await fetch(API_URL + '/api/portal/tasks/' + currentUser.id);
+                res = await fetch(API_URL + '/api/portal/tasks/' + currentUser._id);
                 data = await res.json();
                 if(data.success) {
                     document.getElementById('tasksList').innerHTML = data.tasks.length ? data.tasks.map(t => `
@@ -627,7 +627,7 @@ table {
                 }
 
                 // Fetch expenses
-                res = await fetch(API_URL + '/api/portal/expenses/' + currentUser.id);
+                res = await fetch(API_URL + '/api/portal/expenses/' + currentUser._id);
                 data = await res.json();
                 if(data.success) {
                     document.getElementById('expensesList').innerHTML = data.expenses.length ? data.expenses.map(e => `
@@ -722,7 +722,7 @@ table {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
-                        userId: currentUser.id,
+                        userId: currentUser._id,
                         item: document.getElementById('expItem').value,
                         price: document.getElementById('expPrice').value
                     })
