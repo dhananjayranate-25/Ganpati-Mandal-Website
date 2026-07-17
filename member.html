@@ -376,6 +376,21 @@ table {
     }
 }
 
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    color: #fff;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease;
+    z-index: 10;
+}
+.close-btn:hover {
+    color: #f43f5e;
+}
 </style>
 </head>
 <body>
@@ -704,6 +719,8 @@ table {
 
         async function updateExpense(e) {
             e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            if (btn) btn.disabled = true;
             const id = document.getElementById('editExpenseId').value;
             const item = document.getElementById('editExpenseItem').value;
             const price = document.getElementById('editExpensePrice').value;
@@ -718,13 +735,15 @@ table {
                 if(data.success) {
                     alert('Expense updated successfully!');
                     closeModal('editExpenseModal');
-                    loadDashboard();
+                    refreshData(); // update UI without reload
                 } else {
                     alert(data.error || 'Update failed');
                 }
             } catch(err) {
+                console.error(err);
                 alert('Error updating expense');
             }
+            if (btn) btn.disabled = false;
         }
 
         async function deleteExpense(id) {
@@ -735,11 +754,12 @@ table {
                 });
                 const data = await res.json();
                 if(data.success) {
-                    loadDashboard();
+                    refreshData(); // update UI without reload
                 } else {
                     alert(data.error || 'Deletion failed');
                 }
             } catch(err) {
+                console.error(err);
                 alert('Error deleting expense');
             }
         }
@@ -762,14 +782,12 @@ table {
                 if(data.success) {
                     closeModals();
                     e.target.reset();
-                    refreshData();
-    
-            if(currentUser.photoUrl) {
-                document.getElementById('profilePhotoPreview').src = currentUser.photoUrl;
-            }
-            loadMyData(); // updates the balance and list
+                    refreshData(); // updates the balance and list
                 } else alert(data.message);
-            } catch(err) { alert('Error logging expense'); }
+            } catch(err) { 
+                console.error(err);
+                alert('Error logging expense'); 
+            }
             btn.disabled = false;
         }
     
@@ -841,27 +859,31 @@ table {
 
     
 
+        
         async function uploadProfilePhoto(input) {
             if (!input.files || input.files.length === 0) return;
             const file = input.files[0];
+            
+            // Show local preview instantly
+            const localUrl = URL.createObjectURL(file);
+            document.getElementById('profilePhotoPreview').src = localUrl;
+            document.getElementById('profilePhotoPreview').style.opacity = '0.5';
+
+            // Compress image
+            const compressedFile = await compressImage(file);
             const formData = new FormData();
-            formData.append('photo', file);
+            formData.append('photo', compressedFile);
 
             try {
-                // Show loading on image
-                document.getElementById('profilePhotoPreview').style.opacity = '0.5';
-                
-                const res = await fetch(`${API_URL}/api/users/${currentUser._id}/photo`, {
+                const res = await fetch(${API_URL}/api/users//photo, {
                     method: 'POST',
                     body: formData
                 });
                 const data = await res.json();
                 if (data.success) {
-                    // Update current user
                     currentUser.photoUrl = data.photoUrl;
                     localStorage.setItem('portalUser', JSON.stringify(currentUser));
                     document.getElementById('profilePhotoPreview').src = data.photoUrl;
-                    alert('प्रोफाईल फोटो यशस्वीरित्या अपडेट झाला!');
                 } else {
                     alert('फोटो अपडेट करताना त्रुटी: ' + data.error);
                 }
@@ -870,8 +892,46 @@ table {
                 alert('Server Error');
             } finally {
                 document.getElementById('profilePhotoPreview').style.opacity = '1';
-                input.value = ''; // Reset input
+                input.value = '';
             }
+        }
+
+        function compressImage(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+                        const max_size = 500;
+
+                        if (width > height && width > max_size) {
+                            height *= max_size / width;
+                            width = max_size;
+                        } else if (height > max_size) {
+                            width *= max_size / height;
+                            height = max_size;
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        canvas.toBlob((blob) => {
+                            const newFile = new File([blob], file.name, {
+                                type: 'image/jpeg',
+                                lastModified: Date.now()
+                            });
+                            resolve(newFile);
+                        }, 'image/jpeg', 0.8);
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
         }
 
         async function loadMyData() {
@@ -994,6 +1054,8 @@ table {
 
         async function updateNiyojan(e) {
             e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            if (btn) btn.disabled = true;
             const id = document.getElementById('editNiyojanId').value;
             const title = document.getElementById('editNiyojanTitle').value;
             const description = document.getElementById('editNiyojanDesc').value;
@@ -1013,6 +1075,7 @@ table {
                     loadMyData();
                 } else alert('Error updating');
             } catch(e) { alert('Server error'); }
+            if (btn) btn.disabled = false;
         }
 
         async function editAarti(id, oldName) {

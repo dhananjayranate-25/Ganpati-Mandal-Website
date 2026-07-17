@@ -247,10 +247,16 @@
                 </div>
                 <div class="upload-container">
                     <div class="form-group" style="margin-top: 10px;">
+                        <label style="color: var(--text-primary); margin-bottom: 5px; display: block;">वर्गणी आभार शीर्षक (Title)</label>
+                        <input type="text" id="varganiAabharTitle" class="form-control" placeholder="उदा. वर्गणी आभार" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.5); color: white; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px;">
+                        
                         <label style="color: var(--text-primary); margin-bottom: 5px; display: block;">वर्गणी आभार संदेश (Vargani Aabhar Text)</label>
                         <textarea id="varganiAabharText" class="form-control" rows="4" placeholder="येथे वर्गणी आभार संदेश टाईप करा..." style="width: 100%; padding: 10px; background: rgba(0,0,0,0.5); color: white; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);"></textarea>
                     </div>
                     <div class="form-group" style="margin-top: 15px;">
+                        <label style="color: var(--text-primary); margin-bottom: 5px; display: block;">महाप्रसाद निमंत्रण शीर्षक (Title)</label>
+                        <input type="text" id="mahaprasadNimantranTitle" class="form-control" placeholder="उदा. महाप्रसाद निमंत्रण" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.5); color: white; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px;">
+
                         <label style="color: var(--text-primary); margin-bottom: 5px; display: block;">महाप्रसाद निमंत्रण संदेश (Mahaprasad Nimantran Text)</label>
                         <textarea id="mahaprasadNimantranText" class="form-control" rows="4" placeholder="येथे महाप्रसाद निमंत्रण संदेश टाईप करा..." style="width: 100%; padding: 10px; background: rgba(0,0,0,0.5); color: white; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);"></textarea>
                     </div>
@@ -406,8 +412,18 @@
                             <div class="input-focus-line"></div>
                         </div>
                         <div class="form-group floating-label">
-                            <input type="text" id="presidentDesignation" placeholder=" ">
-                            <label for="presidentDesignation">Post / Designation (उदा. अध्यक्ष)</label>
+                                    <select id="presidentDesignation" class="form-control" style="width:100%; padding:10px; border-radius:10px; background:var(--bg-card); border:1px solid var(--glass-border); color:var(--text-primary);">
+                                        <option value="">Post / Designation निवडा</option>
+                                        <option value="अध्यक्ष" selected>अध्यक्ष</option>
+                                        <option value="उपाध्यक्ष">उपाध्यक्ष</option>
+                                        <option value="खजिनदार">खजिनदार</option>
+                                        <option value="सचिव">सचिव</option>
+                                        <option value="सहसचिव">सहसचिव</option>
+                                        <option value="सदस्य">सदस्य</option>
+                                        <option value="सल्लागार">सल्लागार</option>
+                                        <option value="मार्गदर्शक">मार्गदर्शक</option>
+                                    </select>
+
                             <div class="input-focus-line"></div>
                         </div>
                     </div>
@@ -436,8 +452,18 @@
                             <div class="input-focus-line"></div>
                         </div>
                         <div class="form-group floating-label">
-                            <input type="text" id="treasurerDesignation" placeholder=" ">
-                            <label for="treasurerDesignation">Post / Designation (उदा. खजिनदार)</label>
+                                    <select id="treasurerDesignation" class="form-control" style="width:100%; padding:10px; border-radius:10px; background:var(--bg-card); border:1px solid var(--glass-border); color:var(--text-primary);">
+                                        <option value="">Post / Designation निवडा</option>
+                                        <option value="अध्यक्ष">अध्यक्ष</option>
+                                        <option value="उपाध्यक्ष">उपाध्यक्ष</option>
+                                        <option value="खजिनदार" selected>खजिनदार</option>
+                                        <option value="सचिव">सचिव</option>
+                                        <option value="सहसचिव">सहसचिव</option>
+                                        <option value="सदस्य">सदस्य</option>
+                                        <option value="सल्लागार">सल्लागार</option>
+                                        <option value="मार्गदर्शक">मार्गदर्शक</option>
+                                    </select>
+
                             <div class="input-focus-line"></div>
                         </div>
                     </div>
@@ -475,8 +501,18 @@
                                     <div class="input-focus-line"></div>
                                 </div>
                                 <div class="form-group floating-label">
-                                    <input type="text" id="member${i}Designation" placeholder=" ">
-                                    <label for="member${i}Designation">Post / Designation (उदा. सचिव)</label>
+                                    <select id="member${i}Designation" class="form-control" style="width:100%; padding:10px; border-radius:10px; background:var(--bg-card); border:1px solid var(--glass-border); color:var(--text-primary);">
+                                        <option value="">Post / Designation निवडा</option>
+                                        <option value="अध्यक्ष">अध्यक्ष</option>
+                                        <option value="उपाध्यक्ष">उपाध्यक्ष</option>
+                                        <option value="खजिनदार">खजिनदार</option>
+                                        <option value="सचिव">सचिव</option>
+                                        <option value="सहसचिव">सहसचिव</option>
+                                        <option value="सदस्य" selected>सदस्य</option>
+                                        <option value="सल्लागार">सल्लागार</option>
+                                        <option value="मार्गदर्शक">मार्गदर्शक</option>
+                                    </select>
+
                                     <div class="input-focus-line"></div>
                                 </div>
                             </div>
@@ -879,8 +915,14 @@
                     if (document.getElementById('varganiAabharText')) {
                         document.getElementById('varganiAabharText').value = settings.varganiAabharText || '';
                     }
+                    if (document.getElementById('varganiAabharTitle')) {
+                        document.getElementById('varganiAabharTitle').value = settings.varganiAabharTitle || '';
+                    }
                     if (document.getElementById('mahaprasadNimantranText')) {
                         document.getElementById('mahaprasadNimantranText').value = settings.mahaprasadNimantranText || '';
+                    }
+                    if (document.getElementById('mahaprasadNimantranTitle')) {
+                        document.getElementById('mahaprasadNimantranTitle').value = settings.mahaprasadNimantranTitle || '';
                     }
                 }
             } catch(e) {
@@ -947,11 +989,15 @@
             
             const varganiAabharText = document.getElementById('varganiAabharText').value.trim();
             const mahaprasadNimantranText = document.getElementById('mahaprasadNimantranText').value.trim();
+            const varganiAabharTitle = document.getElementById('varganiAabharTitle').value.trim();
+            const mahaprasadNimantranTitle = document.getElementById('mahaprasadNimantranTitle').value.trim();
             
             try {
                 const settingsToSave = [
                     { key: 'varganiAabharText', value: varganiAabharText },
-                    { key: 'mahaprasadNimantranText', value: mahaprasadNimantranText }
+                    { key: 'varganiAabharTitle', value: varganiAabharTitle },
+                    { key: 'mahaprasadNimantranText', value: mahaprasadNimantranText },
+                    { key: 'mahaprasadNimantranTitle', value: mahaprasadNimantranTitle }
                 ];
                 
                 // Save texts one by one sequentially
