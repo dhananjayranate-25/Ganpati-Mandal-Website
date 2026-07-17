@@ -30,9 +30,9 @@
     });
     
 </script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    
+    
+    
     
     <!-- Preload critical top images for faster loading -->
     <link rel="preload" as="image" href="logo/logo1.jpeg">
@@ -1796,7 +1796,37 @@ table {
 
     let cachedLogo = '';
 
+    
+    async function loadPDFLibraries() {
+        if (window.jsPDF && window.html2canvas && window.PDFLib) return true;
+        
+        return new Promise((resolve, reject) => {
+            let loaded = 0;
+            const scripts = [
+                'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
+                'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js',
+                'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
+                'https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js'
+            ];
+            
+            function loadNext() {
+                if (loaded >= scripts.length) {
+                    resolve(true);
+                    return;
+                }
+                const s = document.createElement('script');
+                s.src = scripts[loaded];
+                s.onload = () => { loaded++; loadNext(); };
+                s.onerror = reject;
+                document.head.appendChild(s);
+            }
+            loadNext();
+        });
+    }
+
     async function generateAndOpenMergedPDF(filename, year, download, pdfSubtitle, pdfTagline, pdfOrgName) {
+        await loadPDFLibraries();
+        window.jsPDF = window.jspdf.jsPDF;
         try {
             const logoDataURL = await loadLogoForCover();
             const coverHTML = createCoverHTML(year, logoDataURL, pdfSubtitle, pdfTagline, pdfOrgName);
