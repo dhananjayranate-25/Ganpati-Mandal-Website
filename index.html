@@ -15,7 +15,9 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Noto+Sans+Devanagari:wght@300;400;500;600;700;900&family=Yatra+One&family=Amita:wght@700&family=Eczar:wght@800&family=Khand:wght@800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css?v=4">
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
     // Auto-wrap tables for mobile responsiveness
     document.addEventListener('DOMContentLoaded', function() {
         const tables = document.querySelectorAll('table');
@@ -28,8 +30,7 @@
             }
         });
     });
-    
-</script>
+    </script>
     
     
     
@@ -171,19 +172,19 @@
                     
                     <!-- Share and Download Buttons -->
                     <div class="donation-actions" id="donationActions">
-                        <button onclick="downloadDonationImage()" class="donation-action-btn donation-download-btn">
+                        <button onclick="downloadDonationImage(this)" class="donation-action-btn donation-download-btn">
                             <i class="fas fa-download"></i> डाउनलोड करा
                         </button>
-                        <button onclick="shareDonationImage()" class="donation-action-btn donation-share-btn">
+                        <button onclick="shareDonationImage(this)" class="donation-action-btn donation-share-btn">
                             <i class="fas fa-share-alt"></i> शेअर करा
                         </button>
                     </div>
                     <div class="donation-actions" id="customPosterActions" style="margin-top: 15px;">
-                        <button onclick="shareCustomPoster('vargani')" class="donation-action-btn" style="background: linear-gradient(135deg, #10b981, #059669); color: white;">
-                            <i class="fas fa-share-alt"></i> वर्गणी आभार
+                        <button id="varganiBtn" onclick="shareCustomPoster('vargani', this)" class="donation-action-btn" style="background: linear-gradient(135deg, #10b981, #059669); color: white;">
+                            <i class="fas fa-share-alt"></i> <span id="varganiBtnText">वर्गणी आभार</span>
                         </button>
-                        <button onclick="shareCustomPoster('mahaprasad')" class="donation-action-btn" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white;">
-                            <i class="fas fa-share-alt"></i> महाप्रसाद निमंत्रण
+                        <button id="mahaprasadBtn" onclick="shareCustomPoster('mahaprasad', this)" class="donation-action-btn" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white;">
+                            <i class="fas fa-share-alt"></i> <span id="mahaprasadBtnText">महाप्रसाद निमंत्रण</span>
                         </button>
                     </div>
                     
@@ -953,6 +954,16 @@
                     if (footerQrImg) footerQrImg.src = settings.donateQRCode;
                 }
                 
+                // Custom Posters Titles on Buttons
+                if (settings.varganiAabharTitle) {
+                    const vBtnText = document.getElementById('varganiBtnText');
+                    if (vBtnText) vBtnText.textContent = settings.varganiAabharTitle;
+                }
+                if (settings.mahaprasadNimantranTitle) {
+                    const mBtnText = document.getElementById('mahaprasadBtnText');
+                    if (mBtnText) mBtnText.textContent = settings.mahaprasadNimantranTitle;
+                }
+                
                 // Load Aarti Media
                 const aartiMediaContainer = document.getElementById('aartiMediaContainer');
                 const aartiAudioWrapper = document.getElementById('aartiAudioWrapper');
@@ -1015,18 +1026,14 @@
                     }
                     
                     let photoUrl = member.photoUrl;
-                    if (photoUrl) {
-                        if (!photoUrl.startsWith('data:')) {
-                            photoUrl += '?t=' + new Date().getTime();
-                        }
-                    } else {
+                    if (!photoUrl) {
                         photoUrl = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23e0e0e0'/%3E%3Ccircle cx='50' cy='40' r='20' fill='%23bdbdbd'/%3E%3Cpath d='M20,90 Q50,50 80,90' stroke='%23bdbdbd' stroke-width='10' fill='none'/%3E%3C/svg%3E";
                     }
                     const mobileHtml = member.mobile ? `<p class="member-phone">मो.नं ${member.mobile}</p>` : '<p class="member-phone" style="display:none;"></p>';
                     const memberName = member.name || 'नाव टाका';
                     
                     return `
-                    <div class="committee-member">
+                    <div class="committee-member" onclick="openLightbox('${photoUrl}')" style="cursor: pointer;">
                         <div class="member-photo-frame">
                             <img src="${photoUrl}" alt="${roleName}" class="member-photo" ${member.role === 'president' ? 'style="object-position: center 10%;"' : ''}>
                         </div>
@@ -1917,7 +1924,11 @@ table {
     
     <!-- Donation Poster Script -->
     <script>
+    let cachedDonationCanvas = null;
+    let cachedCustomCanvases = { vargani: null, mahaprasad: null };
+
     async function captureDonationPoster() {
+    if (cachedDonationCanvas) return cachedDonationCanvas;
     const card = document.querySelector('.donation-card');
     
     const clone = card.cloneNode(true);
@@ -1982,7 +1993,8 @@ table {
     clone.insertBefore(tempWebsiteUrl, mandalPoster.nextSibling);
     
     const devWatermark1 = document.createElement('div');
-    devWatermark1.style.color = '#777';
+    devWatermark1.style.color = 'rgba(255, 255, 255, 0.7)';
+    devWatermark1.style.textShadow = '0px 1px 3px rgba(0,0,0,0.8)';
     devWatermark1.style.textAlign = 'center';
     devWatermark1.style.fontSize = '14px';
     devWatermark1.style.marginTop = '20px';
@@ -1999,11 +2011,14 @@ table {
     });
     
     document.body.removeChild(clone);
+    cachedDonationCanvas = canvas;
     return canvas;
 }
 
     
     async function captureCustomPoster(type) {
+        if (cachedCustomCanvases[type]) return cachedCustomCanvases[type];
+        
         // Create a new container matching the donation card style
         const clone = document.createElement('div');
         clone.style.position = 'absolute';
@@ -2048,8 +2063,19 @@ table {
         clone.appendChild(tempWebsiteUrl);
 
         // Add Title
-        const titleText = type === 'vargani' ? '✧ वर्गणी आभार ✧' : '✧ महाप्रसाद निमंत्रण ✧';
-        const titleHtml = `<h2 class="section-title" style="color: var(--text-highlight); text-align: center; font-size: 2rem; margin-bottom: 30px; letter-spacing: 2px;">${titleText}</h2>`;
+        const defaultTitle = type === 'vargani' ? 'वर्गणी आभार' : 'महाप्रसाद निमंत्रण';
+        let userTitle = defaultTitle;
+        if (window.appSettings) {
+            userTitle = type === 'vargani' 
+                ? (window.appSettings.varganiAabharTitle || defaultTitle)
+                : (window.appSettings.mahaprasadNimantranTitle || defaultTitle);
+        }
+        const titleHtml = `
+            <div class="section-header" style="width: 100%; justify-content: center;">
+                <div class="header-line"></div>
+                <h2>${userTitle}</h2>
+                <div class="header-line"></div>
+            </div>`;
         clone.insertAdjacentHTML('beforeend', titleHtml);
 
         // Add Custom Text Content
@@ -2078,7 +2104,8 @@ table {
         clone.appendChild(textContainer);
         
         const devWatermark2 = document.createElement('div');
-        devWatermark2.style.color = '#777';
+        devWatermark2.style.color = 'rgba(255, 255, 255, 0.7)';
+        devWatermark2.style.textShadow = '0px 1px 3px rgba(0,0,0,0.8)';
         devWatermark2.style.textAlign = 'center';
         devWatermark2.style.fontSize = '14px';
         devWatermark2.style.marginTop = '20px';
@@ -2096,90 +2123,153 @@ table {
         });
 
         document.body.removeChild(clone);
-        return { canvas, text: customText };
+        cachedCustomCanvases[type] = { canvas, text: customText };
+        return cachedCustomCanvases[type];
     }
 
-    async function shareCustomPoster(type) {
+    async function shareCustomPoster(type, btn) {
+        let originalText = btn ? btn.innerHTML : '';
+        if (btn) { btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> कृपया थांबा...'; btn.disabled = true; }
+        
         try {
             const result = await captureCustomPoster(type);
             const canvas = result.canvas;
             const customText = result.text;
             
             canvas.toBlob(async (blob) => {
-                const fileName = type === 'vargani' ? 'Vargani_Aabhar.jpg' : 'Mahaprasad_Nimantran.jpg';
-                const file = new File([blob], fileName, { type: 'image/jpeg' });
-                
-                const orgName = (typeof appSettings !== 'undefined' && appSettings.pdfCustomSettings && appSettings.pdfCustomSettings.orgName) ? appSettings.pdfCustomSettings.orgName : 'मंडळ';
-                const shareTitle = type === 'vargani' ? 'वर्गणी आभार' : 'महाप्रसाद निमंत्रण';
-                
-                const shareData = {
-                    title: orgName + ' - ' + shareTitle,
-                    text: customText + '\n\n🌐 अधिकृत वेबसाईट:\nhttps://shivsrushti-utsav-mandal.onrender.com',
-                    files: [file]
-                };
+                try {
+                    const fileName = type === 'vargani' ? 'Vargani_Aabhar.jpg' : 'Mahaprasad_Nimantran.jpg';
+                    const file = new File([blob], fileName, { type: 'image/jpeg' });
+                    
+                    const orgName = (typeof appSettings !== 'undefined' && appSettings.pdfCustomSettings && appSettings.pdfCustomSettings.orgName) ? appSettings.pdfCustomSettings.orgName : 'मंडळ';
+                    const shareTitle = type === 'vargani' ? 'वर्गणी आभार' : 'महाप्रसाद निमंत्रण';
+                    
+                    const shareData = {
+                        title: orgName + ' - ' + shareTitle,
+                        text: customText + '\n\n🌐 अधिकृत वेबसाईट:\nhttps://shivsrushti-utsav-mandal.onrender.com',
+                        files: [file]
+                    };
 
-                if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                    await navigator.share(shareData);
-                } else {
-                    // Fallback to text sharing
-                    if (navigator.share) {
-                        await navigator.share({
-                            title: shareData.title,
-                            text: shareData.text
-                        });
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        await navigator.share(shareData);
                     } else {
                         // Download fallback
                         const link = document.createElement('a');
                         link.download = fileName;
                         link.href = canvas.toDataURL('image/jpeg', 0.9);
                         link.click();
-                        alert('तुमच्या डिव्हाइसवर शेअरिंग सपोर्टेड नाही. इमेज डाउनलोड झाली आहे.');
+                        alert('तुमच्या डिव्हाइसवर डायरेक्ट इमेज शेअरिंग सपोर्टेड नाही. इमेज डाउनलोड झाली आहे, ती तुम्ही स्वतः शेअर करू शकता.');
                     }
+                } catch (shareErr) {
+                    console.log('Share action was cancelled or failed:', shareErr);
+                    if (shareErr.name !== 'AbortError') {
+                        const link = document.createElement('a');
+                        link.download = type === 'vargani' ? 'Vargani_Aabhar.jpg' : 'Mahaprasad_Nimantran.jpg';
+                        link.href = canvas.toDataURL('image/jpeg', 0.9);
+                        link.click();
+                        alert('तुमच्या डिव्हाइसवर डायरेक्ट शेअरिंगमध्ये तांत्रिक अडचण आली. इमेज डाउनलोड झाली आहे, ती तुम्ही मॅन्युअली शेअर करू शकता.');
+                    }
+                } finally {
+                    if (btn) { btn.innerHTML = originalText; btn.disabled = false; }
                 }
             }, 'image/jpeg', 0.9);
         } catch (err) {
             console.error('Error sharing custom poster:', err);
-            alert('पोस्टर तयार करताना किंवा शेअर करताना त्रुटी आली.');
+            if (err.name === 'SecurityError' || (err.message && err.message.includes('Tainted'))) {
+                alert('सिक्युरिटी एरर: तुम्ही ही फाईल थेट फोल्डरमधून (file://) उघडली आहे, त्यामुळे ब्राउझर पोस्टर तयार करू शकत नाही. कृपया होस्ट केलेल्या लिंकवरून किंवा लोकल सर्व्हरवरून वेबसाईट उघडा.');
+            } else {
+                alert('पोस्टर तयार करताना त्रुटी आली: ' + (err.message || err));
+            }
+            if (btn) { btn.innerHTML = originalText; btn.disabled = false; }
         }
     }
 
-    function downloadDonationImage() {
-        captureDonationPoster().then(canvas => {
+    async function downloadDonationImage(btn) {
+        let originalText = btn ? btn.innerHTML : '';
+        if (btn) { btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> कृपया थांबा...'; btn.disabled = true; }
+        
+        try {
+            const canvas = await captureDonationPoster();
             const link = document.createElement('a');
             link.download = 'Donation_Poster.jpg';
             link.href = canvas.toDataURL('image/jpeg', 0.9);
             link.click();
-        }).catch(err => {
+            if (btn) { btn.innerHTML = originalText; btn.disabled = false; }
+        } catch(err) {
             console.error('Error generating image:', err);
-            alert('इमेज तयार करताना त्रुटी आली.');
-        });
+            if (err.name === 'SecurityError' || (err.message && err.message.includes('Tainted'))) {
+                alert('सिक्युरिटी एरर: तुम्ही ही फाईल थेट फोल्डरमधून (file://) उघडली आहे, त्यामुळे ब्राउझर पोस्टर तयार करू शकत नाही. कृपया होस्ट केलेल्या लिंकवरून किंवा लोकल सर्व्हरवरून वेबसाईट उघडा.');
+            } else {
+                alert('इमेज तयार करताना त्रुटी आली: ' + (err.message || err));
+            }
+            if (btn) { btn.innerHTML = originalText; btn.disabled = false; }
+        }
     }
 
-    async function shareDonationImage() {
+    async function shareDonationImage(btn) {
+        let originalText = btn ? btn.innerHTML : '';
+        if (btn) { btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> कृपया थांबा...'; btn.disabled = true; }
+        
         try {
             const canvas = await captureDonationPoster();
             canvas.toBlob(async (blob) => {
-                const file = new File([blob], 'Donation_Poster.jpg', { type: 'image/jpeg' });
-                
-                const orgName = (typeof appSettings !== 'undefined' && appSettings.pdfCustomSettings && appSettings.pdfCustomSettings.orgName) ? appSettings.pdfCustomSettings.orgName : 'मंडळ';
-                const shareData = {
-                    title: orgName + ' - देणगी',
-                    text: `🌺 श्री गणेशाय नमः 🌺\n\nश्री गणेशोत्सव हा आपल्या सर्वांचा उत्सव आहे. या उत्सवाचे आयोजन अधिक भव्य, दिव्य आणि यशस्वी करण्यासाठी आपल्या सहकार्याची आम्हाला मनापासून अपेक्षा आहे.\n\nकृपया आपल्या सार्वजनिक गणेश उत्सव मंडळासाठी किमान ₹1111/- (एक हजार एकशे अकरा रुपये) वर्गणी/देणगी देऊन सहकार्य करा.\nआपण वर दिलेल्या QR कोड स्कॅन करून / UPI ID किंवा फोन नंबर द्वारे सहज देणगी देऊ शकता.\n\nआपले प्रत्येक योगदान आपल्या मंडळाचा गणेशोत्सव अधिक उत्साहाने, भक्तिभावाने आणि दिमाखात साजरा करण्यासाठी मोलाचे ठरेल. 🙏🌸\n\n॥ गणपती बाप्पा मोरया ॥\n॥ मंगलमूर्ती मोरया ॥\n॥ हर हर महादेव ॥\n\n– शिवसृष्टी सार्वजनिक उत्सव मंडळ, संगमनेर
+                try {
+                    const file = new File([blob], 'Donation_Poster.jpg', { type: 'image/jpeg' });
+                    
+                    const orgName = (typeof appSettings !== 'undefined' && appSettings.pdfCustomSettings && appSettings.pdfCustomSettings.orgName) ? appSettings.pdfCustomSettings.orgName : 'मंडळ';
+                    const shareData = {
+                        title: orgName + ' - देणगी',
+                        text: `🌺 श्री गणेशाय नमः 🌺\n\nश्री गणेशोत्सव हा आपल्या सर्वांचा उत्सव आहे. या उत्सवाचे आयोजन अधिक भव्य, दिव्य आणि यशस्वी करण्यासाठी आपल्या सहकार्याची आम्हाला मनापासून अपेक्षा आहे.\n\nकृपया आपल्या सार्वजनिक गणेश उत्सव मंडळासाठी किमान ₹1111/- (एक हजार एकशे अकरा रुपये) वर्गणी/देणगी देऊन सहकार्य करा.\nआपण वर दिलेल्या QR कोड स्कॅन करून / UPI ID किंवा फोन नंबर द्वारे सहज देणगी देऊ शकता.\n\nआपले प्रत्येक योगदान आपल्या मंडळाचा गणेशोत्सव अधिक उत्साहाने, भक्तिभावाने आणि दिमाखात साजरा करण्यासाठी मोलाचे ठरेल. 🙏🌸\n\n॥ गणपती बाप्पा मोरया ॥\n॥ मंगलमूर्ती मोरया ॥\n॥ हर हर महादेव ॥\n\n– शिवसृष्टी सार्वजनिक उत्सव मंडळ, संगमनेर\n\n🌐 अधिकृत वेबसाईट:\nhttps://shivsrushti-utsav-mandal.onrender.com`,
+                        files: [file]
+                    };
 
-🌐 अधिकृत वेबसाईट:
-https://shivsrushti-utsav-mandal.onrender.com`,
-                    files: [file]
-                };
-
-                if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                    await navigator.share(shareData);
-                } else {
-                    alert('शेअर करण्याचा पर्याय तुमच्या ब्राउझरमध्ये उपलब्ध नाही. कृपया डाउनलोड करून शेअर करा.');
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        await navigator.share(shareData);
+                    } else {
+                        // Download fallback
+                        const link = document.createElement('a');
+                        link.download = 'Donation_Poster.jpg';
+                        link.href = canvas.toDataURL('image/jpeg', 0.9);
+                        link.click();
+                        alert('तुमच्या डिव्हाइसवर डायरेक्ट इमेज शेअरिंग सपोर्टेड नाही. इमेज डाउनलोड झाली आहे, ती तुम्ही स्वतः शेअर करू शकता.');
+                    }
+                } catch (shareErr) {
+                    console.log('Share action was cancelled or failed:', shareErr);
+                    if (shareErr.name !== 'AbortError') {
+                        const link = document.createElement('a');
+                        link.download = 'Donation_Poster.jpg';
+                        link.href = canvas.toDataURL('image/jpeg', 0.9);
+                        link.click();
+                        alert('तुमच्या डिव्हाइसवर डायरेक्ट शेअरिंगमध्ये तांत्रिक अडचण आली. इमेज डाउनलोड झाली आहे, ती तुम्ही मॅन्युअली शेअर करू शकता.');
+                    }
+                } finally {
+                    if (btn) { btn.innerHTML = originalText; btn.disabled = false; }
                 }
             }, 'image/jpeg', 0.9);
         } catch (err) {
             console.error('Error sharing image:', err);
-            alert('शेअर करताना त्रुटी आली. कृपया डाउनलोड करून शेअर करा.');
+            if (err.name === 'SecurityError' || (err.message && err.message.includes('Tainted'))) {
+                alert('सिक्युरिटी एरर: तुम्ही ही फाईल थेट फोल्डरमधून (file://) उघडली आहे, त्यामुळे ब्राउझर पोस्टर तयार करू शकत नाही. कृपया होस्ट केलेल्या लिंकवरून किंवा लोकल सर्व्हरवरून वेबसाईट उघडा.');
+            } else {
+                alert('शेअर करताना त्रुटी आली: ' + (err.message || err));
+            }
+            if (btn) { btn.innerHTML = originalText; btn.disabled = false; }
+        }
+    }
+    
+    function openLightbox(src) {
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightboxImg');
+        if (lightbox && lightboxImg) {
+            lightboxImg.src = src;
+            lightbox.style.display = 'flex';
+        }
+    }
+
+    function closeLightbox() {
+        const lightbox = document.getElementById('lightbox');
+        if (lightbox) {
+            lightbox.style.display = 'none';
         }
     }
     </script>
