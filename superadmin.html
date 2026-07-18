@@ -691,19 +691,28 @@ table {
                 const data = await res.json();
                 if(data.success) {
                     const list = document.getElementById('memberList');
-                    list.innerHTML = data.users.map(u => `
-                        <div class="member-item ${u._id === selectedMemberId ? 'active' : ''}" onclick="selectMember('${u._id}', '${u.name}')">
-                            <h4>${u.name}</h4>
-                            <span style="font-size:0.8rem; color:var(--text-muted);">₹${u.balance} left</span>
-                        </div>
-                    `).join('');
-                    
-                    if (!selectedMemberId && data.users.length > 0) {
-                        selectMember(data.users[0]._id, data.users[0].name);
+                    if(data.users.length > 0) {
+                        list.innerHTML = data.users.map(u => `
+                            <div class="member-item ${u._id === selectedMemberId ? 'active' : ''}" onclick="selectMember('${u._id}', '${u.name}')">
+                                <h4>${u.name}</h4>
+                                <span style="font-size:0.8rem; color:#888;">₹${u.balance} left</span>
+                            </div>
+                        `).join('');
+                        
+                        if (!selectedMemberId) {
+                            selectMember(data.users[0]._id, data.users[0].name);
+                        }
+                    } else {
+                        list.innerHTML = '<p class="empty-state" style="padding: 20px;">No members added yet.</p>';
+                        document.getElementById('memberDashboard').style.display = 'none';
+                        document.getElementById('noSelection').style.display = 'block';
+                        document.getElementById('noSelection').innerHTML = '<div style="text-align:center; margin-top:50px; color:#888;"><h3>Welcome Super Admin</h3><p>Click "Add" in the sidebar to create your first member.</p></div>';
+                        document.getElementById('dashboardTitle').innerText = 'Super Admin Dashboard';
                     }
                 }
             } catch(e) {
                 console.error(e);
+                document.getElementById('memberList').innerHTML = `<p class="empty-state" style="color:var(--danger); padding: 20px;">Failed to connect to server.</p>`;
             }
         }
 
