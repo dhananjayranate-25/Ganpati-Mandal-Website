@@ -897,6 +897,17 @@
     }
 
     async function loadAppearanceSettingsHome() {
+        // ⚡ INSTANT: Load cached marquee first before API call
+        const cachedMarquee = localStorage.getItem('shivsrushti_marquee');
+        if (cachedMarquee) {
+            const mText = document.getElementById('marqueeText');
+            const mContainer = document.getElementById('marqueeContainer');
+            if (mText && mContainer) {
+                mText.textContent = cachedMarquee;
+                mContainer.style.display = 'block';
+            }
+        }
+
         try {
             const response = await fetch('/api/settings');
             const result = await response.json();
@@ -916,10 +927,13 @@
                     if (mContainer && mText) {
                         mText.textContent = settings.appMarqueeText;
                         mContainer.style.display = 'block';
+                        // ⚡ Save to cache for next visit
+                        localStorage.setItem('shivsrushti_marquee', settings.appMarqueeText);
                     }
                 } else {
                     const mContainer = document.getElementById('marqueeContainer');
                     if (mContainer) mContainer.style.display = 'none';
+                    localStorage.removeItem('shivsrushti_marquee');
                 }
                 
                 if (settings.appNiyojanMarqueeText) {
