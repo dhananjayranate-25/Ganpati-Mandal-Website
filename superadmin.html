@@ -485,6 +485,7 @@ table {
                 <button class="btn btn-outline" style="flex:1; min-width:100px; justify-content:center; display:flex; align-items:center;" onclick="openEditModal()"><i class="fas fa-edit"></i> Edit</button>
                 <button class="btn btn-outline" style="flex:1; min-width:100px; justify-content:center; display:flex; align-items:center; color: var(--danger); border-color: var(--danger);" onclick="deleteMember()"><i class="fas fa-trash"></i> Delete</button>
                 <button class="btn" style="flex:1; min-width:140px; justify-content:center; display:flex; align-items:center;" onclick="openModal('addFundsModal')"><i class="fas fa-rupee-sign"></i> Add Funds</button>
+                <button class="btn btn-outline" style="flex:1; min-width:140px; justify-content:center; display:flex; align-items:center; color: var(--danger); border-color: var(--danger);" onclick="deductFunds()"><i class="fas fa-minus"></i> Zero Funds</button>
             </div>
             <div class="dashboard-grid">
                 <div class="card">
@@ -657,6 +658,8 @@ table {
         </div>
     </div>
 
+
+
     <script>
         const API_URL = '';
         let currentUser = null;
@@ -687,6 +690,8 @@ table {
 
         async function loadMembers() {
             try {
+                const list = document.getElementById('memberList');
+                list.innerHTML = '<div style="padding:20px;text-align:center;color:#888;"><i class="fas fa-spinner fa-spin" style="margin-bottom:10px; font-size: 24px;"></i><br>Loading members...<br><small style="font-size:10px;">(Please wait, server may be waking up)</small></div>';
                 const res = await fetch(API_URL + '/api/portal/users');
                 const data = await res.json();
                 if(data.success) {
@@ -933,9 +938,37 @@ table {
                     closeModals();
                     e.target.reset();
                     refreshMemberData();
+                } else {
+                    alert(data.message || 'Failed to add funds');
                 }
-            } catch(err) {}
+            } catch(err) {
+                alert('Error adding funds');
+            }
             btn.disabled = false;
+        }
+
+        async function deductFunds() {
+            if(!selectedMemberId) return;
+            if(!confirm("Are you sure you want to zero out the funds for this member? This action will set the total funds to 0.")) return;
+            
+            try {
+                const res = await fetch(API_URL + '/api/portal/funds/deduct', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        userId: selectedMemberId
+                    })
+                });
+                const data = await res.json();
+                if(data.success) {
+                    refreshMemberData();
+                    alert('Funds have been successfully zeroed out.');
+                } else {
+                    alert(data.message || 'Failed to remove funds');
+                }
+            } catch(err) {
+                alert('Error removing funds');
+            }
         }
     
         async function addNiyojan(e) {

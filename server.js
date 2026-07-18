@@ -27,7 +27,16 @@ if (!fs.existsSync(UPLOAD_DIR)) {
 }
 
 app.use('/uploads', express.static(UPLOAD_DIR, { maxAge: '7d' }));
-app.use(express.static(path.join(__dirname), { maxAge: '1h' }));
+app.use(express.static(path.join(__dirname), { 
+    maxAge: '1h',
+    setHeaders: (res, filePath) => {
+        if (filePath.endsWith('.html')) {
+            res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+            res.setHeader('Pragma', 'no-cache');
+            res.setHeader('Expires', '0');
+        }
+    }
+}));
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => cb(null, UPLOAD_DIR),
@@ -917,6 +926,22 @@ app.post('/api/portal/funds', async (req, res) => {
     }
 });
 
+app.post('/api/portal/funds/deduct', async (req, res) => {
+    try {
+        const { userId } = req.body;
+        const user = await PortalUser.findById(userId);
+        if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+        
+        user.totalFunds = 0;
+        user.balance = -user.totalSpent || 0;
+        await user.save();
+        
+        res.json({ success: true, user });
+    } catch(err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
 // Update expense
 
 // Delete expense
@@ -1007,10 +1032,15 @@ app.post('/api/portal/expenses', async (req, res) => {
 
 
 // Add Endpoint for User Profile Photo
-app.post('/api/users/:id/photo', upload.single('photo'), async (req, res) => {
+app.post('/api/users/:id/photo', uploadCommittee.single('photo'), async (req, res) => {
     try {
         if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
-        const photoUrl = 'uploads/' + req.file.filename;
+        
+        // Convert buffer to base64 Data URL to save in DB directly
+        const base64Data = req.file.buffer.toString('base64');
+        const mimeType = req.file.mimetype;
+        const photoUrl = `data:${mimeType};base64,${base64Data}`;
+        
         const user = await PortalUser.findByIdAndUpdate(req.params.id, { photoUrl }, { new: true });
         if (!user) return res.status(404).json({ error: 'User not found' });
         

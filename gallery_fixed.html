@@ -777,8 +777,9 @@
             const visible = isYearVisible(year);
 
             if (!visible) {
-                container.innerHTML = '<div class="year-section"><div class="year-section-header"><h2>' + year + ' - Cashbook</h2><div class="section-actions desktop-only"><button class="btn btn-pdf-view disabled" disabled>View PDF</button><button class="btn btn-pdf-download disabled" disabled>Download PDF</button></div></div><div class="empty-state"><p style="color:var(--text-secondary);">This Year Cashbook Hide By Admin | This Cashbook Visible Soon!!!</p></div><div class="section-actions mobile-only"><button class="btn btn-pdf-view disabled" disabled>View PDF</button><button class="btn btn-pdf-download disabled" disabled>Download PDF</button></div></div>';
+                container.innerHTML = '';
                 return;
+            }
             }
 
             currentYearEntries = entries;
@@ -857,7 +858,7 @@
     }
 
     async function viewPDFYear(year, btn) {
-        if (!isYearVisible(year)) { alert('This Year Cashbook Hide By Admin. This Cashbook Visible Soon!!!'); return; }
+        if (!isYearVisible(year)) return;
         const originalText = btn ? btn.innerHTML : 'View PDF';
         if (btn) btn.innerHTML = 'Wait...';
         try {
@@ -878,7 +879,7 @@
     }
 
     async function downloadPDFYear(year, btn) {
-        if (!isYearVisible(year)) { alert('This Year Cashbook Hide By Admin. This Cashbook Visible Soon!!!'); return; }
+        if (!isYearVisible(year)) return;
         const originalText = btn ? btn.innerHTML : 'Download PDF';
         if (btn) btn.innerHTML = 'Wait...';
         try {
