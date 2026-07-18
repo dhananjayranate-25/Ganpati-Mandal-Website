@@ -67,7 +67,7 @@
                     <a href="javascript:void(0)" id="nav-committee" onclick="switchTab('committee'); navLinks.classList.remove('active'); return false;" style="display: block !important;">उत्सव कमिटी</a>
                     <a href="javascript:void(0)" id="nav-niyojan" onclick="switchTab('niyojan'); navLinks.classList.remove('active'); return false;" style="display: block !important;">उत्सव नियोजन</a>
                     <a href="javascript:void(0)" id="nav-aarti" onclick="switchTab('aarti'); navLinks.classList.remove('active'); return false;" style="display: block !important;">महाआरती</a>
-                    <a href="gallery.html" id="nav-gallery" style="display: block !important;">गणपती छायाचित्रे</a>
+                    <a href="javascript:void(0)" id="nav-gallery" onclick="navLinks.classList.remove('active'); window.location.href='gallery.html'; return false;" style="display: block !important;">गणपती छायाचित्रे</a>
                     <a href="javascript:void(0)" id="nav-contact" onclick="switchTab('contact'); navLinks.classList.remove('active'); return false;" style="display: block !important;">संपर्क</a>
                     <a href="javascript:void(0)" id="nav-donate" class="nav-donate-btn" onclick="switchTab('donate'); navLinks.classList.remove('active'); return false;" style="display: block !important;">देणगी</a>
                 <a href="login.html" id="nav-login" class="nav-donate-btn" style="display: block !important; background-color: #3b82f6; margin-left: 10px;">Login</a>
@@ -92,6 +92,14 @@
                             navLinks.classList.remove('active');
                         });
                     });
+                    
+                    // Fix: also close login link
+                    const loginLink = document.getElementById('nav-login');
+                    if(loginLink) {
+                        loginLink.addEventListener('click', () => {
+                            navLinks.classList.remove('active');
+                        });
+                    }
                 }
             });
         </script>
