@@ -185,7 +185,8 @@ const portalUserSchema = new mongoose.Schema({
     password: { type: String, required: true },
     totalFunds: { type: Number, default: 0 },
     totalSpent: { type: Number, default: 0 },
-    balance: { type: Number, default: 0 }
+    balance: { type: Number, default: 0 },
+    photoUrl: { type: String, default: '' }
 });
 const PortalUser = mongoose.model('PortalUser', portalUserSchema);
 
@@ -1011,8 +1012,10 @@ app.post('/api/users/:id/photo', upload.single('photo'), async (req, res) => {
         const user = await PortalUser.findByIdAndUpdate(req.params.id, { photoUrl }, { new: true });
         if (!user) return res.status(404).json({ error: 'User not found' });
         
-        // Auto update CommitteeMember with the same name
-        await CommitteeMember.updateMany({ name: user.name }, { photoUrl, base64Data: '' });
+        // Auto update CommitteeMember with the same name (case-insensitive)
+        const regexName = new RegExp(`^${user.name.trim()}$`, 'i');
+        const updateResult = await CommitteeMember.updateMany({ name: regexName }, { photoUrl, base64Data: '' });
+        console.log(`Updated ${updateResult.modifiedCount} committee members with photo for user ${user.name}`);
         
         res.json({ success: true, photoUrl, user });
     } catch (e) {
