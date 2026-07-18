@@ -67,10 +67,11 @@ const galleryStorage = multer.diskStorage({
     destination: (req, file, cb) => cb(null, UPLOAD_DIR),
     filename: (req, file, cb) => {
         const ext = path.extname(file.originalname) || '.jpg';
-        cb(null, `gallery_${Date.now()}_${Math.floor(Math.random() * 1000)}${ext}`);
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, `gallery_${uniqueSuffix}${ext}`);
     }
 });
-const uploadGallery = multer({ storage: galleryStorage, limits: { fileSize: 20 * 1024 * 1024 } });
+const uploadGallery = multer({ storage: galleryStorage, limits: { fileSize: 50 * 1024 * 1024 } });
 
 
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -447,6 +448,7 @@ app.delete('/api/gallery/album/:id', async (req, res) => {
 // Upload photos to album
 app.post('/api/gallery/album/:id/photos', uploadGallery.array('photos', 20), async (req, res) => {
     try {
+        console.log(`Gallery Upload request received for album ${req.params.id}. Files count:`, req.files ? req.files.length : 0);
         const album = await GalleryAlbum.findById(req.params.id);
         if (!album) return res.status(404).json({ success: false, error: 'Album not found' });
         
