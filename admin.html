@@ -2355,25 +2355,53 @@ async function handleUploadPhotos(e, albumId) {
     const status = document.getElementById('uploadStatus_' + albumId);
     
     if (input.files.length === 0) return;
-    status.innerText = "Uploading...";
     
-    const formData = new FormData();
-    for (let i = 0; i < input.files.length; i++) {
+    const total = input.files.length;
+    let successCount = 0;
+    
+    status.innerText = `Uploading 0 of ${total}...`;
+    status.style.color = "#ffeb3b";
+    
+    for (let i = 0; i < total; i++) {
+        const formData = new FormData();
         formData.append('photos', input.files[i]);
+        
+        try {
+            status.innerText = `Uploading ${i + 1} of ${total}...`;
+            const res = await fetch('/api/gallery/album/' + albumId + '/photos', {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (!res.ok) {
+                const text = await res.text();
+                throw new Error(text || res.statusText);
+            }
+            
+            const data = await res.json();
+            if (data.success) {
+                successCount++;
+            } else {
+                console.error("Upload failed for file", i, data.error);
+            }
+        } catch (err) {
+            console.error("Error uploading file", i, err);
+            status.style.color = "#ff5252";
+            status.innerText = `Error on photo ${i + 1}. Stopping.`;
+            break;
+        }
     }
     
-    try {
-        const res = await fetch('/api/gallery/album/' + albumId + '/photos', {
-            method: 'POST',
-            body: formData
-        });
-        const data = await res.json();
-        if (data.success) {
-            loadAdminAlbums();
-        }
-    } catch (err) {
-        status.innerText = "Error uploading.";
+    if (successCount === total) {
+        status.style.color = "#4caf50";
+        status.innerText = "All photos uploaded successfully!";
+    } else if (successCount > 0) {
+        status.innerText = `Uploaded ${successCount} of ${total} photos.`;
     }
+    
+    setTimeout(() => { status.innerText = ""; status.style.color = "#ffeb3b"; }, 3000);
+    input.value = ""; // clear input
+    loadAdminAlbums();
 }
 
 async function deletePhoto(albumId, filename) {
