@@ -875,7 +875,7 @@ table {
             formData.append('photo', compressedFile);
 
             try {
-                const res = await fetch(${API_URL}/api/users//photo, {
+                const res = await fetch(`${API_URL}/api/users/${currentUser._id}/photo`, {
                     method: 'POST',
                     body: formData
                 });
