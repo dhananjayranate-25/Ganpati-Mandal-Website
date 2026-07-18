@@ -695,7 +695,7 @@
 
     function switchTab(tabName, pushState = true) {
         currentTab = tabName;
-        window.scrollTo({top: 0, behavior: 'smooth'});
+        window.scrollTo(0, 0);
         
         const heroContainer = document.getElementById('heroSectionContainer');
         const ganeshotsavHeader = document.getElementById('ganeshotsavHeader');
