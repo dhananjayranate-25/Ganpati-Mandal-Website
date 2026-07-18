@@ -745,28 +745,38 @@ table {
 
         async function refreshMemberData() {
             if(!selectedMemberId) return;
+            
+            // Set loading state
+            document.getElementById('tasksList').innerHTML = '<p class="empty-state">Loading tasks...</p>';
+            document.getElementById('expensesList').innerHTML = '<p class="empty-state">Loading expenses...</p>';
+            
             try {
-                // Fetch user data
-                let res = await fetch(API_URL + '/api/portal/users/' + selectedMemberId);
-                let data = await res.json();
+                // Fetch user data, tasks, and expenses concurrently for faster load
+                const [userRes, tasksRes, expensesRes] = await Promise.all([
+                    fetch(API_URL + '/api/portal/users/' + selectedMemberId),
+                    fetch(API_URL + '/api/portal/tasks/' + selectedMemberId),
+                    fetch(API_URL + '/api/portal/expenses/' + selectedMemberId)
+                ]);
 
-                if(data.success) {
-                    selectedMemberData = data.user;
-                    document.getElementById('statTotalFunds').innerText = '₹' + data.user.totalFunds;
-                    document.getElementById('statTotalSpent').innerText = '₹' + data.user.totalSpent;
-                    document.getElementById('statBalance').innerText = '₹' + data.user.balance;
+                const userData = await userRes.json();
+                const tasksData = await tasksRes.json();
+                const expensesData = await expensesRes.json();
+
+                // Process User Data
+                if(userData.success) {
+                    selectedMemberData = userData.user;
+                    document.getElementById('statTotalFunds').innerText = '₹' + userData.user.totalFunds;
+                    document.getElementById('statTotalSpent').innerText = '₹' + userData.user.totalSpent;
+                    document.getElementById('statBalance').innerText = '₹' + userData.user.balance;
                     
                     document.getElementById('dashboardCreds').style.display = 'block';
-                    document.getElementById('credUser').innerText = data.user.username;
-                    document.getElementById('credPass').innerText = data.user.password;
+                    document.getElementById('credUser').innerText = userData.user.username;
+                    document.getElementById('credPass').innerText = userData.user.password;
                 }
 
-
-                // Fetch tasks
-                res = await fetch(API_URL + '/api/portal/tasks/' + selectedMemberId);
-                data = await res.json();
-                if(data.success) {
-                    document.getElementById('tasksList').innerHTML = data.tasks.length ? data.tasks.map(t => `
+                // Process Tasks Data
+                if(tasksData.success) {
+                    document.getElementById('tasksList').innerHTML = tasksData.tasks.length ? tasksData.tasks.map(t => `
                         <div class="item-row">
                             <div>
                                 <div style="font-weight:500;">${t.title}</div>
@@ -777,11 +787,9 @@ table {
                     `).join('') : '<p class="empty-state">No tasks assigned.</p>';
                 }
 
-                // Fetch expenses
-                res = await fetch(API_URL + '/api/portal/expenses/' + selectedMemberId);
-                data = await res.json();
-                if(data.success) {
-                    document.getElementById('expensesList').innerHTML = data.expenses.length ? data.expenses.map(e => `
+                // Process Expenses Data
+                if(expensesData.success) {
+                    document.getElementById('expensesList').innerHTML = expensesData.expenses.length ? expensesData.expenses.map(e => `
                         <div class="item-row">
                             <div>
                                 <div style="font-weight:500;">${e.item}</div>
@@ -792,7 +800,9 @@ table {
                     `).join('') : '<p class="empty-state">No expenses logged.</p>';
                 }
             } catch(e) {
-                console.error(e);
+                console.error('Error fetching member data concurrently:', e);
+                document.getElementById('tasksList').innerHTML = '<p class="empty-state" style="color:var(--danger)">Error loading data.</p>';
+                document.getElementById('expensesList').innerHTML = '<p class="empty-state" style="color:var(--danger)">Error loading data.</p>';
             }
         }
 
