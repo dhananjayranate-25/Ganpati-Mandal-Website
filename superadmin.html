@@ -71,6 +71,8 @@
         .sidebar-footer {
             padding: 15px;
             border-top: 1px solid var(--glass-border);
+            display: flex;
+            gap: 10px;
         }
         .main-content {
             flex: 1;
@@ -355,7 +357,7 @@
                 position: fixed;
                 left: -300px;
                 top: 0;
-                height: 100vh;
+                height: 100dvh; /* Use dvh to fix mobile browser bottom cutoff */
                 z-index: 1000;
                 transition: left 0.3s ease;
                 box-shadow: 2px 0 10px rgba(0,0,0,0.5);
@@ -457,8 +459,8 @@ table {
             <!-- Members will load here -->
         </div>
         <div class="sidebar-footer">
-            <button class="btn btn-outline" style="width: 100%; margin-bottom: 10px;" onclick="openModal('addMemberModal')"><i class="fas fa-plus"></i> Add Member</button>
-            <button class="btn" style="width: 100%; background: #444; color: white;" onclick="logout()">Logout</button>
+            <button class="btn btn-outline" style="flex: 1;" onclick="openModal('addMemberModal')"><i class="fas fa-plus"></i> Add</button>
+            <button class="btn" style="flex: 1; background: #444; color: white;" onclick="logout()">Logout</button>
         </div>
     </div>
 
