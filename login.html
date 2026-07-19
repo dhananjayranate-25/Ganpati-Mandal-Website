@@ -203,7 +203,7 @@
             try {
                 if (role === 'websiteadmin') {
                     // Website Admin login uses a different API
-                    const res = await fetch(API_URL + '/login', {
+                    const res = await fetch(API_URL + '/api/login', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ password })
