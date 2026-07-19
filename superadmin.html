@@ -707,7 +707,7 @@ table {
             try {
                 const list = document.getElementById('memberList');
                 list.innerHTML = '<div style="padding:20px;text-align:center;color:#888;"><i class="fas fa-spinner fa-spin" style="margin-bottom:10px; font-size: 24px;"></i><br>Loading members...<br><small style="font-size:10px;">(Please wait, server may be waking up)</small></div>';
-                const res = await fetch(API_URL + '/api/portal/users');
+                const res = await fetch(API_URL + '/api/portal/users', { cache: 'no-store' });
                 const data = await res.json();
                 if(data.success) {
                     const list = document.getElementById('memberList');
@@ -773,7 +773,7 @@ table {
             try {
                 // Fetch user data, tasks, and expenses concurrently for faster load
                 const [userRes, tasksRes, expensesRes] = await Promise.all([
-                    fetch(API_URL + '/api/portal/users/' + selectedMemberId),
+                    fetch(API_URL + '/api/portal/users/' + selectedMemberId, { cache: 'no-store' }),
                     fetch(API_URL + '/api/portal/tasks/' + selectedMemberId),
                     fetch(API_URL + '/api/portal/expenses/' + selectedMemberId)
                 ]);
