@@ -2838,9 +2838,9 @@ body > .container {
 .floating-decor {
     position: fixed;
     pointer-events: none;
-    z-index: 0;
+    z-index: 2;
     font-size: 24px;
-    opacity: 0.12;
+    opacity: 0.5;
     animation: float-decor 25s ease-in-out infinite;
     filter: drop-shadow(0 0 8px rgba(251,191,36,0.15));
 }
@@ -3214,7 +3214,7 @@ footer::after {
     .hero-section {
         width: 100%;
         margin: 0;
-        padding: 5vh 10vw;
+        padding: 3% !important;
         box-sizing: border-box;
         flex-grow: 1;
         display: flex;
@@ -3243,7 +3243,7 @@ footer::after {
         display: block;
         background-color: transparent;
         position: relative;
-        z-index: 1;
+        z-index: 3;
         border: 2px solid rgba(255, 215, 0, 0.6);
         box-shadow: 0 0 30px rgba(255, 140, 0, 0.5);
     }
@@ -3353,7 +3353,7 @@ footer::after {
     .hero-section {
         height: 85vh !important;
         min-height: unset !important;
-        padding: 5vw !important;
+        padding: 3% !important;
         margin: 0 !important;
         box-sizing: border-box !important;
         display: flex !important;
@@ -3362,8 +3362,8 @@ footer::after {
     }
     .floating-decor {
         display: block !important;
-        z-index: 0 !important;
-        opacity: 0.6 !important;
+        z-index: 2 !important;
+        opacity: 0.5 !important;
     }
 
     .hero-banner-img {
@@ -3376,7 +3376,7 @@ footer::after {
         border: 3px solid rgba(255, 215, 0, 0.8) !important;
         box-shadow: 0 0 40px rgba(255, 140, 0, 0.6) !important;
         position: relative;
-        z-index: 1;
+        z-index: 3;
     }
 }
 
