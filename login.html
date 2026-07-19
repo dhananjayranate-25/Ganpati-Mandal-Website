@@ -7,8 +7,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal Login - Shivsrushti Boyz</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=17">
+    <link rel="stylesheet" href="style.css?v=18">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .role-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .role-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .role-card:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 140, 0, 0.1);
+            border-color: rgba(255, 140, 0, 0.3);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .role-icon {
+            font-size: 24px;
+            color: #ff8c00;
+            margin-right: 20px;
+            width: 40px;
+            text-align: center;
+        }
+        .role-info h3 {
+            margin: 0 0 5px 0;
+            font-size: 1.2rem;
+            color: #fff;
+        }
+        .role-info p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .back-link a {
+            color: #888;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+        .back-link a:hover {
+            color: #ff8c00;
+        }
+    </style>
 </head>
 <body>
     <div id="loginContainer" class="container" style="max-width: 700px; margin-top: 40px;">
@@ -17,7 +71,7 @@
                 <div class="ganpati-image-container">
                     <img src="logo/logo.jpeg" alt="Shivsrushti Logo" class="ganpati-image" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚩</text></svg>';this.classList.add('fallback-icon')">
                 </div>
-                <h1 class="title-gradient">Portal Login</h1>
+                <h1 class="title-gradient" id="pageTitle">लॉगिन (Login)</h1>
                 <div class="subtitle-wrapper">
                     <span class="subtitle-badge">शिवसृष्टी हिंदू तरुण मित्र मंडळ | 🚩</span>
                 </div>
@@ -25,17 +79,50 @@
         </header>
         
         <div class="form-container animate-fade-up" style="animation-delay: 0.2s;">
-            <form id="loginForm" onsubmit="handleLogin(event)">
+            <!-- Role Selection -->
+            <div id="roleSelection" class="role-selector">
+                <div class="role-card" onclick="window.location.href='admin.html'">
+                    <div class="role-icon"><i class="fas fa-globe"></i></div>
+                    <div class="role-info">
+                        <h3>Website Admin</h3>
+                        <p>Manage Homepage, Cashbook & Gallery</p>
+                    </div>
+                </div>
+                
+                <div class="role-card" onclick="showLoginForm('superadmin')">
+                    <div class="role-icon"><i class="fas fa-crown"></i></div>
+                    <div class="role-info">
+                        <h3>Super Admin</h3>
+                        <p>Manage Members, Tasks & Funds</p>
+                    </div>
+                </div>
+        
+                <div class="role-card" onclick="showLoginForm('member')">
+                    <div class="role-icon"><i class="fas fa-user-friends"></i></div>
+                    <div class="role-info">
+                        <h3>Member</h3>
+                        <p>Update Tasks & Log Expenses</p>
+                    </div>
+                </div>
+                
+                <div class="back-link">
+                    <a href="index.html"><i class="fas fa-arrow-left"></i> Back to Website</a>
+                </div>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm" onsubmit="handleLogin(event)" style="display: none;">
+                <input type="hidden" id="loginRole">
                 <div class="form-grid">
-                    <div class="form-group floating-label">
-                        <input type="text" id="username" placeholder=" " required="">
-                        <label for="username">Username</label>
+                    <div class="form-group floating-label" id="usernameGroup">
+                        <input type="text" id="username" placeholder=" ">
+                        <label for="username">Enter Username</label>
                         <div class="input-focus-line"></div>
                     </div>
                     
                     <div class="form-group floating-label">
                         <input type="password" id="password" placeholder=" " required="">
-                        <label for="password">Password</label>
+                        <label for="password">Enter Password</label>
                         <div class="input-focus-line"></div>
                     </div>
                 </div>
@@ -51,22 +138,12 @@
                         Login
                     </button>
                     <div style="margin-top:12px;">
-                        <a href="admin.html" class="btn btn-secondary ripple" style="width:100%;justify-content:center; background: rgba(255, 140, 0, 0.1); color: #ff8c00; border-color: rgba(255, 140, 0, 0.3);">
+                        <button type="button" class="btn btn-secondary ripple" style="width:100%;justify-content:center;" onclick="showRoleSelection()">
                             <span class="btn-icon">
-                                <i class="fas fa-globe"></i>
+                                <i class="fas fa-arrow-left"></i>
                             </span>
-                            Website Admin Login
-                        </a>
-                    </div>
-                    <div style="margin-top:12px;">
-                        <a href="index.html" class="btn btn-secondary ripple" style="width:100%;justify-content:center;">
-                            <span class="btn-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M3 12h18M3 12l4-4m-4 4l4 4"></path>
-                                </svg>
-                            </span>
-                            Back to Home
-                        </a>
+                            Back to Options
+                        </button>
                     </div>
                 </div>
                 <div id="errorMsg" style="color: #ef4444; text-align: center; margin-top: 10px; display: none;">
@@ -78,11 +155,39 @@
     
     <script>
         const API_URL = ''; // Leave empty if same domain
+
+        function showLoginForm(role) {
+            document.getElementById('roleSelection').style.display = 'none';
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('loginRole').value = role;
+            
+            document.getElementById('password').value = '';
+            document.getElementById('errorMsg').style.display = 'none';
+            
+            if (role === 'superadmin') {
+                document.getElementById('pageTitle').innerText = 'Super Admin Login';
+                document.getElementById('usernameGroup').style.display = 'none';
+                document.getElementById('username').value = 'admin'; // Hidden hardcoded username
+                document.getElementById('username').removeAttribute('required');
+            } else {
+                document.getElementById('pageTitle').innerText = 'Member Login';
+                document.getElementById('usernameGroup').style.display = 'block';
+                document.getElementById('username').value = '';
+                document.getElementById('username').setAttribute('required', 'true');
+            }
+        }
+
+        function showRoleSelection() {
+            document.getElementById('roleSelection').style.display = 'flex';
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('pageTitle').innerText = 'लॉगिन (Login)';
+        }
         
         async function handleLogin(e) {
             e.preventDefault();
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
+            const role = document.getElementById('loginRole').value;
             const btn = document.getElementById('loginBtn');
             const errorMsg = document.getElementById('errorMsg');
             
@@ -99,6 +204,9 @@
                 const data = await res.json();
                 
                 if(data.success) {
+                    if(data.user.role !== role) {
+                        throw new Error(`Please login using the ${data.user.role} option instead.`);
+                    }
                     localStorage.setItem('portalUser', JSON.stringify(data.user));
                     localStorage.setItem('userRole', data.user.role);
                     
