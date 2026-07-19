@@ -3357,9 +3357,10 @@ footer::after {
         justify-content: center !important;
         align-items: center !important;
     }
-    
     .floating-decor {
-        display: none !important;
+        display: block !important;
+        z-index: 0 !important;
+        opacity: 0.6 !important;
     }
 
     .hero-banner-img {
