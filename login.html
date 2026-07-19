@@ -81,7 +81,7 @@
         <div class="form-container animate-fade-up" style="animation-delay: 0.2s;">
             <!-- Role Selection -->
             <div id="roleSelection" class="role-selector">
-                <div class="role-card" onclick="showLoginForm('websiteadmin')">
+                <div class="role-card" tabindex="0" onclick="showLoginForm('websiteadmin')" onkeydown="if(event.key === 'Enter') showLoginForm('websiteadmin')">
                     <div class="role-icon"><i class="fas fa-globe"></i></div>
                     <div class="role-info">
                         <h3>Website Admin</h3>
@@ -89,7 +89,7 @@
                     </div>
                 </div>
                 
-                <div class="role-card" onclick="showLoginForm('superadmin')">
+                <div class="role-card" tabindex="0" onclick="showLoginForm('superadmin')" onkeydown="if(event.key === 'Enter') showLoginForm('superadmin')">
                     <div class="role-icon"><i class="fas fa-crown"></i></div>
                     <div class="role-info">
                         <h3>Super Admin</h3>
@@ -97,7 +97,7 @@
                     </div>
                 </div>
         
-                <div class="role-card" onclick="showLoginForm('member')">
+                <div class="role-card" tabindex="0" onclick="showLoginForm('member')" onkeydown="if(event.key === 'Enter') showLoginForm('member')">
                     <div class="role-icon"><i class="fas fa-user-friends"></i></div>
                     <div class="role-info">
                         <h3>Member</h3>
