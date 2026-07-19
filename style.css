@@ -83,6 +83,7 @@ body::after {
 }
 
 .particles {
+    display: none !important;
     position: absolute;
     top: 0;
     left: 0;
@@ -3313,7 +3314,7 @@ footer::after {
 
     .top-banner-img {
         width: 100%;
-        height: 120px;
+        height: 150px;
         object-fit: fill;
     }
     
@@ -3331,6 +3332,19 @@ footer::after {
 
     .section-title {
         text-align: center !important;
+    }
+
+    .particles {
+        position: absolute;
+        display: none !important;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: 1;
+        pointer-events: none;
+        display: none !important;
     }
 
     .custom-navbar {
