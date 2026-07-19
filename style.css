@@ -89,8 +89,46 @@ body::after {
     right: 0;
     bottom: 0;
     pointer-events: none;
-    z-index: 0;
+    z-index: 9999;
     overflow: hidden;
+}
+
+.sparkle {
+    position: absolute;
+    bottom: -10px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: white;
+    opacity: 0;
+    animation: float-up var(--dur) linear var(--delay) infinite;
+}
+.sparkle.gold { background-color: #ffd700; box-shadow: 0 0 10px #ffd700; }
+.sparkle.purple { background-color: #ff8c00; box-shadow: 0 0 10px #ff8c00; }
+.sparkle.tiny { width: 3px; height: 3px; }
+.sparkle.big { width: 9px; height: 9px; }
+
+@keyframes float-up {
+    0% { transform: translateY(0) scale(1); opacity: 0; }
+    10% { opacity: var(--max-opacity); }
+    90% { opacity: var(--max-opacity); }
+    100% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
+}
+
+.sparkle-star {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background-color: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #fff;
+    opacity: 0;
+    animation: twinkle-star linear infinite;
+}
+
+@keyframes twinkle-star {
+    0%, 100% { opacity: 0; transform: scale(0.5); }
+    50% { opacity: 1; transform: scale(1.5); }
 }
 
 .particle {
@@ -2836,13 +2874,7 @@ body > .container {
 
 /* ===== DECORATIVE FLOATING ELEMENTS ===== */
 .floating-decor {
-    position: fixed;
-    pointer-events: none;
-    z-index: 9999;
-    font-size: 24px;
-    opacity: 0.8;
-    animation: float-decor 25s ease-in-out infinite;
-    filter: drop-shadow(0 0 8px rgba(251,191,36,0.15));
+    display: none !important;
 }
 
 .floating-decor:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; font-size: 32px; }
@@ -3361,9 +3393,7 @@ footer::after {
         align-items: center !important;
     }
     .floating-decor {
-        display: block !important;
-        z-index: 9999 !important;
-        opacity: 0.8 !important;
+        display: none !important;
     }
 
     .hero-banner-img {
