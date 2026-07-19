@@ -3335,7 +3335,7 @@ footer::after {
     .hero-section {
         height: 85vh !important;
         min-height: unset !important;
-        padding: 5vh 5vw !important;
+        padding: 5vw !important;
         margin: 0 !important;
         box-sizing: border-box !important;
         display: flex !important;
