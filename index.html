@@ -707,6 +707,7 @@
         const committeeSection = document.getElementById('committeeSection');
         const contactSection = document.getElementById('contactSection');
         const niyojanSection = document.getElementById('niyojanSection');
+        const topBanner = document.querySelector('.main-banner');
 
         // Hide everything first
         if(heroContainer) heroContainer.style.display = 'none';
@@ -721,11 +722,13 @@
         if(aartiSection) aartiSection.style.display = 'none';
         if(contactSection) contactSection.style.display = 'none';
         if(niyojanSection) niyojanSection.style.display = 'none';
+        if(topBanner) topBanner.style.display = 'none';
 
         // Show based on tabName
         if (tabName === 'home') {
             if(heroContainer) heroContainer.style.display = 'block';
             if(siteFooter) siteFooter.style.display = 'block';
+            if(topBanner) topBanner.style.display = 'block';
         } else if (tabName === 'ganeshotsav') {
             if(ganeshotsavHeader) ganeshotsavHeader.style.display = 'block';
             if(cashbookContainer) cashbookContainer.style.display = 'block';
