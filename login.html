@@ -81,7 +81,7 @@
         <div class="form-container animate-fade-up" style="animation-delay: 0.2s;">
             <!-- Role Selection -->
             <div id="roleSelection" class="role-selector">
-                <div class="role-card" onclick="window.location.href='admin.html'">
+                <div class="role-card" onclick="showLoginForm('websiteadmin')">
                     <div class="role-icon"><i class="fas fa-globe"></i></div>
                     <div class="role-info">
                         <h3>Website Admin</h3>
@@ -169,6 +169,11 @@
                 document.getElementById('usernameGroup').style.display = 'none';
                 document.getElementById('username').value = 'admin'; // Hidden hardcoded username
                 document.getElementById('username').removeAttribute('required');
+            } else if (role === 'websiteadmin') {
+                document.getElementById('pageTitle').innerText = 'Website Admin Login';
+                document.getElementById('usernameGroup').style.display = 'none';
+                document.getElementById('username').value = 'websiteadmin'; // Dummy value, not used for auth
+                document.getElementById('username').removeAttribute('required');
             } else {
                 document.getElementById('pageTitle').innerText = 'Member Login';
                 document.getElementById('usernameGroup').style.display = 'block';
@@ -196,27 +201,44 @@
             errorMsg.style.display = 'none';
             
             try {
-                const res = await fetch(API_URL + '/api/portal/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
-                });
-                const data = await res.json();
-                
-                if(data.success) {
-                    if(data.user.role !== role) {
-                        throw new Error(`Please login using the ${data.user.role} option instead.`);
-                    }
-                    localStorage.setItem('portalUser', JSON.stringify(data.user));
-                    localStorage.setItem('userRole', data.user.role);
-                    
-                    if(data.user.role === 'superadmin') {
-                        window.location.href = 'superadmin.html';
+                if (role === 'websiteadmin') {
+                    // Website Admin login uses a different API
+                    const res = await fetch(API_URL + '/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ password })
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        sessionStorage.setItem('adminLoggedIn', 'true');
+                        window.location.href = 'admin.html';
                     } else {
-                        window.location.href = 'member.html';
+                        throw new Error(data.message || 'Wrong password! Try again.');
                     }
                 } else {
-                    throw new Error(data.message || 'Login failed');
+                    // Super Admin and Member use the portal login API
+                    const res = await fetch(API_URL + '/api/portal/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username, password })
+                    });
+                    const data = await res.json();
+                    
+                    if(data.success) {
+                        if(data.user.role !== role) {
+                            throw new Error(`Please login using the ${data.user.role} option instead.`);
+                        }
+                        localStorage.setItem('portalUser', JSON.stringify(data.user));
+                        localStorage.setItem('userRole', data.user.role);
+                        
+                        if(data.user.role === 'superadmin') {
+                            window.location.href = 'superadmin.html';
+                        } else {
+                            window.location.href = 'member.html';
+                        }
+                    } else {
+                        throw new Error(data.message || 'Login failed');
+                    }
                 }
             } catch (err) {
                 errorMsg.innerText = err.message || 'Network error. Please try again.';

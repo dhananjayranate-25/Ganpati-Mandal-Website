@@ -762,9 +762,20 @@
     <script src="script.js?v=4"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Always show login on page load (no session persistence)
-            document.getElementById('loginContainer').style.display = 'flex';
-            document.getElementById('adminPanel').style.display = 'none';
+            // Check session persistence (if logged in from login.html)
+            if (sessionStorage.getItem('adminLoggedIn') === 'true') {
+                document.getElementById('loginContainer').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                // Wait a moment for script.js to load, then initialize
+                setTimeout(() => {
+                    if (window.loadYearsForAdmin) window.loadYearsForAdmin();
+                    if (window.fetchStorageStats) window.fetchStorageStats();
+                }, 100);
+            } else {
+                // Show login by default
+                document.getElementById('loginContainer').style.display = 'flex';
+                document.getElementById('adminPanel').style.display = 'none';
+            }
             
             // Login button handler
             const loginBtn = document.getElementById('loginBtn');
