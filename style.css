@@ -3335,9 +3335,12 @@ footer::after {
     .hero-section {
         height: 85vh !important;
         min-height: unset !important;
-        padding: 0 !important;
+        padding: 5vh 5vw !important;
         margin: 0 !important;
         box-sizing: border-box !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
     }
     
     .floating-decor {
@@ -3347,9 +3350,9 @@ footer::after {
     .hero-banner-img {
         object-fit: cover !important;
         object-position: center !important;
-        height: calc(100% - 10vw) !important;
-        width: 90% !important;
-        margin: 5vw auto !important;
+        height: 100% !important;
+        width: 100% !important;
+        margin: 0 !important;
         border-radius: 15px !important;
     }
 }
