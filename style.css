@@ -3214,9 +3214,12 @@ footer::after {
     .hero-section {
         width: 100%;
         margin: 0;
-        padding: 0;
+        padding: 5vh 10vw;
+        box-sizing: border-box;
         flex-grow: 1;
         display: flex;
+        justify-content: center;
+        align-items: center;
         flex-direction: column;
         min-height: 0;
         background: radial-gradient(circle at center, rgba(255, 140, 0, 0.3) 0%, rgba(100, 0, 0, 0.9) 50%, #110000 100%) !important;
