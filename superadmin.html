@@ -458,9 +458,10 @@ table {
         <div class="member-list" id="memberList">
             <!-- Members will load here -->
         </div>
-        <div class="sidebar-footer">
-            <button class="btn btn-outline" style="flex: 1;" onclick="openModal('addMemberModal')"><i class="fas fa-plus"></i> Add</button>
-            <button class="btn" style="flex: 1; background: #444; color: white;" onclick="logout()">Logout</button>
+        <div class="sidebar-footer" style="display: flex; gap: 5px; flex-wrap: wrap;">
+            <button class="btn btn-outline" style="flex: 1; font-size: 0.9rem; padding: 10px 5px;" onclick="openModal('addMemberModal')"><i class="fas fa-user-plus"></i> Add</button>
+            <button class="btn btn-outline" style="flex: 1; font-size: 0.9rem; padding: 10px 5px;" onclick="openModal('changeAdminPasswordModal')"><i class="fas fa-key"></i> Pass</button>
+            <button class="btn" style="flex: 1; font-size: 0.9rem; padding: 10px 5px; background: #444; color: white;" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Out</button>
         </div>
     </div>
 
@@ -597,6 +598,20 @@ table {
     </div>
 
     <!-- Modals -->
+    <!-- Change Admin Password Modal -->
+    <div class="modal" id="changeAdminPasswordModal">
+        <div class="modal-content">
+            <h3 class="modal-title">Change Password</h3>
+            <form onsubmit="changeAdminPassword(event)">
+                <input type="password" id="newAdminPass" class="form-control" placeholder="New Password" required>
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px;">
+                    <button type="button" class="btn btn-outline" onclick="closeModals()">Cancel</button>
+                    <button type="submit" class="btn" style="background: var(--primary); color: var(--darker);">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Add Member Modal -->
     <div class="modal" id="addMemberModal">
         <div class="modal-content">
@@ -918,6 +933,46 @@ table {
         
 
         
+
+        async function changeAdminPassword(e) {
+            e.preventDefault();
+            const newPass = document.getElementById('newAdminPass').value.trim();
+            if (!newPass) return alert("Password cannot be empty");
+            
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerText;
+            btn.innerText = 'Updating...';
+            btn.disabled = true;
+            
+            try {
+                const res = await fetch(API_URL + '/api/portal/users/' + currentUser._id, {
+                    method: 'PUT',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ 
+                        name: currentUser.name, 
+                        username: currentUser.username, 
+                        password: newPass 
+                    })
+                });
+                const data = await res.json();
+                if(data.success) {
+                    alert('Password updated successfully!');
+                    closeModals();
+                    document.getElementById('newAdminPass').value = '';
+                    
+                    // Update current user password locally to avoid logging out
+                    currentUser.password = newPass;
+                    localStorage.setItem('portalUser', JSON.stringify(currentUser));
+                    
+                } else {
+                    alert(data.message || 'Error updating password');
+                }
+            } catch(err) {
+                alert('Network error while updating password');
+            }
+            btn.innerText = originalText;
+            btn.disabled = false;
+        }
 
         async function addFunds(e) {
             e.preventDefault();
