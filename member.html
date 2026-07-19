@@ -405,8 +405,16 @@ table {
             <input type="file" id="profilePhotoInput" style="display: none;" accept="image/*" onchange="uploadProfilePhoto(this)">
             <h2><span id="welcomeName">Member</span></h2>
         </div>
-        <button class="btn btn-outline" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        <div style="display: flex; gap: 10px;">
+            <button class="btn btn-outline" onclick="openModal('changePasswordModal')" style="padding: 8px 12px;"><i class="fas fa-key"></i> <span class="hide-on-mobile">Pass</span></button>
+            <button class="btn btn-outline" onclick="logout()" style="padding: 8px 12px;"><i class="fas fa-sign-out-alt"></i> <span class="hide-on-mobile">Logout</span></button>
+        </div>
     </div>
+    <style>
+    @media (max-width: 600px) {
+        .hide-on-mobile { display: none; }
+    }
+    </style>
 
 
     <div class="main-content">
@@ -541,6 +549,21 @@ table {
             </div>
     </div>
 
+    <!-- Modals -->
+    <!-- Change Password Modal -->
+    <div class="modal" id="changePasswordModal">
+        <div class="modal-content">
+            <h3 class="modal-title">Change Password</h3>
+            <form onsubmit="changeUserPassword(event)">
+                <input type="password" id="newUserPass" class="form-control" placeholder="New Password" required>
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px;">
+                    <button type="button" class="btn btn-outline" onclick="closeModals()">Cancel</button>
+                    <button type="submit" class="btn" style="background: var(--primary); color: var(--darker);">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Add Expense Modal -->
     <div class="modal" id="addExpenseModal">
         <div class="modal-content">
@@ -623,6 +646,46 @@ table {
             }
             loadMyData();
         };
+
+        async function changeUserPassword(e) {
+            e.preventDefault();
+            const newPass = document.getElementById('newUserPass').value.trim();
+            if (!newPass) return alert("Password cannot be empty");
+            
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerText;
+            btn.innerText = 'Updating...';
+            btn.disabled = true;
+            
+            try {
+                const res = await fetch(API_URL + '/api/portal/users/' + currentUser._id, {
+                    method: 'PUT',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ 
+                        name: currentUser.name, 
+                        username: currentUser.username, 
+                        password: newPass 
+                    })
+                });
+                const data = await res.json();
+                if(data.success) {
+                    alert('Password updated successfully!');
+                    closeModals();
+                    document.getElementById('newUserPass').value = '';
+                    
+                    // Update current user password locally to avoid logging out
+                    currentUser.password = newPass;
+                    localStorage.setItem('portalUser', JSON.stringify(currentUser));
+                    
+                } else {
+                    alert(data.message || 'Error updating password');
+                }
+            } catch(err) {
+                alert('Network error while updating password');
+            }
+            btn.innerText = originalText;
+            btn.disabled = false;
+        }
 
         function logout() {
             localStorage.removeItem('portalUser');
