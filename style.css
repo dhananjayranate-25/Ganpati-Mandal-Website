@@ -2838,9 +2838,9 @@ body > .container {
 .floating-decor {
     position: fixed;
     pointer-events: none;
-    z-index: 2;
+    z-index: 9999;
     font-size: 24px;
-    opacity: 0.5;
+    opacity: 0.8;
     animation: float-decor 25s ease-in-out infinite;
     filter: drop-shadow(0 0 8px rgba(251,191,36,0.15));
 }
@@ -3362,8 +3362,8 @@ footer::after {
     }
     .floating-decor {
         display: block !important;
-        z-index: 2 !important;
-        opacity: 0.5 !important;
+        z-index: 9999 !important;
+        opacity: 0.8 !important;
     }
 
     .hero-banner-img {
