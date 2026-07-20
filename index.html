@@ -2040,11 +2040,18 @@ table {
 
         // 6. QR and Bank Details Two-Column Layout
         const orgName = (typeof appSettings !== 'undefined' && appSettings.pdfCustomSettings && appSettings.pdfCustomSettings.orgName) ? appSettings.pdfCustomSettings.orgName : 'शिवसृष्टी सार्वजनिक उत्सव मंडळ, संगमनेर';
-        const upiId = document.getElementById('upiId').value;
-        const bankName = document.getElementById('bankName').value;
-        const accountName = document.getElementById('accountName').value;
-        const accountNumber = document.getElementById('accountNumber').value;
-        const ifscCode = document.getElementById('ifscCode').value;
+        const upiId = 'dhananjayranate@ybl';
+        
+        // Get bank details safely from the DOM (fallback to hardcoded if not found)
+        const getSafeText = (id, fallback) => {
+            const el = document.getElementById(id);
+            return el ? el.textContent.trim() : fallback;
+        };
+        
+        const accountName = getSafeText('bankAccName', 'Dhananjay Sachin Ranate');
+        const accountNumber = getSafeText('bankAccNo', '322502010043655');
+        const ifscCode = getSafeText('bankIfsc', 'UBIN0532258');
+        const bankName = getSafeText('bankBranch', 'Union Bank Of India');
 
         // Generate QR code internally
         const qrContainer = document.createElement('div');
