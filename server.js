@@ -976,9 +976,22 @@ app.post('/api/portal/tasks', async (req, res) => {
 
 app.put('/api/portal/tasks/:id', async (req, res) => {
     try {
-        const { status } = req.body;
-        const task = await PortalTask.findByIdAndUpdate(req.params.id, { status }, { new: true });
+        const { status, title } = req.body;
+        const updateData = {};
+        if (status) updateData.status = status;
+        if (title) updateData.title = title;
+        
+        const task = await PortalTask.findByIdAndUpdate(req.params.id, updateData, { new: true });
         res.json({ success: true, task });
+    } catch(err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+app.delete('/api/portal/tasks/:id', async (req, res) => {
+    try {
+        await PortalTask.findByIdAndDelete(req.params.id);
+        res.json({ success: true });
     } catch(err) {
         res.status(500).json({ success: false, message: err.message });
     }
