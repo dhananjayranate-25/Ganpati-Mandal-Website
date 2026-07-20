@@ -773,7 +773,7 @@
                     
                     const savedTab = sessionStorage.getItem('activeAdminTab');
                     if (savedTab) {
-                        switchAdminTab(savedTab);
+                        switchAdminTab(savedTab, false);
                     }
                 }, 100);
             } else {
@@ -2016,17 +2016,50 @@ table {
             window.open(url, '_blank');
         }
 
-        function switchAdminTab(tabId) {
+        function switchAdminTab(tabId, pushState = true) {
+            if (pushState) {
+                const currentHash = window.location.hash.replace('#', '');
+                const isCurrentlyHome = !currentHash || currentHash === 'tab-home';
+                
+                if (isCurrentlyHome && tabId !== 'tab-home') {
+                    history.pushState(null, '', '#' + tabId);
+                } else if (!isCurrentlyHome && tabId !== 'tab-home') {
+                    history.replaceState(null, '', '#' + tabId);
+                } else if (tabId === 'tab-home' && !isCurrentlyHome) {
+                    history.pushState(null, '', '#tab-home');
+                }
+            }
+
             document.querySelectorAll('.admin-tab-content').forEach(el => el.style.display = 'none');
             document.querySelectorAll('.btn-tab').forEach(el => el.classList.remove('active'));
-            document.getElementById(tabId).style.display = 'block';
-            document.getElementById('btn-' + tabId).classList.add('active');
+            
+            const tabContent = document.getElementById(tabId);
+            if(tabContent) tabContent.style.display = 'block';
+            
+            const btn = document.getElementById('btn-' + tabId);
+            if(btn) btn.classList.add('active');
             
             sessionStorage.setItem('activeAdminTab', tabId);
             
-            if (tabId === 'tab-committee') {
+            if (tabId === 'tab-committee' && typeof loadCommitteeMembers === 'function') {
                 loadCommitteeMembers();
             }
+            if (tabId === 'tab-aarti' && typeof loadAartiData === 'function') {
+                loadAartiData();
+            }
+            if (tabId === 'tab-gallery' && typeof loadAdminAlbums === 'function') {
+                loadAdminAlbums();
+            }
+        }
+        
+        window.addEventListener('popstate', function(e) {
+            const hash = window.location.hash.replace('#', '');
+            if (hash) {
+                switchAdminTab(hash, false);
+            } else {
+                switchAdminTab('tab-home', false);
+            }
+        });
             if (tabId === 'tab-aarti') {
                 loadAartiData();
             }
