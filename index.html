@@ -1927,7 +1927,6 @@ table {
         clone.style.top = '-9999px';
         clone.style.width = '900px';
         clone.style.maxWidth = '900px';
-          clone.style.height = '1050px';
         clone.style.background = 'radial-gradient(circle at center, #3e0000 0%, #1a0000 100%)';
         clone.style.overflow = 'hidden';
         clone.style.border = '1px solid #3e0000';
@@ -2006,7 +2005,7 @@ table {
 
         // 2. Donation Title with Inline Lines
         const posterTitleHtml = `
-            <div style="display: flex; align-items: center; justify-content: center; width: 100%; margin: 25px 0; position: relative; z-index: 10;">
+            <div style="display: flex; align-items: center; justify-content: center; width: 100%; margin: 5px 0; position: relative; z-index: 10;">
                 <div style="flex-grow: 1; height: 1px; background: linear-gradient(to left, transparent, #ffd700);"></div>
                 <span style="color: #ffd700; font-size: 24px; margin: 0 10px;">✦</span>
                 <span style="color: #ffd700; font-size: 32px; font-weight: bold; font-family: 'Mukta', sans-serif; margin: 0 5px; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">देणगी</span>
@@ -2020,7 +2019,7 @@ table {
         membersBlock.style.display = 'flex';
         membersBlock.style.justifyContent = 'space-between';
         membersBlock.style.width = '90%';
-        membersBlock.style.margin = '10px auto 30px auto';
+        membersBlock.style.margin = '5px auto 15px auto';
         membersBlock.style.position = 'relative';
         membersBlock.style.zIndex = '10';
         
@@ -2187,7 +2186,6 @@ table {
         clone.style.top = '-9999px';
         clone.style.width = '900px';
         clone.style.maxWidth = '900px';
-          clone.style.height = '1050px';
         clone.style.background = 'radial-gradient(circle at center, #3e0000 0%, #1a0000 100%)';
         clone.style.overflow = 'hidden';
         clone.style.border = '1px solid #3e0000';
@@ -2323,15 +2321,11 @@ table {
         textContainerWrapper.style.width = '100%';
         textContainerWrapper.style.border = '1px solid #ffd700';
         textContainerWrapper.style.borderRadius = '15px';
-        textContainerWrapper.style.padding = '10px 20px';
+        textContainerWrapper.style.padding = '40px';
         textContainerWrapper.style.background = 'rgba(70, 0, 0, 0.6)';
         textContainerWrapper.style.position = 'relative';
         textContainerWrapper.style.zIndex = '10';
         textContainerWrapper.style.boxShadow = 'inset 0 0 20px rgba(0,0,0,0.5)';
-        textContainerWrapper.style.flexGrow = '1';
-        textContainerWrapper.style.display = 'flex';
-        textContainerWrapper.style.alignItems = 'center';
-        textContainerWrapper.style.justifyContent = 'center';
         
         // Add corner accents to the content box
         textContainerWrapper.innerHTML = `
@@ -2339,7 +2333,7 @@ table {
             <div style="position: absolute; top: 0; right: 0; width: 15px; height: 15px; border-top: 2px solid #ffd700; border-right: 2px solid #ffd700; border-top-right-radius: 15px;"></div>
             <div style="position: absolute; bottom: 0; left: 0; width: 15px; height: 15px; border-bottom: 2px solid #ffd700; border-left: 2px solid #ffd700; border-bottom-left-radius: 15px;"></div>
             <div style="position: absolute; bottom: 0; right: 0; width: 15px; height: 15px; border-bottom: 2px solid #ffd700; border-right: 2px solid #ffd700; border-bottom-right-radius: 15px;"></div>
-            <div style="color: #fff; font-size: 20px; line-height: 1.45; text-align: center; white-space: pre-wrap; font-family: 'Poppins', sans-serif; text-shadow: 1px 1px 2px rgba(0,0,0,0.8);">${customText}</div>
+            <div style="color: #fff; font-size: 24px; line-height: 1.8; text-align: center; white-space: pre-wrap; font-family: 'Poppins', sans-serif; text-shadow: 1px 1px 2px rgba(0,0,0,0.8);">${customText}</div>
         `;
         clone.appendChild(textContainerWrapper);
 
