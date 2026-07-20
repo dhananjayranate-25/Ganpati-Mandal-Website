@@ -1930,7 +1930,44 @@ table {
     // Force dimensions to trigger desktop media queries in html2canvas
     clone.style.width = '900px';
     clone.style.maxWidth = '900px';
-    clone.style.background = '#1a1a1a';
+    
+    clone.style.background = 'radial-gradient(circle at center, #3e0000 0%, #1a0000 100%)';
+    clone.style.position = 'absolute';
+    clone.style.overflow = 'hidden';
+    clone.style.border = '1px solid #3e0000';
+    clone.style.padding = '30px';
+
+    // Add 4 premium corner accents
+    const createCorner = (top, right, bottom, left) => {
+        const c = document.createElement('div');
+        c.style.position = 'absolute';
+        c.style.width = '30px';
+        c.style.height = '30px';
+        c.style.border = '3px solid #ff8c00';
+        c.style.zIndex = '0';
+        if(top) { c.style.top = '10px'; c.style.borderBottom = 'none'; }
+        if(bottom) { c.style.bottom = '10px'; c.style.borderTop = 'none'; }
+        if(left) { c.style.left = '10px'; c.style.borderRight = 'none'; }
+        if(right) { c.style.right = '10px'; c.style.borderLeft = 'none'; }
+        return c;
+    };
+    clone.appendChild(createCorner(true, false, false, true)); // Top-Left
+    clone.appendChild(createCorner(true, true, false, false)); // Top-Right
+    clone.appendChild(createCorner(false, false, true, true)); // Bottom-Left
+    clone.appendChild(createCorner(false, true, true, false)); // Bottom-Right
+
+    // Inner glowing border
+    const innerBorder = document.createElement('div');
+    innerBorder.style.position = 'absolute';
+    innerBorder.style.top = '15px';
+    innerBorder.style.left = '15px';
+    innerBorder.style.right = '15px';
+    innerBorder.style.bottom = '15px';
+    innerBorder.style.border = '1px solid rgba(255, 215, 0, 0.2)';
+    innerBorder.style.zIndex = '0';
+    innerBorder.style.pointerEvents = 'none';
+    clone.appendChild(innerBorder);
+
     clone.style.padding = '30px';
     
     // Important: DO NOT make the main card row direction!
@@ -1958,11 +1995,20 @@ table {
         wrapper.style.width = '100%';
     }
     
+    
+    // 1. Create Header Wrapper with URL inside
+    const headerWrapper = document.createElement('div');
+    headerWrapper.style.position = 'relative';
+    headerWrapper.style.width = '100%';
+    headerWrapper.style.marginBottom = '20px';
+    headerWrapper.style.borderRadius = '15px';
+    headerWrapper.style.overflow = 'hidden';
+    headerWrapper.style.boxShadow = '0 10px 20px rgba(0,0,0,0.8)';
+    headerWrapper.style.zIndex = '10';
+        
     const mandalPoster = document.createElement('img');
     mandalPoster.style.width = '100%';
     mandalPoster.style.height = 'auto';
-    mandalPoster.style.borderRadius = '15px';
-    mandalPoster.style.marginBottom = '25px';
     mandalPoster.style.display = 'block';
     mandalPoster.style.objectFit = 'contain';
 
@@ -1970,28 +2016,61 @@ table {
         mandalPoster.onload = resolve;
         mandalPoster.onerror = resolve;
         mandalPoster.src = 'logo/Receipt.jpeg'; 
-        clone.insertBefore(mandalPoster, clone.firstChild);
+        headerWrapper.appendChild(mandalPoster);
     });
     
     const tempWebsiteUrl = document.createElement('div');
-    tempWebsiteUrl.style.color = '#e0e0e0';
+    tempWebsiteUrl.style.position = 'absolute';
+    tempWebsiteUrl.style.bottom = '8px';
+    tempWebsiteUrl.style.width = '100%';
+    tempWebsiteUrl.style.color = '#ffffff';
     tempWebsiteUrl.style.textAlign = 'center';
-    tempWebsiteUrl.style.fontSize = '18px';
-    tempWebsiteUrl.style.marginBottom = '25px';
-    tempWebsiteUrl.style.marginTop = '-10px';
+    tempWebsiteUrl.style.fontSize = '16px';
     tempWebsiteUrl.style.fontFamily = "'Poppins', sans-serif";
+    tempWebsiteUrl.style.textShadow = '0px 2px 4px rgba(0,0,0,0.9), 0px 4px 8px rgba(0,0,0,0.9)'; 
+    tempWebsiteUrl.style.fontWeight = '500';
     tempWebsiteUrl.innerHTML = 'अधिकृत वेबसाईट: <span style="color: #ffd700;">https://shivsrushti-utsav-mandal.onrender.com</span>';
-    clone.insertBefore(tempWebsiteUrl, mandalPoster.nextSibling);
+    headerWrapper.appendChild(tempWebsiteUrl);
     
+    clone.insertBefore(headerWrapper, clone.firstChild);
+
+    // 2. Insert Donation Title just below header
     const posterTitleHtml = `
-        <div class="section-header" style="width: 100%; justify-content: center; margin-bottom: 25px;">
+        <div class="section-header" style="width: 100%; justify-content: center; margin-bottom: 0px;">
             <div class="header-line"></div>
-            <h2>देणगी</h2>
+            <h2>✨ देणगी ✨</h2>
             <div class="header-line"></div>
         </div>`;
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = posterTitleHtml;
-    clone.insertBefore(tempDiv.firstElementChild, tempWebsiteUrl.nextSibling);
+    const titleElement = tempDiv.firstElementChild;
+    clone.insertBefore(titleElement, headerWrapper.nextSibling);
+
+    // 3. Insert Adhyaksh/Khajindar Block just below Donation Title
+    const membersBlock = document.createElement('div');
+    membersBlock.style.display = 'flex';
+    membersBlock.style.justifyContent = 'space-between';
+    membersBlock.style.width = '100%';
+    membersBlock.style.margin = '5px auto 25px auto';
+    membersBlock.style.padding = '0';
+    membersBlock.style.position = 'relative';
+    membersBlock.style.zIndex = '10';
+    
+    membersBlock.innerHTML = `
+        <div style="text-align: center; color: #fff; width: 45%;">
+            <div style="color: #ffd700; font-weight: bold; font-size: 20px; margin-bottom: 5px; font-family: 'Mukta', sans-serif;">अध्यक्ष</div>
+            <div style="font-size: 18px; font-weight: bold; font-family: 'Poppins', sans-serif;">तेजस फटांगरे</div>
+            <div style="font-size: 14px; color: #aaa; margin-top: 3px; font-family: 'Poppins', sans-serif;">मो.नं 9370599259</div>
+        </div>
+        <div style="border-left: 1px solid rgba(255, 215, 0, 0.3);"></div>
+        <div style="text-align: center; color: #fff; width: 45%;">
+            <div style="color: #ffd700; font-weight: bold; font-size: 20px; margin-bottom: 5px; font-family: 'Mukta', sans-serif;">खजिनदार, समन्वयक</div>
+            <div style="font-size: 18px; font-weight: bold; font-family: 'Poppins', sans-serif;">धनंजय रणाते</div>
+            <div style="font-size: 14px; color: #aaa; margin-top: 3px; font-family: 'Poppins', sans-serif;">मो.नं 9322134560</div>
+        </div>
+    `;
+    clone.insertBefore(membersBlock, titleElement.nextSibling);
+
     
     const devWatermark1 = document.createElement('div');
     devWatermark1.style.color = 'rgba(255, 255, 255, 0.7)';
@@ -2027,7 +2106,44 @@ table {
         clone.style.top = '-9999px';
         clone.style.width = '900px';
         clone.style.maxWidth = '900px';
-        clone.style.background = '#1a1a1a';
+        
+    clone.style.background = 'radial-gradient(circle at center, #3e0000 0%, #1a0000 100%)';
+    clone.style.position = 'absolute';
+    clone.style.overflow = 'hidden';
+    clone.style.border = '1px solid #3e0000';
+    clone.style.padding = '30px';
+
+    // Add 4 premium corner accents
+    const createCorner = (top, right, bottom, left) => {
+        const c = document.createElement('div');
+        c.style.position = 'absolute';
+        c.style.width = '30px';
+        c.style.height = '30px';
+        c.style.border = '3px solid #ff8c00';
+        c.style.zIndex = '0';
+        if(top) { c.style.top = '10px'; c.style.borderBottom = 'none'; }
+        if(bottom) { c.style.bottom = '10px'; c.style.borderTop = 'none'; }
+        if(left) { c.style.left = '10px'; c.style.borderRight = 'none'; }
+        if(right) { c.style.right = '10px'; c.style.borderLeft = 'none'; }
+        return c;
+    };
+    clone.appendChild(createCorner(true, false, false, true)); // Top-Left
+    clone.appendChild(createCorner(true, true, false, false)); // Top-Right
+    clone.appendChild(createCorner(false, false, true, true)); // Bottom-Left
+    clone.appendChild(createCorner(false, true, true, false)); // Bottom-Right
+
+    // Inner glowing border
+    const innerBorder = document.createElement('div');
+    innerBorder.style.position = 'absolute';
+    innerBorder.style.top = '15px';
+    innerBorder.style.left = '15px';
+    innerBorder.style.right = '15px';
+    innerBorder.style.bottom = '15px';
+    innerBorder.style.border = '1px solid rgba(255, 215, 0, 0.2)';
+    innerBorder.style.zIndex = '0';
+    innerBorder.style.pointerEvents = 'none';
+    clone.appendChild(innerBorder);
+
         clone.style.padding = '30px';
         clone.style.display = 'flex';
         clone.style.flexDirection = 'column';
@@ -2102,6 +2218,29 @@ table {
         textContainer.style.whiteSpace = 'pre-wrap';
         textContainer.style.fontFamily = "'Poppins', sans-serif";
         textContainer.textContent = customText;
+        
+        const c_membersBlock = document.createElement('div');
+        c_membersBlock.style.display = 'flex';
+        c_membersBlock.style.justifyContent = 'space-between';
+        c_membersBlock.style.width = '100%';
+        c_membersBlock.style.margin = '0px auto 25px auto';
+        c_membersBlock.style.position = 'relative';
+        c_membersBlock.style.zIndex = '10';
+        
+        c_membersBlock.innerHTML = `
+            <div style="text-align: center; color: #fff; width: 45%;">
+                <div style="color: #ffd700; font-weight: bold; font-size: 20px; margin-bottom: 5px; font-family: 'Mukta', sans-serif;">अध्यक्ष</div>
+            <div style="font-size: 18px; font-weight: bold; font-family: 'Poppins', sans-serif;">तेजस फटांगरे</div>
+            <div style="font-size: 14px; color: #aaa; margin-top: 3px; font-family: 'Poppins', sans-serif;">मो.नं 9370599259</div>
+            </div>
+            <div style="border-left: 1px solid rgba(255, 215, 0, 0.3);"></div>
+            <div style="text-align: center; color: #fff; width: 45%;">
+                <div style="color: #ffd700; font-weight: bold; font-size: 20px; margin-bottom: 5px; font-family: 'Mukta', sans-serif;">खजिनदार, समन्वयक</div>
+            <div style="font-size: 18px; font-weight: bold; font-family: 'Poppins', sans-serif;">धनंजय रणाते</div>
+            <div style="font-size: 14px; color: #aaa; margin-top: 3px; font-family: 'Poppins', sans-serif;">मो.नं 9322134560</div>
+            </div>
+        `;
+        clone.appendChild(c_membersBlock);
         clone.appendChild(textContainer);
         
         const devWatermark2 = document.createElement('div');
