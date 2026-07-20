@@ -756,7 +756,20 @@
         }
         
         if (pushState) {
-            window.history.pushState({ tab: tabName }, '', '#' + tabName);
+            const currentHash = window.location.hash.replace('#', '');
+            const isCurrentlyHome = !currentHash || currentHash === 'home';
+            
+            if (tabName === 'home') {
+                if (!isCurrentlyHome) {
+                    window.history.pushState({ tab: 'home' }, '', window.location.pathname);
+                }
+            } else {
+                if (isCurrentlyHome) {
+                    window.history.pushState({ tab: tabName }, '', '#' + tabName);
+                } else {
+                    window.history.replaceState({ tab: tabName }, '', '#' + tabName);
+                }
+            }
         }
     }
 
