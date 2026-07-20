@@ -720,7 +720,13 @@ table {
                         `).join('');
                         
                         if (!selectedMemberId) {
-                            selectMember(data.users[0]._id, data.users[0].name);
+                            const saved = sessionStorage.getItem('superadminActiveMember');
+                            const user = saved ? data.users.find(u => u._id === saved) : null;
+                            if (user) {
+                                selectMember(user._id, user.name);
+                            } else {
+                                selectMember(data.users[0]._id, data.users[0].name);
+                            }
                         }
                     } else {
                         list.innerHTML = '<p class="empty-state" style="padding: 20px;">No members added yet.</p>';
@@ -750,6 +756,8 @@ table {
 
         async function selectMember(id, name) {
             selectedMemberId = id;
+            sessionStorage.setItem('superadminActiveMember', id);
+            
             document.getElementById('noSelection').style.display = 'none';
             document.getElementById('memberDashboard').style.display = 'block';
             closeSidebarOnMobile();

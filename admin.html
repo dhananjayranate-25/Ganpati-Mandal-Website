@@ -770,6 +770,11 @@
                 setTimeout(() => {
                     if (window.loadYearsForAdmin) window.loadYearsForAdmin();
                     if (window.fetchStorageStats) window.fetchStorageStats();
+                    
+                    const savedTab = sessionStorage.getItem('activeAdminTab');
+                    if (savedTab) {
+                        switchAdminTab(savedTab);
+                    }
                 }, 100);
             } else {
                 // Show login by default
@@ -2016,6 +2021,8 @@ table {
             document.querySelectorAll('.btn-tab').forEach(el => el.classList.remove('active'));
             document.getElementById(tabId).style.display = 'block';
             document.getElementById('btn-' + tabId).classList.add('active');
+            
+            sessionStorage.setItem('activeAdminTab', tabId);
             
             if (tabId === 'tab-committee') {
                 loadCommitteeMembers();
