@@ -1919,278 +1919,361 @@ table {
     let cachedCustomCanvases = { vargani: null, mahaprasad: null };
 
     async function captureDonationPoster() {
-    if (cachedDonationCanvas) return cachedDonationCanvas;
-    const card = document.querySelector('.donation-card');
-    
-    const clone = card.cloneNode(true);
-    clone.style.position = 'absolute';
-    clone.style.left = '-9999px';
-    clone.style.top = '-9999px';
-    
-    // Force dimensions to trigger desktop media queries in html2canvas
-    clone.style.width = '900px';
-    clone.style.maxWidth = '900px';
-    
-    clone.style.background = 'radial-gradient(circle at center, #3e0000 0%, #1a0000 100%)';
-    clone.style.position = 'absolute';
-    clone.style.overflow = 'hidden';
-    clone.style.border = '1px solid #3e0000';
-    clone.style.padding = '30px';
-
-    // Add 4 premium corner accents
-    const createCorner = (top, right, bottom, left) => {
-        const c = document.createElement('div');
-        c.style.position = 'absolute';
-        c.style.width = '30px';
-        c.style.height = '30px';
-        c.style.border = '3px solid #ff8c00';
-        c.style.zIndex = '0';
-        if(top) { c.style.top = '10px'; c.style.borderBottom = 'none'; }
-        if(bottom) { c.style.bottom = '10px'; c.style.borderTop = 'none'; }
-        if(left) { c.style.left = '10px'; c.style.borderRight = 'none'; }
-        if(right) { c.style.right = '10px'; c.style.borderLeft = 'none'; }
-        return c;
-    };
-    clone.appendChild(createCorner(true, false, false, true)); // Top-Left
-    clone.appendChild(createCorner(true, true, false, false)); // Top-Right
-    clone.appendChild(createCorner(false, false, true, true)); // Bottom-Left
-    clone.appendChild(createCorner(false, true, true, false)); // Bottom-Right
-
-    // Inner glowing border
-    const innerBorder = document.createElement('div');
-    innerBorder.style.position = 'absolute';
-    innerBorder.style.top = '15px';
-    innerBorder.style.left = '15px';
-    innerBorder.style.right = '15px';
-    innerBorder.style.bottom = '15px';
-    innerBorder.style.border = '1px solid rgba(255, 215, 0, 0.2)';
-    innerBorder.style.zIndex = '0';
-    innerBorder.style.pointerEvents = 'none';
-    clone.appendChild(innerBorder);
-
-    clone.style.padding = '30px';
-    
-    // Important: DO NOT make the main card row direction!
-    clone.style.display = 'flex';
-    clone.style.flexDirection = 'column';
-    clone.style.alignItems = 'center';
-    
-    document.body.appendChild(clone);
-    
-    const actions = clone.querySelector('#donationActions');
-    const customActions = clone.querySelector('#customPosterActions');
-    const title = clone.querySelector('.section-header');
-    
-    if(actions) actions.style.display = 'none';
-    if(customActions) customActions.style.display = 'none';
-    if(title) title.style.display = 'none';
-    
-    // The internal wrapper must be forced to row layout if media query doesn't trigger
-    const wrapper = clone.querySelector('.donation-content-wrapper');
-    if(wrapper) {
-        wrapper.style.display = 'flex';
-        wrapper.style.flexDirection = 'row';
-        wrapper.style.justifyContent = 'space-around';
-        wrapper.style.alignItems = 'flex-start';
-        wrapper.style.width = '100%';
-    }
-    
-    
-    // 1. Create Header Wrapper with URL inside
-    const headerWrapper = document.createElement('div');
-    headerWrapper.style.position = 'relative';
-    headerWrapper.style.width = '100%';
-    headerWrapper.style.marginBottom = '20px';
-    headerWrapper.style.borderRadius = '15px';
-    headerWrapper.style.overflow = 'hidden';
-    headerWrapper.style.boxShadow = '0 10px 20px rgba(0,0,0,0.8)';
-    headerWrapper.style.zIndex = '10';
+        if (cachedDonationCanvas) return cachedDonationCanvas;
         
-    const mandalPoster = document.createElement('img');
-    mandalPoster.style.width = '100%';
-    mandalPoster.style.height = '280px';
-    mandalPoster.style.display = 'block';
-    mandalPoster.style.objectFit = 'fill';
-
-    await new Promise((resolve) => {
-        mandalPoster.onload = resolve;
-        mandalPoster.onerror = resolve;
-        mandalPoster.src = 'logo/Receipt.jpeg'; 
-        headerWrapper.appendChild(mandalPoster);
-    });
-    
-    const tempWebsiteUrl = document.createElement('div');
-    tempWebsiteUrl.style.position = 'absolute';
-    tempWebsiteUrl.style.bottom = '8px';
-    tempWebsiteUrl.style.width = '100%';
-    tempWebsiteUrl.style.color = '#ffffff';
-    tempWebsiteUrl.style.textAlign = 'center';
-    tempWebsiteUrl.style.fontSize = '16px';
-    tempWebsiteUrl.style.fontFamily = "'Poppins', sans-serif";
-    tempWebsiteUrl.style.textShadow = '0px 2px 4px rgba(0,0,0,0.9), 0px 4px 8px rgba(0,0,0,0.9)'; 
-    tempWebsiteUrl.style.fontWeight = '500';
-    tempWebsiteUrl.innerHTML = 'अधिकृत वेबसाईट : &nbsp;&nbsp; <span style=\"color: #ffd700; margin-left: 5px;\">https://shivsrushti-utsav-mandal.onrender.com</span>';
-    headerWrapper.appendChild(tempWebsiteUrl);
-    
-    clone.insertBefore(headerWrapper, clone.firstChild);
-
-    // 2. Insert Donation Title just below header
-    const posterTitleHtml = `
-        <div class="section-header" style="width: 100%; justify-content: center; margin-bottom: 0px;">
-            <div class="header-line"></div>
-            <h2>देणगी</h2>
-            <div class="header-line"></div>
-        </div>`;
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = posterTitleHtml;
-    const titleElement = tempDiv.firstElementChild;
-    clone.insertBefore(titleElement, headerWrapper.nextSibling);
-
-    // 3. Insert Adhyaksh/Khajindar Block just below Donation Title
-    const membersBlock = document.createElement('div');
-    membersBlock.style.display = 'flex';
-    membersBlock.style.justifyContent = 'space-between';
-    membersBlock.style.width = '100%';
-    membersBlock.style.margin = '5px auto 25px auto';
-    membersBlock.style.padding = '0';
-    membersBlock.style.position = 'relative';
-    membersBlock.style.zIndex = '10';
-    
-    membersBlock.innerHTML = `
-        <div style="text-align: center; color: #fff; width: 45%;">
-            <div style="color: #ffd700; font-weight: bold; font-size: 20px; margin-bottom: 5px; font-family: 'Mukta', sans-serif;">अध्यक्ष</div>
-            <div style="font-size: 18px; font-weight: bold; font-family: 'Poppins', sans-serif;">तेजस फटांगरे</div>
-            <div style="font-size: 14px; color: #fff; margin-top: 3px; font-family: 'Poppins', sans-serif;">मो.नं 9370599259</div>
-        </div>
-        <div style="border-left: 1px solid rgba(255, 215, 0, 0.3);"></div>
-        <div style="text-align: center; color: #fff; width: 45%;">
-            <div style="color: #ffd700; font-weight: bold; font-size: 20px; margin-bottom: 5px; font-family: 'Mukta', sans-serif;">खजिनदार, समन्वयक</div>
-            <div style="font-size: 18px; font-weight: bold; font-family: 'Poppins', sans-serif;">धनंजय रणाते</div>
-            <div style="font-size: 14px; color: #fff; margin-top: 3px; font-family: 'Poppins', sans-serif;">मो.नं 9322134560</div>
-        </div>
-    `;
-    clone.insertBefore(membersBlock, titleElement.nextSibling);
-
-    
-    const devWatermark1 = document.createElement('div');
-    devWatermark1.style.color = 'rgba(255, 255, 255, 0.7)';
-    devWatermark1.style.textShadow = '0px 1px 3px rgba(0,0,0,0.8)';
-    devWatermark1.style.textAlign = 'center';
-    devWatermark1.style.fontSize = '14px';
-    devWatermark1.style.marginTop = '20px';
-    devWatermark1.style.width = '100%';
-    devWatermark1.style.fontFamily = "'Poppins', sans-serif";
-    devWatermark1.innerHTML = 'Developed by | Dhananjay Ranate';
-    clone.appendChild(devWatermark1);
-    
-    const canvas = await html2canvas(clone, {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: '#1a1a1a',
-        windowWidth: 1200
-    });
-    
-    document.body.removeChild(clone);
-    cachedDonationCanvas = canvas;
-    return canvas;
-}
-
-    
-    async function captureCustomPoster(type) {
-        if (cachedCustomCanvases[type]) return cachedCustomCanvases[type];
-        
-        // Create a new container matching the donation card style
         const clone = document.createElement('div');
         clone.style.position = 'absolute';
         clone.style.left = '-9999px';
         clone.style.top = '-9999px';
         clone.style.width = '900px';
         clone.style.maxWidth = '900px';
-        
-    clone.style.background = 'radial-gradient(circle at center, #3e0000 0%, #1a0000 100%)';
-    clone.style.position = 'absolute';
-    clone.style.overflow = 'hidden';
-    clone.style.border = '1px solid #3e0000';
-    clone.style.padding = '30px';
-
-    // Add 4 premium corner accents
-    const createCorner = (top, right, bottom, left) => {
-        const c = document.createElement('div');
-        c.style.position = 'absolute';
-        c.style.width = '30px';
-        c.style.height = '30px';
-        c.style.border = '3px solid #ff8c00';
-        c.style.zIndex = '0';
-        if(top) { c.style.top = '10px'; c.style.borderBottom = 'none'; }
-        if(bottom) { c.style.bottom = '10px'; c.style.borderTop = 'none'; }
-        if(left) { c.style.left = '10px'; c.style.borderRight = 'none'; }
-        if(right) { c.style.right = '10px'; c.style.borderLeft = 'none'; }
-        return c;
-    };
-    clone.appendChild(createCorner(true, false, false, true)); // Top-Left
-    clone.appendChild(createCorner(true, true, false, false)); // Top-Right
-    clone.appendChild(createCorner(false, false, true, true)); // Bottom-Left
-    clone.appendChild(createCorner(false, true, true, false)); // Bottom-Right
-
-    // Inner glowing border
-    const innerBorder = document.createElement('div');
-    innerBorder.style.position = 'absolute';
-    innerBorder.style.top = '15px';
-    innerBorder.style.left = '15px';
-    innerBorder.style.right = '15px';
-    innerBorder.style.bottom = '15px';
-    innerBorder.style.border = '1px solid rgba(255, 215, 0, 0.2)';
-    innerBorder.style.zIndex = '0';
-    innerBorder.style.pointerEvents = 'none';
-    clone.appendChild(innerBorder);
-
+        clone.style.background = 'radial-gradient(circle at center, #3e0000 0%, #1a0000 100%)';
+        clone.style.overflow = 'hidden';
+        clone.style.border = '1px solid #3e0000';
         clone.style.padding = '30px';
         clone.style.display = 'flex';
         clone.style.flexDirection = 'column';
         clone.style.alignItems = 'center';
-        clone.style.borderRadius = '15px';
-        clone.style.border = '1px solid #333';
+        
+        // Add 4 premium corner accents
+        const createCorner = (top, right, bottom, left) => {
+            const c = document.createElement('div');
+            c.style.position = 'absolute';
+            c.style.width = '30px';
+            c.style.height = '30px';
+            c.style.border = '3px solid #ff8c00';
+            c.style.zIndex = '0';
+            if(top) { c.style.top = '10px'; c.style.borderBottom = 'none'; }
+            if(bottom) { c.style.bottom = '10px'; c.style.borderTop = 'none'; }
+            if(left) { c.style.left = '10px'; c.style.borderRight = 'none'; }
+            if(right) { c.style.right = '10px'; c.style.borderLeft = 'none'; }
+            return c;
+        };
+        clone.appendChild(createCorner(true, false, false, true));
+        clone.appendChild(createCorner(true, true, false, false));
+        clone.appendChild(createCorner(false, false, true, true));
+        clone.appendChild(createCorner(false, true, true, false));
+
+        // Inner glowing border
+        const innerBorder = document.createElement('div');
+        innerBorder.style.position = 'absolute';
+        innerBorder.style.top = '15px';
+        innerBorder.style.left = '15px';
+        innerBorder.style.right = '15px';
+        innerBorder.style.bottom = '15px';
+        innerBorder.style.border = '1px solid rgba(255, 215, 0, 0.2)';
+        innerBorder.style.zIndex = '0';
+        innerBorder.style.pointerEvents = 'none';
+        clone.appendChild(innerBorder);
+        
         document.body.appendChild(clone);
 
-        // Add Banner Image with Website Link inside it
-        const headerWrapper = document.createElement('div');
-        headerWrapper.style.position = 'relative';
-        headerWrapper.style.width = '100%';
-        headerWrapper.style.marginBottom = '20px';
-        headerWrapper.style.borderRadius = '15px';
-        headerWrapper.style.overflow = 'hidden';
-        headerWrapper.style.boxShadow = '0 10px 20px rgba(0,0,0,0.8)';
-        headerWrapper.style.zIndex = '10';
-        
+        // 1. Header Image
         const mandalPoster = document.createElement('img');
         mandalPoster.style.width = '100%';
-        mandalPoster.style.height = '280px';
-        mandalPoster.style.display = 'block';
+        mandalPoster.style.height = '320px';
         mandalPoster.style.objectFit = 'fill';
+        mandalPoster.style.display = 'block';
+        mandalPoster.style.position = 'relative';
+        mandalPoster.style.zIndex = '10';
 
         await new Promise((resolve) => {
             mandalPoster.onload = resolve;
             mandalPoster.onerror = resolve;
             mandalPoster.src = 'logo/Receipt.jpeg'; 
-            headerWrapper.appendChild(mandalPoster);
+            clone.appendChild(mandalPoster);
         });
         
+        // 2. Website Link under Header Image
         const tempWebsiteUrl = document.createElement('div');
-        tempWebsiteUrl.style.position = 'absolute';
-        tempWebsiteUrl.style.bottom = '8px';
-        tempWebsiteUrl.style.width = '100%';
-        tempWebsiteUrl.style.color = '#ffffff';
+        tempWebsiteUrl.style.color = '#e0e0e0';
         tempWebsiteUrl.style.textAlign = 'center';
         tempWebsiteUrl.style.fontSize = '16px';
+        tempWebsiteUrl.style.marginTop = '10px';
         tempWebsiteUrl.style.fontFamily = "'Poppins', sans-serif";
-        tempWebsiteUrl.style.textShadow = '0px 2px 4px rgba(0,0,0,0.9), 0px 4px 8px rgba(0,0,0,0.9)';
-        tempWebsiteUrl.style.fontWeight = '500';
-        tempWebsiteUrl.innerHTML = 'अधिकृत वेबसाईट : &nbsp;&nbsp; <span style=\"color: #ffd700; margin-left: 5px;\">https://shivsrushti-utsav-mandal.onrender.com</span>';
-        headerWrapper.appendChild(tempWebsiteUrl);
-        
-        clone.appendChild(headerWrapper);
+        tempWebsiteUrl.style.position = 'relative';
+        tempWebsiteUrl.style.zIndex = '10';
+        tempWebsiteUrl.innerHTML = 'अधिकृत वेबसाईट : &nbsp;&nbsp; <span style="color: #ffd700;">https://shivsrushti-utsav-mandal.onrender.com</span>';
+        clone.appendChild(tempWebsiteUrl);
 
-        // Add Title
+        // 3. Horizontal Decorative Divider
+        const dividerHtml1 = `
+            <div style="display: flex; align-items: center; justify-content: center; width: 100%; margin: 15px 0; position: relative; z-index: 10;">
+                <div style="flex-grow: 1; height: 1px; background: linear-gradient(to right, transparent, #ffd700, transparent);"></div>
+                <div style="color: #ffd700; margin: 0 15px; font-size: 20px;">✧</div>
+                <div style="flex-grow: 1; height: 1px; background: linear-gradient(to right, transparent, #ffd700, transparent);"></div>
+            </div>`;
+        clone.insertAdjacentHTML('beforeend', dividerHtml1);
+
+        // 4. Donation Title
+        const posterTitleHtml = `
+            <div style="width: 100%; text-align: center; margin: 15px 0; position: relative; z-index: 10;">
+                <span style="color: #ffd700; font-size: 24px;">✦ ✨</span>
+                <span style="color: #ffd700; font-size: 32px; font-weight: bold; font-family: 'Mukta', sans-serif; margin: 0 15px; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">देणगी</span>
+                <span style="color: #ffd700; font-size: 24px;">✨ ✦</span>
+            </div>`;
+        clone.insertAdjacentHTML('beforeend', posterTitleHtml);
+
+        // 5. Committee Members Block
+        const membersBlock = document.createElement('div');
+        membersBlock.style.display = 'flex';
+        membersBlock.style.justifyContent = 'space-between';
+        membersBlock.style.width = '90%';
+        membersBlock.style.margin = '10px auto 30px auto';
+        membersBlock.style.position = 'relative';
+        membersBlock.style.zIndex = '10';
+        
+        membersBlock.innerHTML = `
+            <div style="text-align: center; color: #fff; width: 45%;">
+                <div style="color: #ffd700; font-weight: bold; font-size: 20px; margin-bottom: 5px; font-family: 'Mukta', sans-serif;">अध्यक्ष</div>
+                <div style="font-size: 18px; font-weight: bold; font-family: 'Poppins', sans-serif;">तेजस फटांगरे</div>
+                <div style="font-size: 14px; color: #fff; margin-top: 3px; font-family: 'Poppins', sans-serif;">मो.नं 9370599259</div>
+            </div>
+            <div style="border-left: 1px solid rgba(255, 215, 0, 0.5);"></div>
+            <div style="text-align: center; color: #fff; width: 45%;">
+                <div style="color: #ffd700; font-weight: bold; font-size: 20px; margin-bottom: 5px; font-family: 'Mukta', sans-serif;">खजिनदार, समन्वयक</div>
+                <div style="font-size: 18px; font-weight: bold; font-family: 'Poppins', sans-serif;">धनंजय रणाते</div>
+                <div style="font-size: 14px; color: #fff; margin-top: 3px; font-family: 'Poppins', sans-serif;">मो.नं 9322134560</div>
+            </div>
+        `;
+        clone.appendChild(membersBlock);
+
+        // 6. QR and Bank Details Two-Column Layout
+        const orgName = (typeof appSettings !== 'undefined' && appSettings.pdfCustomSettings && appSettings.pdfCustomSettings.orgName) ? appSettings.pdfCustomSettings.orgName : 'शिवसृष्टी सार्वजनिक उत्सव मंडळ, संगमनेर';
+        const upiId = document.getElementById('upiId').value;
+        const bankName = document.getElementById('bankName').value;
+        const accountName = document.getElementById('accountName').value;
+        const accountNumber = document.getElementById('accountNumber').value;
+        const ifscCode = document.getElementById('ifscCode').value;
+
+        // Generate QR code internally
+        const qrContainer = document.createElement('div');
+        const qrSize = 180;
+        new QRCode(qrContainer, {
+            text: `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(orgName)}&cu=INR`,
+            width: qrSize,
+            height: qrSize,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+        });
+
+        let qrDataUrl = '';
+        const qrCanvas = qrContainer.querySelector('canvas');
+        if (qrCanvas) {
+            qrDataUrl = qrCanvas.toDataURL("image/png");
+        } else {
+            const qrImg = qrContainer.querySelector('img');
+            if (qrImg) {
+                qrDataUrl = qrImg.src;
+            }
+        }
+
+        const columnsWrapper = document.createElement('div');
+        columnsWrapper.style.display = 'flex';
+        columnsWrapper.style.justifyContent = 'space-between';
+        columnsWrapper.style.width = '100%';
+        columnsWrapper.style.position = 'relative';
+        columnsWrapper.style.zIndex = '10';
+        columnsWrapper.style.gap = '20px';
+
+        // Left Column (QR)
+        const leftCol = document.createElement('div');
+        leftCol.style.flex = '1';
+        leftCol.style.border = '1px solid #ffd700';
+        leftCol.style.borderRadius = '15px';
+        leftCol.style.padding = '20px';
+        leftCol.style.position = 'relative';
+        leftCol.style.display = 'flex';
+        leftCol.style.flexDirection = 'column';
+        leftCol.style.alignItems = 'center';
+        leftCol.innerHTML = `
+            <!-- Corner Decorations -->
+            <div style="position: absolute; top: 0; left: 0; width: 10px; height: 10px; border-top: 2px solid #ffd700; border-left: 2px solid #ffd700; border-top-left-radius: 15px;"></div>
+            <div style="position: absolute; top: 0; right: 0; width: 10px; height: 10px; border-top: 2px solid #ffd700; border-right: 2px solid #ffd700; border-top-right-radius: 15px;"></div>
+            <div style="position: absolute; bottom: 0; left: 0; width: 10px; height: 10px; border-bottom: 2px solid #ffd700; border-left: 2px solid #ffd700; border-bottom-left-radius: 15px;"></div>
+            <div style="position: absolute; bottom: 0; right: 0; width: 10px; height: 10px; border-bottom: 2px solid #ffd700; border-right: 2px solid #ffd700; border-bottom-right-radius: 15px;"></div>
+            
+            <div style="background: #fff; padding: 10px; border-radius: 10px; margin-bottom: 20px;">
+                <img src="${qrDataUrl}" style="width: 100%; max-width: 180px; display: block;">
+            </div>
+            
+            <div style="color: #fff; font-weight: bold; font-size: 18px; margin-bottom: 10px; font-family: 'Poppins', sans-serif;">मो.नं +91 9322134560</div>
+            
+            <div style="color: #ccc; font-size: 14px; margin-bottom: 15px; font-family: 'Poppins', sans-serif;">UPI ID : dhananjayranate@ybl</div>
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <div style="background: #fff; color: #5f259f; font-weight: bold; padding: 3px 8px; border-radius: 5px; font-size: 12px;">PhonePe</div>
+                <div style="background: #fff; color: #002970; font-weight: bold; padding: 3px 8px; border-radius: 5px; font-size: 12px;">Paytm</div>
+                <div style="background: #fff; color: #ea4335; font-weight: bold; padding: 3px 8px; border-radius: 5px; font-size: 12px;">G Pay</div>
+                <div style="background: #fff; color: #000; font-weight: bold; padding: 3px 8px; border-radius: 5px; font-size: 12px;">UPI</div>
+            </div>
+            
+            <div style="color: #ffd700; font-size: 14px; font-weight: 500;">UPI द्वारे स्कॅन करून देणगी द्या</div>
+            <div style="color: #ffd700; margin-top: 5px; font-size: 10px;">✧✧✧ ◉ ✧✧✧</div>
+        `;
+        columnsWrapper.appendChild(leftCol);
+
+        // Right Column (Bank Details)
+        const rightCol = document.createElement('div');
+        rightCol.style.flex = '1';
+        rightCol.style.border = '1px solid #ffd700';
+        rightCol.style.borderRadius = '15px';
+        rightCol.style.padding = '20px';
+        rightCol.style.position = 'relative';
+        rightCol.style.display = 'flex';
+        rightCol.style.flexDirection = 'column';
+        rightCol.innerHTML = `
+            <!-- Corner Decorations -->
+            <div style="position: absolute; top: 0; left: 0; width: 10px; height: 10px; border-top: 2px solid #ffd700; border-left: 2px solid #ffd700; border-top-left-radius: 15px;"></div>
+            <div style="position: absolute; top: 0; right: 0; width: 10px; height: 10px; border-top: 2px solid #ffd700; border-right: 2px solid #ffd700; border-top-right-radius: 15px;"></div>
+            <div style="position: absolute; bottom: 0; left: 0; width: 10px; height: 10px; border-bottom: 2px solid #ffd700; border-left: 2px solid #ffd700; border-bottom-left-radius: 15px;"></div>
+            <div style="position: absolute; bottom: 0; right: 0; width: 10px; height: 10px; border-bottom: 2px solid #ffd700; border-right: 2px solid #ffd700; border-bottom-right-radius: 15px;"></div>
+            
+            <div style="text-align: center; margin-bottom: 15px;">
+                <div style="color: #ffd700; font-size: 20px; font-weight: bold; font-family: 'Mukta', sans-serif;">बँक खात्याचा तपशील</div>
+                <div style="color: #ffd700; font-size: 12px; margin-top: 5px;">✧ ◉ ✧</div>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <div style="color: #aaa; font-size: 14px; margin-bottom: 5px;">खात्याचे नाव:</div>
+                <div style="color: #fff; font-size: 16px; font-family: 'Poppins', sans-serif;">${accountName}</div>
+            </div>
+            <div style="border-bottom: 1px dotted rgba(255,255,255,0.2); margin-bottom: 15px;"></div>
+            
+            <div style="margin-bottom: 15px;">
+                <div style="color: #aaa; font-size: 14px; margin-bottom: 5px;">खाते क्रमांक:</div>
+                <div style="color: #fff; font-size: 16px; font-family: 'Poppins', sans-serif;">${accountNumber}</div>
+            </div>
+            <div style="border-bottom: 1px dotted rgba(255,255,255,0.2); margin-bottom: 15px;"></div>
+            
+            <div style="margin-bottom: 15px;">
+                <div style="color: #aaa; font-size: 14px; margin-bottom: 5px;">IFSC कोड:</div>
+                <div style="color: #fff; font-size: 16px; font-family: 'Poppins', sans-serif;">${ifscCode}</div>
+            </div>
+            <div style="border-bottom: 1px dotted rgba(255,255,255,0.2); margin-bottom: 15px;"></div>
+            
+            <div>
+                <div style="color: #aaa; font-size: 14px; margin-bottom: 5px;">बँक व शाखा:</div>
+                <div style="color: #fff; font-size: 16px; font-family: 'Poppins', sans-serif;">${bankName}</div>
+            </div>
+        `;
+        columnsWrapper.appendChild(rightCol);
+        clone.appendChild(columnsWrapper);
+
+        // Footer Section
+        const footerHtml = `
+            <div style="width: 100%; text-align: center; margin-top: 40px; position: relative; z-index: 10;">
+                <div style="color: #aaa; font-size: 14px; font-family: 'Poppins', sans-serif;">Developed by | Dhananjay Ranate</div>
+                <div style="display: flex; align-items: center; justify-content: center; width: 100%; margin-top: 10px;">
+                    <div style="flex-grow: 1; height: 1px; background: linear-gradient(to right, transparent, #ffd700, transparent);"></div>
+                    <div style="color: #ffd700; margin: 0 15px; font-size: 16px;">✧ ◉ ✧</div>
+                    <div style="flex-grow: 1; height: 1px; background: linear-gradient(to right, transparent, #ffd700, transparent);"></div>
+                </div>
+            </div>
+        `;
+        clone.insertAdjacentHTML('beforeend', footerHtml);
+
+        const canvas = await html2canvas(clone, {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: '#1a1a1a',
+            windowWidth: 1200
+        });
+        
+        document.body.removeChild(clone);
+        cachedDonationCanvas = canvas;
+        return canvas;
+    }
+
+    async function captureCustomPoster(type) {
+        if (cachedCustomCanvases[type]) return cachedCustomCanvases[type];
+        
+        const clone = document.createElement('div');
+        clone.style.position = 'absolute';
+        clone.style.left = '-9999px';
+        clone.style.top = '-9999px';
+        clone.style.width = '900px';
+        clone.style.maxWidth = '900px';
+        clone.style.background = 'radial-gradient(circle at center, #3e0000 0%, #1a0000 100%)';
+        clone.style.overflow = 'hidden';
+        clone.style.border = '1px solid #3e0000';
+        clone.style.padding = '30px';
+        clone.style.display = 'flex';
+        clone.style.flexDirection = 'column';
+        clone.style.alignItems = 'center';
+        
+        // Add 4 premium corner accents
+        const createCorner = (top, right, bottom, left) => {
+            const c = document.createElement('div');
+            c.style.position = 'absolute';
+            c.style.width = '30px';
+            c.style.height = '30px';
+            c.style.border = '3px solid #ff8c00';
+            c.style.zIndex = '0';
+            if(top) { c.style.top = '10px'; c.style.borderBottom = 'none'; }
+            if(bottom) { c.style.bottom = '10px'; c.style.borderTop = 'none'; }
+            if(left) { c.style.left = '10px'; c.style.borderRight = 'none'; }
+            if(right) { c.style.right = '10px'; c.style.borderLeft = 'none'; }
+            return c;
+        };
+        clone.appendChild(createCorner(true, false, false, true));
+        clone.appendChild(createCorner(true, true, false, false));
+        clone.appendChild(createCorner(false, false, true, true));
+        clone.appendChild(createCorner(false, true, true, false));
+
+        // Inner glowing border
+        const innerBorder = document.createElement('div');
+        innerBorder.style.position = 'absolute';
+        innerBorder.style.top = '15px';
+        innerBorder.style.left = '15px';
+        innerBorder.style.right = '15px';
+        innerBorder.style.bottom = '15px';
+        innerBorder.style.border = '1px solid rgba(255, 215, 0, 0.2)';
+        innerBorder.style.zIndex = '0';
+        innerBorder.style.pointerEvents = 'none';
+        clone.appendChild(innerBorder);
+        
+        document.body.appendChild(clone);
+
+        // 1. Header Image
+        const mandalPoster = document.createElement('img');
+        mandalPoster.style.width = '100%';
+        mandalPoster.style.height = '320px';
+        mandalPoster.style.objectFit = 'fill';
+        mandalPoster.style.display = 'block';
+        mandalPoster.style.position = 'relative';
+        mandalPoster.style.zIndex = '10';
+
+        await new Promise((resolve) => {
+            mandalPoster.onload = resolve;
+            mandalPoster.onerror = resolve;
+            mandalPoster.src = 'logo/Receipt.jpeg'; 
+            clone.appendChild(mandalPoster);
+        });
+        
+        // 2. Website Link under Header Image
+        const tempWebsiteUrl = document.createElement('div');
+        tempWebsiteUrl.style.color = '#e0e0e0';
+        tempWebsiteUrl.style.textAlign = 'center';
+        tempWebsiteUrl.style.fontSize = '16px';
+        tempWebsiteUrl.style.marginTop = '10px';
+        tempWebsiteUrl.style.fontFamily = "'Poppins', sans-serif";
+        tempWebsiteUrl.style.position = 'relative';
+        tempWebsiteUrl.style.zIndex = '10';
+        tempWebsiteUrl.innerHTML = 'अधिकृत वेबसाईट : &nbsp;&nbsp; <span style="color: #ffd700;">https://shivsrushti-utsav-mandal.onrender.com</span>';
+        clone.appendChild(tempWebsiteUrl);
+
+        // 3. Horizontal Decorative Divider
+        const dividerHtml1 = `
+            <div style="display: flex; align-items: center; justify-content: center; width: 100%; margin: 15px 0; position: relative; z-index: 10;">
+                <div style="flex-grow: 1; height: 1px; background: linear-gradient(to right, transparent, #ffd700, transparent);"></div>
+                <div style="color: #ffd700; margin: 0 15px; font-size: 20px;">✧</div>
+                <div style="flex-grow: 1; height: 1px; background: linear-gradient(to right, transparent, #ffd700, transparent);"></div>
+            </div>`;
+        clone.insertAdjacentHTML('beforeend', dividerHtml1);
+
+        // 4. Custom Title
         const defaultTitle = type === 'vargani' ? 'वर्गणी आभार' : 'महाप्रसाद निमंत्रण';
         let userTitle = defaultTitle;
         if (window.appSettings) {
@@ -2198,15 +2281,40 @@ table {
                 ? (window.appSettings.varganiAabharTitle || defaultTitle)
                 : (window.appSettings.mahaprasadNimantranTitle || defaultTitle);
         }
-        const titleHtml = `
-            <div class="section-header" style="width: 100%; justify-content: center;">
-                <div class="header-line"></div>
-                <h2>${userTitle}</h2>
-                <div class="header-line"></div>
+        
+        const posterTitleHtml = `
+            <div style="width: 100%; text-align: center; margin: 15px 0; position: relative; z-index: 10;">
+                <span style="color: #ffd700; font-size: 24px;">✦ ✨</span>
+                <span style="color: #ffd700; font-size: 32px; font-weight: bold; font-family: 'Mukta', sans-serif; margin: 0 15px; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">${userTitle}</span>
+                <span style="color: #ffd700; font-size: 24px;">✨ ✦</span>
             </div>`;
-        clone.insertAdjacentHTML('beforeend', titleHtml);
+        clone.insertAdjacentHTML('beforeend', posterTitleHtml);
 
-        // Add Custom Text Content
+        // 5. Committee Members Block
+        const membersBlock = document.createElement('div');
+        membersBlock.style.display = 'flex';
+        membersBlock.style.justifyContent = 'space-between';
+        membersBlock.style.width = '90%';
+        membersBlock.style.margin = '10px auto 30px auto';
+        membersBlock.style.position = 'relative';
+        membersBlock.style.zIndex = '10';
+        
+        membersBlock.innerHTML = `
+            <div style="text-align: center; color: #fff; width: 45%;">
+                <div style="color: #ffd700; font-weight: bold; font-size: 20px; margin-bottom: 5px; font-family: 'Mukta', sans-serif;">अध्यक्ष</div>
+                <div style="font-size: 18px; font-weight: bold; font-family: 'Poppins', sans-serif;">तेजस फटांगरे</div>
+                <div style="font-size: 14px; color: #fff; margin-top: 3px; font-family: 'Poppins', sans-serif;">मो.नं 9370599259</div>
+            </div>
+            <div style="border-left: 1px solid rgba(255, 215, 0, 0.5);"></div>
+            <div style="text-align: center; color: #fff; width: 45%;">
+                <div style="color: #ffd700; font-weight: bold; font-size: 20px; margin-bottom: 5px; font-family: 'Mukta', sans-serif;">खजिनदार, समन्वयक</div>
+                <div style="font-size: 18px; font-weight: bold; font-family: 'Poppins', sans-serif;">धनंजय रणाते</div>
+                <div style="font-size: 14px; color: #fff; margin-top: 3px; font-family: 'Poppins', sans-serif;">मो.नं 9322134560</div>
+            </div>
+        `;
+        clone.appendChild(membersBlock);
+
+        // 6. Custom Message Content Box
         let customText = '';
         if (window.appSettings) {
             customText = type === 'vargani' 
@@ -2216,124 +2324,51 @@ table {
             customText = type === 'vargani' ? 'येथे वर्गणी आभार संदेश येईल.' : 'येथे महाप्रसाद निमंत्रण संदेश येईल.';
         }
 
-        const textContainer = document.createElement('div');
-        textContainer.style.width = '100%';
-        textContainer.style.background = 'rgba(255,255,255,0.05)';
-        textContainer.style.padding = '40px';
-        textContainer.style.borderRadius = '15px';
-        textContainer.style.border = '1px solid rgba(255,255,255,0.1)';
-        textContainer.style.color = '#e0e0e0';
-        textContainer.style.fontSize = '24px';
-        textContainer.style.lineHeight = '1.8';
-        textContainer.style.textAlign = 'center';
-        textContainer.style.whiteSpace = 'pre-wrap';
-        textContainer.style.fontFamily = "'Poppins', sans-serif";
-        textContainer.textContent = customText;
+        const textContainerWrapper = document.createElement('div');
+        textContainerWrapper.style.width = '100%';
+        textContainerWrapper.style.border = '1px solid #ffd700';
+        textContainerWrapper.style.borderRadius = '15px';
+        textContainerWrapper.style.padding = '40px';
+        textContainerWrapper.style.background = 'rgba(70, 0, 0, 0.6)';
+        textContainerWrapper.style.position = 'relative';
+        textContainerWrapper.style.zIndex = '10';
+        textContainerWrapper.style.boxShadow = 'inset 0 0 20px rgba(0,0,0,0.5)';
         
-        const c_membersBlock = document.createElement('div');
-        c_membersBlock.style.display = 'flex';
-        c_membersBlock.style.justifyContent = 'space-between';
-        c_membersBlock.style.width = '100%';
-        c_membersBlock.style.margin = '0px auto 25px auto';
-        c_membersBlock.style.position = 'relative';
-        c_membersBlock.style.zIndex = '10';
-        
-        c_membersBlock.innerHTML = `
-            <div style="text-align: center; color: #fff; width: 45%;">
-                <div style="color: #ffd700; font-weight: bold; font-size: 20px; margin-bottom: 5px; font-family: 'Mukta', sans-serif;">अध्यक्ष</div>
-            <div style="font-size: 18px; font-weight: bold; font-family: 'Poppins', sans-serif;">तेजस फटांगरे</div>
-            <div style="font-size: 14px; color: #fff; margin-top: 3px; font-family: 'Poppins', sans-serif;">मो.नं 9370599259</div>
-            </div>
-            <div style="border-left: 1px solid rgba(255, 215, 0, 0.3);"></div>
-            <div style="text-align: center; color: #fff; width: 45%;">
-                <div style="color: #ffd700; font-weight: bold; font-size: 20px; margin-bottom: 5px; font-family: 'Mukta', sans-serif;">खजिनदार, समन्वयक</div>
-            <div style="font-size: 18px; font-weight: bold; font-family: 'Poppins', sans-serif;">धनंजय रणाते</div>
-            <div style="font-size: 14px; color: #fff; margin-top: 3px; font-family: 'Poppins', sans-serif;">मो.नं 9322134560</div>
+        // Add corner accents to the content box
+        textContainerWrapper.innerHTML = `
+            <div style="position: absolute; top: 0; left: 0; width: 15px; height: 15px; border-top: 2px solid #ffd700; border-left: 2px solid #ffd700; border-top-left-radius: 15px;"></div>
+            <div style="position: absolute; top: 0; right: 0; width: 15px; height: 15px; border-top: 2px solid #ffd700; border-right: 2px solid #ffd700; border-top-right-radius: 15px;"></div>
+            <div style="position: absolute; bottom: 0; left: 0; width: 15px; height: 15px; border-bottom: 2px solid #ffd700; border-left: 2px solid #ffd700; border-bottom-left-radius: 15px;"></div>
+            <div style="position: absolute; bottom: 0; right: 0; width: 15px; height: 15px; border-bottom: 2px solid #ffd700; border-right: 2px solid #ffd700; border-bottom-right-radius: 15px;"></div>
+            <div style="color: #fff; font-size: 24px; line-height: 1.8; text-align: center; white-space: pre-wrap; font-family: 'Poppins', sans-serif; text-shadow: 1px 1px 2px rgba(0,0,0,0.8);">${customText}</div>
+        `;
+        clone.appendChild(textContainerWrapper);
+
+        // Footer Section
+        const footerHtml = `
+            <div style="width: 100%; text-align: center; margin-top: 40px; position: relative; z-index: 10;">
+                <div style="color: #aaa; font-size: 14px; font-family: 'Poppins', sans-serif;">Developed by | Dhananjay Ranate</div>
+                <div style="display: flex; align-items: center; justify-content: center; width: 100%; margin-top: 10px;">
+                    <div style="flex-grow: 1; height: 1px; background: linear-gradient(to right, transparent, #ffd700, transparent);"></div>
+                    <div style="color: #ffd700; margin: 0 15px; font-size: 16px;">✧ ◉ ✧</div>
+                    <div style="flex-grow: 1; height: 1px; background: linear-gradient(to right, transparent, #ffd700, transparent);"></div>
+                </div>
             </div>
         `;
-        clone.appendChild(c_membersBlock);
-        clone.appendChild(textContainer);
-        
-        const devWatermark2 = document.createElement('div');
-        devWatermark2.style.color = 'rgba(255, 255, 255, 0.7)';
-        devWatermark2.style.textShadow = '0px 1px 3px rgba(0,0,0,0.8)';
-        devWatermark2.style.textAlign = 'center';
-        devWatermark2.style.fontSize = '14px';
-        devWatermark2.style.marginTop = '20px';
-        devWatermark2.style.width = '100%';
-        devWatermark2.style.fontFamily = "'Poppins', sans-serif";
-        devWatermark2.innerHTML = 'Developed by | Dhananjay Ranate';
-        clone.appendChild(devWatermark2);
+        clone.insertAdjacentHTML('beforeend', footerHtml);
 
-        // Capture with html2canvas
         const canvas = await html2canvas(clone, {
             scale: 2,
             useCORS: true,
             backgroundColor: '#1a1a1a',
             windowWidth: 1200
         });
-
-        document.body.removeChild(clone);
-        cachedCustomCanvases[type] = { canvas, text: customText };
-        return cachedCustomCanvases[type];
-    }
-
-    async function shareCustomPoster(type, btn) {
-        let originalText = btn ? btn.innerHTML : '';
-        if (btn) { btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> कृपया थांबा...'; btn.disabled = true; }
         
-        try {
-            const result = await captureCustomPoster(type);
-            const canvas = result.canvas;
-            const customText = result.text;
-            
-            canvas.toBlob(async (blob) => {
-                try {
-                    const fileName = type === 'vargani' ? 'Vargani_Aabhar.jpg' : 'Mahaprasad_Nimantran.jpg';
-                    const file = new File([blob], fileName, { type: 'image/jpeg' });
-                    
-                    const orgName = (typeof appSettings !== 'undefined' && appSettings.pdfCustomSettings && appSettings.pdfCustomSettings.orgName) ? appSettings.pdfCustomSettings.orgName : 'मंडळ';
-                    const shareTitle = type === 'vargani' ? 'वर्गणी आभार' : 'महाप्रसाद निमंत्रण';
-                    
-                    const shareData = {
-                        title: orgName + ' - ' + shareTitle,
-                        text: customText + '\n\n🌐 अधिकृत वेबसाईट:\nhttps://shivsrushti-utsav-mandal.onrender.com',
-                        files: [file]
-                    };
-
-                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                        await navigator.share(shareData);
-                    } else {
-                        // Download fallback
-                        const link = document.createElement('a');
-                        link.download = fileName;
-                        link.href = canvas.toDataURL('image/jpeg', 0.9);
-                        link.click();
-                        alert('तुमच्या डिव्हाइसवर डायरेक्ट इमेज शेअरिंग सपोर्टेड नाही. इमेज डाउनलोड झाली आहे, ती तुम्ही स्वतः शेअर करू शकता.');
-                    }
-                } catch (shareErr) {
-                    console.log('Share action was cancelled or failed:', shareErr);
-                    if (shareErr.name !== 'AbortError') {
-                        const link = document.createElement('a');
-                        link.download = type === 'vargani' ? 'Vargani_Aabhar.jpg' : 'Mahaprasad_Nimantran.jpg';
-                        link.href = canvas.toDataURL('image/jpeg', 0.9);
-                        link.click();
-                        alert('तुमच्या डिव्हाइसवर डायरेक्ट शेअरिंगमध्ये तांत्रिक अडचण आली. इमेज डाउनलोड झाली आहे, ती तुम्ही मॅन्युअली शेअर करू शकता.');
-                    }
-                } finally {
-                    if (btn) { btn.innerHTML = originalText; btn.disabled = false; }
-                }
-            }, 'image/jpeg', 0.9);
-        } catch (err) {
-            console.error('Error sharing custom poster:', err);
-            if (err.name === 'SecurityError' || (err.message && err.message.includes('Tainted'))) {
-                alert('सिक्युरिटी एरर: तुम्ही ही फाईल थेट फोल्डरमधून (file://) उघडली आहे, त्यामुळे ब्राउझर पोस्टर तयार करू शकत नाही. कृपया होस्ट केलेल्या लिंकवरून किंवा लोकल सर्व्हरवरून वेबसाईट उघडा.');
-            } else {
-                alert('पोस्टर तयार करताना त्रुटी आली: ' + (err.message || err));
-            }
-            if (btn) { btn.innerHTML = originalText; btn.disabled = false; }
-        }
+        document.body.removeChild(clone);
+        cachedCustomCanvases[type] = canvas;
+        return canvas;
     }
+
 
     async function downloadDonationImage(btn) {
         let originalText = btn ? btn.innerHTML : '';
