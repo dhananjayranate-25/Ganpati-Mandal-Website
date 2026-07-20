@@ -2053,27 +2053,11 @@ table {
         const ifscCode = getSafeText('bankIfsc', 'UBIN0532258');
         const bankName = getSafeText('bankBranch', 'Union Bank Of India');
 
-        // Generate QR code internally
-        const qrContainer = document.createElement('div');
-        const qrSize = 180;
-        new QRCode(qrContainer, {
-            text: `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(orgName)}&cu=INR`,
-            width: qrSize,
-            height: qrSize,
-            colorDark: "#000000",
-            colorLight: "#ffffff",
-            correctLevel: QRCode.CorrectLevel.H
-        });
-
-        let qrDataUrl = '';
-        const qrCanvas = qrContainer.querySelector('canvas');
-        if (qrCanvas) {
-            qrDataUrl = qrCanvas.toDataURL("image/png");
-        } else {
-            const qrImg = qrContainer.querySelector('img');
-            if (qrImg) {
-                qrDataUrl = qrImg.src;
-            }
+        // Fetch the uploaded QR code image from the DOM
+        let qrDataUrl = 'uploads/donate_qr.jpg'; // default
+        const qrImgDOM = document.getElementById('donationQRImg');
+        if (qrImgDOM && qrImgDOM.src) {
+            qrDataUrl = qrImgDOM.src;
         }
 
         const columnsWrapper = document.createElement('div');
