@@ -2016,6 +2016,7 @@ table {
             window.open(url, '_blank');
         }
 
+        window.switchAdminTab = switchAdminTab;
         function switchAdminTab(tabId, pushState = true) {
             if (pushState) {
                 const currentHash = window.location.hash.replace('#', '');
@@ -2557,8 +2558,5 @@ async function deleteNiyojan(id) {
     </script>
 
 
-<script>
-// PDF functions moved to the DOMContentLoaded block
-window.switchAdminTab = switchAdminTab;
-</script>
+
 </body></html>
