@@ -2434,6 +2434,60 @@ table {
         }
     }
     
+    async function shareCustomPoster(type, btn) {
+        let originalText = btn ? btn.innerHTML : '';
+        if (btn) { btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> कृपया थांबा...'; btn.disabled = true; }
+        
+        try {
+            const canvas = await captureCustomPoster(type);
+            canvas.toBlob(async (blob) => {
+                try {
+                    const filename = type === 'vargani' ? 'Vargani_Aabhar.jpg' : 'Mahaprasad_Nimantran.jpg';
+                    const file = new File([blob], filename, { type: 'image/jpeg' });
+                    
+                    const orgName = (typeof appSettings !== 'undefined' && appSettings.pdfCustomSettings && appSettings.pdfCustomSettings.orgName) ? appSettings.pdfCustomSettings.orgName : 'मंडळ';
+                    const titleStr = type === 'vargani' ? 'वर्गणी आभार' : 'महाप्रसाद निमंत्रण';
+                    const shareData = {
+                        title: orgName + ' - ' + titleStr,
+                        text: `🙏 सस्नेह नमस्कार,\n\n${orgName} कडून ${titleStr}!\n\n🌐 अधिकृत वेबसाईट:\nhttps://shivsrushti-utsav-mandal.onrender.com`,
+                        files: [file]
+                    };
+
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        await navigator.share(shareData);
+                    } else {
+                        // Download fallback
+                        const link = document.createElement('a');
+                        link.download = filename;
+                        link.href = canvas.toDataURL('image/jpeg', 0.9);
+                        link.click();
+                        alert('तुमच्या डिव्हाइसवर डायरेक्ट इमेज शेअरिंग सपोर्टेड नाही. इमेज डाउनलोड झाली आहे, ती तुम्ही स्वतः शेअर करू शकता.');
+                    }
+                } catch (shareErr) {
+                    console.log('Share action was cancelled or failed:', shareErr);
+                    if (shareErr.name !== 'AbortError') {
+                        const filename = type === 'vargani' ? 'Vargani_Aabhar.jpg' : 'Mahaprasad_Nimantran.jpg';
+                        const link = document.createElement('a');
+                        link.download = filename;
+                        link.href = canvas.toDataURL('image/jpeg', 0.9);
+                        link.click();
+                        alert('तुमच्या डिव्हाइसवर डायरेक्ट शेअरिंगमध्ये तांत्रिक अडचण आली. इमेज डाउनलोड झाली आहे, ती तुम्ही मॅन्युअली शेअर करू शकता.');
+                    }
+                } finally {
+                    if (btn) { btn.innerHTML = originalText; btn.disabled = false; }
+                }
+            }, 'image/jpeg', 0.9);
+        } catch (err) {
+            console.error('Error sharing image:', err);
+            if (err.name === 'SecurityError' || (err.message && err.message.includes('Tainted'))) {
+                alert('सिक्युरिटी एरर: तुम्ही ही फाईल थेट फोल्डरमधून उघडली आहे, त्यामुळे ब्राउझर पोस्टर तयार करू शकत नाही. कृपया होस्ट केलेल्या लिंकवरून उघडा.');
+            } else {
+                alert('शेअर करताना त्रुटी आली: ' + (err.message || err));
+            }
+            if (btn) { btn.innerHTML = originalText; btn.disabled = false; }
+        }
+    }
+
     function openLightbox(src) {
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightboxImg');
