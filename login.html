@@ -248,13 +248,22 @@
             }
         }
         
-        // Prevent going back to login if already logged in
-        document.addEventListener('DOMContentLoaded', () => {
-            const userStr = localStorage.getItem('portalUser');
-            const userRole = localStorage.getItem('userRole');
-            if (userStr && userRole) {
-                if(userRole === 'superadmin') window.location.href = 'superadmin.html';
-                if(userRole === 'member') window.location.href = 'member.html';
+        // Handle bfcache when navigating back to login page
+        window.addEventListener('pageshow', (event) => {
+            // Always show role selection first (prevents auto-opening form when navigating back)
+            showRoleSelection();
+            
+            // Reset the login button state
+            const btn = document.getElementById('loginBtn');
+            if (btn) {
+                btn.innerHTML = '<span class="btn-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="11 16 15 12 11 8"></polyline><line x1="2" y1="12" x2="15" y2="12"></line></svg></span> Login';
+                btn.disabled = false;
+            }
+            
+            // Hide error message
+            const errorMsg = document.getElementById('errorMsg');
+            if (errorMsg) {
+                errorMsg.style.display = 'none';
             }
         });
     </script>
