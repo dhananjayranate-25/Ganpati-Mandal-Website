@@ -972,12 +972,12 @@
                 
                 let hasMedia = false;
                 if (settings.aartiAudioPath) {
-                    aartiAudioPlayer.src = '/' + settings.aartiAudioPath;
+                    aartiAudioPlayer.src = settings.aartiAudioPath;
                     aartiAudioWrapper.style.display = 'flex';
                     hasMedia = true;
                 }
                 if (settings.aartiPdfPath) {
-                    aartiPdfLink.href = '/' + settings.aartiPdfPath;
+                    aartiPdfLink.href = settings.aartiPdfPath;
                     aartiPdfWrapper.style.display = 'block';
                     hasMedia = true;
                 }
