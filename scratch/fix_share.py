@@ -1,127 +1,48 @@
 import re
 
-with open('index.html', 'r', encoding='utf-8') as f:
-    text = f.read()
+def fix_share_custom_poster():
+    try:
+        with open('index.html', 'r', encoding='utf-8') as f:
+            content = f.read()
 
-# Remove the script I just added
-text = re.sub(r'<!-- Donation Poster Script -->.*?</script>', '', text, flags=re.DOTALL)
+        # Find the block where `customText` is defined in captureCustomPoster
+        # It starts with "let customText = '';" and ends before "const textContainerWrapper ="
+        match = re.search(r'(let customText = \'\';.*?)(?=const textContainerWrapper =)', content, re.DOTALL)
+        if not match:
+            print("Could not find customText block")
+            return
+            
+        customTextCode = match.group(1).strip()
+        
+        # Now find the place to insert it inside shareCustomPoster
+        # specifically, right before `const shareData = {`
+        share_data_match = re.search(r'const shareData = \{\s*title: orgName \+ \' - \' \+ titleStr,\s*text: `\$\{customText\}.*?\};', content, re.DOTALL)
+        if not share_data_match:
+            print("Could not find shareData block in shareCustomPoster")
+            return
+            
+        shareDataCode = share_data_match.group(0)
+        
+        # We need to make sure we only replace it in shareCustomPoster
+        parts = content.split('async function shareCustomPoster(type, btn) {')
+        
+        if len(parts) > 1:
+            custom_share = parts[1]
+            
+            # Replace shareData block with customText block + shareData block
+            new_share_data = customTextCode + "\n\n                      " + shareDataCode
+            
+            new_custom_share = custom_share.replace(shareDataCode, new_share_data)
+            
+            content = parts[0] + 'async function shareCustomPoster(type, btn) {' + new_custom_share
+            
+            with open('index.html', 'w', encoding='utf-8') as f:
+                f.write(content)
+            print("Successfully fixed shareCustomPoster")
+        else:
+            print("Function shareCustomPoster not found")
 
-script_html = '''
-    <!-- Donation Poster Script -->
-    <script>
-    async function captureDonationPoster() {
-        const card = document.querySelector('.donation-card');
-        const actions = document.getElementById('donationActions');
-        const title = card.querySelector('.section-title');
-        
-        // Hide actions
-        if(actions) actions.style.display = 'none';
-        
-        // Hide existing title ("देणगी / वर्गणी")
-        let originalTitleDisplay = '';
-        if (title) {
-            originalTitleDisplay = title.style.display;
-            title.style.display = 'none';
-        }
-        
-        // Add Mandal Name
-        const mandalName = document.createElement('h2');
-        mandalName.id = 'tempMandalName';
-        mandalName.innerText = (typeof settings !== 'undefined' && settings.orgName) ? settings.orgName : 'श्री शिवसृष्टी मित्र मंडळ';
-        mandalName.style.textAlign = 'center';
-        mandalName.style.color = '#ffeb3b';
-        mandalName.style.fontFamily = "'Noto Sans Devanagari', sans-serif";
-        mandalName.style.fontSize = '2.2rem';
-        mandalName.style.fontWeight = '800';
-        mandalName.style.marginBottom = '25px';
-        mandalName.style.textShadow = '0 2px 10px rgba(0,0,0,0.5)';
-        
-        card.insertBefore(mandalName, card.firstChild);
-        
-        // Add a temporary solid background for better capture since glass-panel might capture poorly depending on background behind it
-        const originalBg = card.style.background;
-        card.style.background = '#1a1a1a'; // solid dark background
-        
-        let canvas = null;
-        try {
-            if (typeof html2canvas !== 'undefined') {
-                canvas = await html2canvas(card, {
-                    scale: 2,
-                    useCORS: true,
-                    backgroundColor: '#1a1a1a'
-                });
-            } else {
-                alert('html2canvas is not loaded!');
-            }
-        } catch(e) {
-            console.error('Error generating image:', e);
-        }
-        
-        // Restore
-        card.style.background = originalBg;
-        mandalName.remove();
-        if (title) title.style.display = originalTitleDisplay;
-        if(actions) actions.style.display = 'flex';
-        
-        return canvas;
-    }
+    except Exception as e:
+        print(f"Error: {e}")
 
-    function downloadDonationImage() {
-        const btn = document.querySelector('.donation-download-btn');
-        if(btn) { btn.disabled = true; btn.innerHTML = 'Downloading...'; }
-        
-        captureDonationPoster().then(canvas => {
-            if(canvas) {
-                const link = document.createElement('a');
-                link.download = 'Donation_Poster.jpg';
-                link.href = canvas.toDataURL('image/jpeg', 0.9);
-                link.click();
-            }
-        }).catch(err => {
-            console.error('Error generating image:', err);
-            alert('इमेज तयार करताना त्रुटी आली.');
-        }).finally(() => {
-            if(btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-download"></i> डाउनलोड करा'; }
-        });
-    }
-
-    async function shareDonationImage() {
-        const btn = document.querySelector('.donation-share-btn');
-        if(btn) { btn.disabled = true; btn.innerHTML = 'Sharing...'; }
-        
-        try {
-            const canvas = await captureDonationPoster();
-            if(canvas) {
-                canvas.toBlob(async (blob) => {
-                    const file = new File([blob], 'Donation_Poster.jpg', { type: 'image/jpeg' });
-                    
-                    const orgName = (typeof settings !== 'undefined' && settings.orgName) ? settings.orgName : 'श्री शिवसृष्टी मित्र मंडळ';
-                    const shareData = {
-                        title: orgName + ' - देणगी',
-                        text: 'कृपया ' + orgName + ' ला सढळ हाताने मदत करा. खालील QR कोड वापरून आपण देणगी देऊ शकता.',
-                        files: [file]
-                    };
-
-                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                        await navigator.share(shareData);
-                    } else {
-                        alert('शेअर करण्याचा पर्याय तुमच्या ब्राउझरमध्ये उपलब्ध नाही. कृपया डाउनलोड करून शेअर करा.');
-                    }
-                }, 'image/jpeg', 0.9);
-            }
-        } catch (err) {
-            console.error('Error sharing image:', err);
-            alert('शेअर करताना त्रुटी आली. कृपया डाउनलोड करून शेअर करा.');
-        } finally {
-            if(btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-share-alt"></i> शेअर करा'; }
-        }
-    }
-    </script>
-'''
-
-text = text.replace('</body>', script_html + '\n</body>')
-
-with open('index.html', 'w', encoding='utf-8') as f:
-    f.write(text)
-
-print("Fixed the share script.")
+fix_share_custom_poster()

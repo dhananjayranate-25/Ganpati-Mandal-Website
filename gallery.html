@@ -381,7 +381,7 @@
                 }
                 
                 grid.innerHTML = galleryAlbumsCache.map(album => {
-                    const coverPhoto = album.photos.length > 0 ? '/' + album.photos[0] : 'logo/logo.jpeg';
+                    const coverPhoto = album.photos.length > 0 ? album.photos[0].photoData : 'logo/logo.jpeg';
                     return `
                         <div class="album-card" onclick="openAlbum('${album._id}')" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; overflow: hidden; cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease;">
                             <div style="width: 100%; padding-top: 75%; position: relative;">
@@ -418,8 +418,8 @@
         }
 
         photosGrid.innerHTML = album.photos.map(photo => `
-            <div style="width: 100%; padding-top: 100%; position: relative; border-radius: 8px; overflow: hidden; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" onclick="openLightbox('/${photo}')">
-                <img src="/${photo}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+            <div style="width: 100%; padding-top: 100%; position: relative; border-radius: 8px; overflow: hidden; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" onclick="openLightbox('${photo.photoData}')">
+                <img src="${photo.photoData}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;" loading="lazy">
             </div>
         `).join('');
     }

@@ -2267,8 +2267,8 @@ async function loadAdminAlbums() {
                     <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                         ${album.photos.map(photo => `
                             <div style="position:relative; width: 100px; height: 100px; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.2);">
-                                <img src="/${photo}" style="width:100%; height:100%; object-fit:cover;">
-                                <button onclick="deletePhoto('${album._id}', '${photo.split('/').pop()}')" style="position:absolute; top:2px; right:2px; background:rgba(244,67,54,0.9); color:white; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer;"><i class="fas fa-times"></i></button>
+                                <img src="${photo.photoData}" style="width:100%; height:100%; object-fit:cover;">
+                                <button onclick="deletePhoto('${album._id}', '${photo._id}')" style="position:absolute; top:2px; right:2px; background:rgba(244,67,54,0.9); color:white; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer;"><i class="fas fa-times"></i></button>
                             </div>
                         `).join('')}
                     </div>

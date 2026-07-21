@@ -38,49 +38,7 @@ app.use(express.static(path.join(__dirname), {
     }
 }));
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => cb(null, UPLOAD_DIR),
-    filename: (req, file, cb) => {
-        const year = req.body.year || 'unknown';
-        cb(null, `cashbook_${year}_${Date.now()}.pdf`);
-    }
-});
-const upload = multer({ storage, limits: { fileSize: 50 * 1024 * 1024 } });
-
-// Storage for hero banner image
-const bannerStorage = multer.diskStorage({
-    destination: (req, file, cb) => cb(null, UPLOAD_DIR),
-    filename: (req, file, cb) => {
-        const ext = path.extname(file.originalname) || '.jpg';
-        cb(null, `hero_banner${ext}`);
-    }
-});
-const uploadBanner = multer({ storage: bannerStorage, limits: { fileSize: 50 * 1024 * 1024 } });
-
-// Storage for committee photos (Memory storage to save in DB)
-const committeeStorage = multer.memoryStorage();
-const uploadCommittee = multer({ storage: committeeStorage, limits: { fileSize: 50 * 1024 * 1024 } });
-
-// Storage for Aarti media (Audio & PDF)
-const aartiMediaStorage = multer.diskStorage({
-    destination: (req, file, cb) => cb(null, UPLOAD_DIR),
-    filename: (req, file, cb) => {
-        const ext = path.extname(file.originalname) || '';
-        cb(null, `aarti_${file.fieldname}_${Date.now()}${ext}`);
-    }
-});
-const uploadAartiMedia = multer({ storage: aartiMediaStorage, limits: { fileSize: 50 * 1024 * 1024 } }); // Up to 50MB for audio files
-
-// Storage for Gallery Photos
-const galleryStorage = multer.diskStorage({
-    destination: (req, file, cb) => cb(null, UPLOAD_DIR),
-    filename: (req, file, cb) => {
-        const ext = path.extname(file.originalname) || '.jpg';
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, `gallery_${uniqueSuffix}${ext}`);
-    }
-});
-const uploadGallery = multer({ storage: galleryStorage, limits: { fileSize: 50 * 1024 * 1024 } });
+const uploadMemory = multer({ storage: multer.memoryStorage(), limits: { fileSize: 50 * 1024 * 1024 } });
 
 
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -167,10 +125,15 @@ const Aarti = mongoose.model('Aarti', aartiSchema);
 
 const galleryAlbumSchema = new mongoose.Schema({
     title: { type: String, required: true },
-    order: { type: Number, default: 0 },
-    photos: [{ type: String }] // Array of file paths
+    order: { type: Number, default: 0 }
 });
 const GalleryAlbum = mongoose.model('GalleryAlbum', galleryAlbumSchema);
+
+const galleryPhotoSchema = new mongoose.Schema({
+    albumId: { type: mongoose.Schema.Types.ObjectId, ref: 'GalleryAlbum' },
+    photoData: { type: String, required: true }
+});
+const GalleryPhoto = mongoose.model('GalleryPhoto', galleryPhotoSchema);
 
 
 const pdfSchema = new mongoose.Schema({
@@ -180,7 +143,8 @@ const pdfSchema = new mongoose.Schema({
     subtitle: { type: String },
     tagline: { type: String },
     orgName: { type: String },
-    uploadedAt: { type: Date, default: Date.now }
+    uploadedAt: { type: Date, default: Date.now },
+    pdfData: { type: String, default: '' }
 });
 const UploadedPDF = mongoose.model('UploadedPDF', pdfSchema);
 
@@ -196,7 +160,8 @@ const portalUserSchema = new mongoose.Schema({
     totalFunds: { type: Number, default: 0 },
     totalSpent: { type: Number, default: 0 },
     balance: { type: Number, default: 0 },
-    photoUrl: { type: String, default: '' }
+    photoUrl: { type: String, default: '' },
+    lastSeen: { type: Date }
 });
 const PortalUser = mongoose.model('PortalUser', portalUserSchema);
 
@@ -204,6 +169,7 @@ const portalTaskSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'PortalUser', required: true },
     title: { type: String, required: true },
     status: { type: String, enum: ['Pending', 'In Process', 'Done'], default: 'Pending' },
+    photoData: { type: String, default: null },
     date: { type: Date, default: Date.now }
 });
 const PortalTask = mongoose.model('PortalTask', portalTaskSchema);
@@ -351,15 +317,19 @@ app.post('/api/settings', async (req, res) => {
 });
 
 // Upload Aarti Media Endpoint
-app.post('/api/settings/aarti-media', uploadAartiMedia.fields([{ name: 'aarti_audio', maxCount: 1 }, { name: 'aarti_pdf', maxCount: 1 }]), async (req, res) => {
+app.post('/api/settings/aarti-media', uploadMemory.fields([{ name: 'aarti_audio', maxCount: 1 }, { name: 'aarti_pdf', maxCount: 1 }]), async (req, res) => {
     try {
         if (req.files['aarti_audio']) {
-            const audioPath = 'uploads/' + req.files['aarti_audio'][0].filename;
-            await AppSetting.findOneAndUpdate({ key: 'aartiAudioPath' }, { value: audioPath }, { upsert: true });
+            const f = req.files['aarti_audio'][0];
+            const base64Data = f.buffer.toString('base64');
+            const dataUri = `data:${f.mimetype};base64,${base64Data}`;
+            await AppSetting.findOneAndUpdate({ key: 'aartiAudioPath' }, { value: dataUri }, { upsert: true });
         }
         if (req.files['aarti_pdf']) {
-            const pdfPath = 'uploads/' + req.files['aarti_pdf'][0].filename;
-            await AppSetting.findOneAndUpdate({ key: 'aartiPdfPath' }, { value: pdfPath }, { upsert: true });
+            const f = req.files['aarti_pdf'][0];
+            const base64Data = f.buffer.toString('base64');
+            const dataUri = `data:${f.mimetype};base64,${base64Data}`;
+            await AppSetting.findOneAndUpdate({ key: 'aartiPdfPath' }, { value: dataUri }, { upsert: true });
         }
         res.json({ success: true, message: 'Media uploaded successfully' });
     } catch (error) {
@@ -415,7 +385,11 @@ app.get('/api/system/storage', async (req, res) => {
 // Get all albums
 app.get('/api/gallery', async (req, res) => {
     try {
-        const albums = await GalleryAlbum.find().sort({ order: 1 });
+        const albums = await GalleryAlbum.find().lean().sort({ order: 1 });
+        for (let album of albums) {
+            const dbPhotos = await GalleryPhoto.find({ albumId: album._id }).lean();
+            album.photos = dbPhotos.map(p => ({ _id: p._id, photoData: p.photoData }));
+        }
         res.json({ success: true, albums });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
@@ -439,13 +413,7 @@ app.delete('/api/gallery/album/:id', async (req, res) => {
     try {
         const album = await GalleryAlbum.findById(req.params.id);
         if (album) {
-            // Delete all photos in this album from disk
-            for (let photo of album.photos) {
-                const filePath = path.join(__dirname, photo);
-                if (fs.existsSync(filePath)) {
-                    fs.unlinkSync(filePath);
-                }
-            }
+            await GalleryPhoto.deleteMany({ albumId: req.params.id });
             await GalleryAlbum.findByIdAndDelete(req.params.id);
         }
         res.json({ success: true });
@@ -455,15 +423,22 @@ app.delete('/api/gallery/album/:id', async (req, res) => {
 });
 
 // Upload photos to album
-app.post('/api/gallery/album/:id/photos', uploadGallery.array('photos', 20), async (req, res) => {
+app.post('/api/gallery/album/:id/photos', uploadMemory.array('photos', 20), async (req, res) => {
     try {
         console.log(`Gallery Upload request received for album ${req.params.id}. Files count:`, req.files ? req.files.length : 0);
         const album = await GalleryAlbum.findById(req.params.id);
         if (!album) return res.status(404).json({ success: false, error: 'Album not found' });
         
-        const newPhotos = req.files.map(file => 'uploads/' + file.filename);
-        album.photos.push(...newPhotos);
-        await album.save();
+        
+        const newPhotos = [];
+        for (const file of req.files) {
+            const base64Data = file.buffer.toString('base64');
+            const dataUri = `data:${file.mimetype};base64,${base64Data}`;
+            const photo = new GalleryPhoto({ albumId: album._id, photoData: dataUri });
+            await photo.save();
+            newPhotos.push(photo);
+        }
+        
         
         res.json({ success: true, album });
     } catch (error) {
@@ -472,22 +447,10 @@ app.post('/api/gallery/album/:id/photos', uploadGallery.array('photos', 20), asy
 });
 
 // Delete specific photo from album
-app.delete('/api/gallery/album/:id/photo/:filename', async (req, res) => {
+app.delete('/api/gallery/album/:id/photo/:photoId', async (req, res) => {
     try {
-        const album = await GalleryAlbum.findById(req.params.id);
-        if (!album) return res.status(404).json({ success: false, error: 'Album not found' });
-        
-        const photoPath = 'uploads/' + req.params.filename;
-        album.photos = album.photos.filter(p => p !== photoPath);
-        await album.save();
-        
-        // Delete from disk
-        const filePath = path.join(__dirname, photoPath);
-        if (fs.existsSync(filePath)) {
-            fs.unlinkSync(filePath);
-        }
-        
-        res.json({ success: true, album });
+        await GalleryPhoto.findByIdAndDelete(req.params.photoId);
+        res.json({ success: true });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }
@@ -503,7 +466,7 @@ app.get('/api/committee', async (req, res) => {
 });
 
 app.post('/api/committee', (req, res, next) => {
-    uploadCommittee.single('photo')(req, res, function (err) {
+    uploadMemory.single('photo')(req, res, function (err) {
         if (err) {
             return res.status(400).json({ success: false, error: err.message || 'File upload failed' });
         }
@@ -770,6 +733,21 @@ app.delete('/api/niyojan/:id', async (req, res) => {
 // ==========================================
 // PORTAL: API ROUTES
 // ==========================================
+
+app.post('/api/portal/ping', express.json(), async (req, res) => {
+    try {
+        const { userId } = req.body;
+        if (userId) {
+            await PortalUser.findByIdAndUpdate(userId, { lastSeen: new Date() });
+            res.json({ success: true });
+        } else {
+            res.json({ success: false });
+        }
+    } catch(err) {
+        res.json({ success: false });
+    }
+});
+
 app.post('/api/portal/login', async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -959,12 +937,27 @@ app.get('/api/portal/tasks/:userId', async (req, res) => {
 
 // Delete expense
 
-app.post('/api/portal/tasks', async (req, res) => {
+app.post('/api/portal/tasks', uploadMemory.single('photo'), async (req, res) => {
     try {
         const { userId, title } = req.body;
-        const newTask = new PortalTask({ userId, title, status: 'Pending' });
+        let photoData = null;
+        if (req.file) {
+            const mimeType = req.file.mimetype;
+            const base64Data = req.file.buffer.toString('base64');
+            photoData = `data:${mimeType};base64,${base64Data}`;
+        }
+        const newTask = new PortalTask({ userId, title, photoData, status: 'Pending' });
         await newTask.save();
         res.json({ success: true, task: newTask });
+    } catch(err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+app.delete('/api/portal/tasks/:id/photo', async (req, res) => {
+    try {
+        const task = await PortalTask.findByIdAndUpdate(req.params.id, { photoData: null }, { new: true });
+        res.json({ success: true, task });
     } catch(err) {
         res.status(500).json({ success: false, message: err.message });
     }
@@ -1045,7 +1038,7 @@ app.post('/api/portal/expenses', async (req, res) => {
 
 
 // Add Endpoint for User Profile Photo
-app.post('/api/users/:id/photo', uploadCommittee.single('photo'), async (req, res) => {
+app.post('/api/users/:id/photo', uploadMemory.single('photo'), async (req, res) => {
     try {
         if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
         
@@ -1076,7 +1069,7 @@ app.listen(PORT, () => {
 });
 
 
-app.post('/api/upload-pdf', upload.single('pdf'), async (req, res) => {
+app.post('/api/upload-pdf', uploadMemory.single('pdf'), async (req, res) => {
     try {
         const { year, subtitle, tagline, orgName } = req.body;
         if (!year || !req.file) {
@@ -1084,10 +1077,8 @@ app.post('/api/upload-pdf', upload.single('pdf'), async (req, res) => {
         }
 
         const originalName = req.file.originalname;
-        const oldPath = req.file.path;
         const newName = `cashbook_${year}_${Date.now()}.pdf`;
-        const newPath = path.join(UPLOAD_DIR, newName);
-        fs.renameSync(oldPath, newPath);
+        const base64Data = req.file.buffer.toString('base64');
 
         const newPdf = new UploadedPDF({
             filename: newName,
@@ -1095,7 +1086,8 @@ app.post('/api/upload-pdf', upload.single('pdf'), async (req, res) => {
             originalName: originalName,
             subtitle: subtitle || '',
             tagline: tagline || '',
-            orgName: orgName || ''
+            orgName: orgName || '',
+            pdfData: base64Data
         });
         await newPdf.save();
 
@@ -1103,27 +1095,26 @@ app.post('/api/upload-pdf', upload.single('pdf'), async (req, res) => {
         res.json({ success: true, filename: newName, year });
     } catch (error) {
         console.error('Upload error:', error);
-        if (req.file && req.file.path && fs.existsSync(req.file.path)) {
-            fs.unlinkSync(req.file.path);
-        }
         res.status(500).json({ success: false, error: error.message });
     }
 });
 
 // Upload Hero Banner API
-app.post('/api/upload-hero', uploadBanner.single('banner'), async (req, res) => {
+app.post('/api/upload-hero', uploadMemory.single('banner'), async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({ success: false, error: 'Banner image file required' });
         }
-        const filename = req.file.filename;
-        // Save the filename to app settings so the frontend knows what to fetch
+        const mimeType = req.file.mimetype;
+        const base64Data = req.file.buffer.toString('base64');
+        const dataUri = `data:${mimeType};base64,${base64Data}`;
+        
         await AppSetting.findOneAndUpdate(
             { key: 'heroBannerImage' },
-            { value: filename },
+            { value: dataUri },
             { upsert: true, new: true }
         );
-        res.json({ success: true, filename: filename, message: 'Banner updated successfully' });
+        res.json({ success: true, filename: 'database_banner', message: 'Banner updated successfully' });
     } catch (error) {
         console.error('Banner upload error:', error);
         res.status(500).json({ success: false, error: error.message });
@@ -1132,40 +1123,6 @@ app.post('/api/upload-hero', uploadBanner.single('banner'), async (req, res) => 
 
 app.get('/api/uploaded-pdfs', async (req, res) => {
     try {
-        if (!fs.existsSync(UPLOAD_DIR)) {
-            return res.json({ success: true, data: [] });
-        }
-        const files = fs.readdirSync(UPLOAD_DIR).filter(f => f.endsWith('.pdf') && !f.endsWith('.meta.json.pdf') && !f.startsWith('aarti_'));
-        
-        const dbPdfs = await UploadedPDF.find({});
-        const dbFilenames = dbPdfs.map(p => p.filename);
-        
-        // Auto-migrate old .meta.json to MongoDB
-        for (const f of files) {
-            if (!dbFilenames.includes(f)) {
-                const metaPath = path.join(UPLOAD_DIR, f.replace('.pdf', '.meta.json'));
-                const match = f.match(/cashbook_(\d+|unknown)_(\d+)\.pdf/);
-                const year = match ? match[1] : 'unknown';
-                let meta = { originalName: f, subtitle: '', tagline: '', orgName: '', year };
-                if (fs.existsSync(metaPath)) {
-                    try {
-                        const fileMeta = JSON.parse(fs.readFileSync(metaPath, 'utf8'));
-                        meta = { ...meta, ...fileMeta };
-                    } catch(e){}
-                }
-                const newDbPdf = new UploadedPDF({
-                    filename: f,
-                    year: meta.year,
-                    originalName: meta.originalName || f,
-                    subtitle: meta.subtitle || '',
-                    tagline: meta.tagline || '',
-                    orgName: meta.orgName || '',
-                    uploadedAt: meta.uploadedAt ? new Date(meta.uploadedAt) : new Date()
-                });
-                await newDbPdf.save();
-            }
-        }
-
         const finalPdfs = await UploadedPDF.find({}).sort({ year: -1, uploadedAt: -1 });
         const pdfList = finalPdfs.map(p => {
             return {
@@ -1179,7 +1136,7 @@ app.get('/api/uploaded-pdfs', async (req, res) => {
                     day: '2-digit', month: 'short', year: 'numeric',
                     hour: '2-digit', minute: '2-digit'
                 }) : '',
-                path: `/uploads/${p.filename}`,
+                path: `/api/cashbook/view/${p.filename}`,
                 mergedPath: `/api/merged-pdf/${p.filename}/${p.year}`
             };
         });
@@ -1187,6 +1144,20 @@ app.get('/api/uploaded-pdfs', async (req, res) => {
         res.json({ success: true, data: pdfList.filter(p => !p.filename.startsWith('aarti_')) });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+
+app.get('/api/cashbook/view/:filename', async (req, res) => {
+    try {
+        const pdf = await UploadedPDF.findOne({ filename: req.params.filename });
+        if (!pdf || !pdf.pdfData) return res.status(404).send('PDF not found');
+        const buffer = Buffer.from(pdf.pdfData, 'base64');
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `inline; filename="${pdf.originalName || pdf.filename}"`);
+        res.send(buffer);
+    } catch (e) {
+        res.status(500).send('Error loading PDF');
     }
 });
 
@@ -1221,39 +1192,31 @@ app.delete('/api/uploaded-pdfs/:filename', async (req, res) => {
     }
 });
 
-app.put('/api/uploaded-pdfs/:filename/rename', (req, res) => {
+app.put('/api/uploaded-pdfs/:filename/rename', async (req, res) => {
     try {
         const { filename } = req.params;
         const { displayName } = req.body;
         if (!displayName || !displayName.trim()) {
             return res.status(400).json({ success: false, error: 'Display name is required' });
         }
-        const metaPath = path.join(UPLOAD_DIR, filename.replace('.pdf', '.meta.json'));
-        if (!fs.existsSync(metaPath)) {
-            return res.status(404).json({ success: false, error: 'Metadata not found' });
-        }
-        const meta = JSON.parse(fs.readFileSync(metaPath, 'utf8'));
-        meta.originalName = displayName.trim();
-        fs.writeFileSync(metaPath, JSON.stringify(meta, null, 2));
+        await UploadedPDF.findOneAndUpdate({ filename }, { originalName: displayName.trim() });
         res.json({ success: true, message: 'Renamed successfully' });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }
 });
 
-app.put('/api/uploaded-pdfs/:filename/cover', (req, res) => {
+app.put('/api/uploaded-pdfs/:filename/cover', async (req, res) => {
     try {
         const { filename } = req.params;
         const { subtitle, tagline, orgName } = req.body;
-        const metaPath = path.join(UPLOAD_DIR, filename.replace('.pdf', '.meta.json'));
-        if (!fs.existsSync(metaPath)) {
-            return res.status(404).json({ success: false, error: 'Metadata not found' });
-        }
-        const meta = JSON.parse(fs.readFileSync(metaPath, 'utf8'));
-        if (subtitle !== undefined) meta.subtitle = subtitle;
-        if (tagline !== undefined) meta.tagline = tagline;
-        if (orgName !== undefined) meta.orgName = orgName;
-        fs.writeFileSync(metaPath, JSON.stringify(meta, null, 2));
+        
+        const update = {};
+        if (subtitle !== undefined) update.subtitle = subtitle;
+        if (tagline !== undefined) update.tagline = tagline;
+        if (orgName !== undefined) update.orgName = orgName;
+        
+        await UploadedPDF.findOneAndUpdate({ filename }, update);
         res.json({ success: true, message: 'Cover settings updated' });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
@@ -1266,16 +1229,13 @@ if (!fs.existsSync(MERGE_CACHE_DIR)) {
 }
 
 async function generateMergedPdf(filename, year, subtitle, tagline, orgName) {
-    const pdfPath = path.join(UPLOAD_DIR, filename);
-    if (!fs.existsSync(pdfPath)) {
+    
+    const dbPdf = await UploadedPDF.findOne({ filename });
+    if (!dbPdf || !dbPdf.pdfData) {
         throw new Error('PDF not found: ' + filename);
     }
+    const existingPdfBytes = Buffer.from(dbPdf.pdfData, 'base64');
 
-    subtitle = subtitle || '\u0917\u0923\u0947\u0936 \u0909\u0924\u094D\u0938\u0935 \u0915\u0945\u0936\u092C\u0941\u0915';
-    tagline = tagline || 'Ganpati Festival Cashbook';
-    orgName = orgName || 'Shivsrushti Hindu Tarun Mitra Mandal 🚩';
-
-    const existingPdfBytes = fs.readFileSync(pdfPath);
     const existingPdf = await PDFDocument.load(existingPdfBytes, { ignoreEncryption: true });
 
     const mergedPdf = await PDFDocument.create();

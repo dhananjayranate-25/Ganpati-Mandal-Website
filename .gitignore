@@ -11,3 +11,7 @@ script_backup.js
 script_temp.js
 *.otf
 .env
+brain/
+scratch/
+logo/
+old_index.html
