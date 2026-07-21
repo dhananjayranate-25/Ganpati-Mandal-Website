@@ -3917,6 +3917,7 @@ footer::after {
 }
 .admin-tab-content {
     animation: fadeUp 0.2s ease-out;
+    padding-bottom: 120px;
 }
 
 @media (max-width: 900px) {
