@@ -161,23 +161,22 @@
     
     <script>
 
-        window.onload = () => {
+const API_URL = ''; // Leave empty if same domain
+
+        function showLoginForm(role) {
+            // Check if already authenticated for this specific role
+            if (role === 'websiteadmin' && sessionStorage.getItem('adminLoggedIn') === 'true') {
+                return window.location.replace('admin.html');
+            }
             const userStr = localStorage.getItem('portalUser');
             if (userStr) {
                 try {
                     const user = JSON.parse(userStr);
-                    if (user.role === 'superadmin') return window.location.replace('superadmin.html');
-                    if (user.role === 'member') return window.location.replace('member.html');
+                    if (role === 'superadmin' && user.role === 'superadmin') return window.location.replace('superadmin.html');
+                    if (role === 'member' && user.role === 'member') return window.location.replace('member.html');
                 } catch(e) {}
             }
-            if (sessionStorage.getItem('adminLoggedIn') === 'true') {
-                return window.location.replace('admin.html');
-            }
-        };
-        
-        const API_URL = ''; // Leave empty if same domain
 
-        function showLoginForm(role) {
             document.getElementById('roleSelection').style.display = 'none';
             document.getElementById('loginForm').style.display = 'block';
             document.getElementById('loginRole').value = role;
