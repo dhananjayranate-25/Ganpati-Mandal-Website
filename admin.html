@@ -2161,7 +2161,7 @@ async function loadAartiData() {
 async function loadAdminAlbums() {
     const container = document.getElementById('albumsListContainer');
     try {
-        const res = await fetch('/api/gallery');
+        const res = await fetch('/api/gallery/admin');
         const data = await res.json();
         if (data.success) {
             if (data.albums.length === 0) {

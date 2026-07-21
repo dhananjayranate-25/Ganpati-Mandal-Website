@@ -383,8 +383,25 @@ app.get('/api/system/storage', async (req, res) => {
 // GALLERY ENDPOINTS
 // ==========================================
 
-// Get all albums
+// Get all albums (Optimized for frontend - no full photos)
 app.get('/api/gallery', async (req, res) => {
+    try {
+        const albums = await GalleryAlbum.find().lean().sort({ order: 1 });
+        for (let album of albums) {
+            const dbPhotosCount = await GalleryPhoto.countDocuments({ albumId: album._id });
+            const firstPhoto = await GalleryPhoto.findOne({ albumId: album._id }).lean();
+            album.photosCount = dbPhotosCount;
+            album.coverPhoto = firstPhoto ? firstPhoto.photoData : '';
+            album.photos = []; // Empty to save bandwidth
+        }
+        res.json({ success: true, albums });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Get all albums with ALL photos (For Admin Dashboard)
+app.get('/api/gallery/admin', async (req, res) => {
     try {
         const albums = await GalleryAlbum.find().lean().sort({ order: 1 });
         for (let album of albums) {
@@ -392,6 +409,17 @@ app.get('/api/gallery', async (req, res) => {
             album.photos = dbPhotos.map(p => ({ _id: p._id, photoData: p.photoData }));
         }
         res.json({ success: true, albums });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Get photos for a specific album
+app.get('/api/gallery/album/:id/photos', async (req, res) => {
+    try {
+        const dbPhotos = await GalleryPhoto.find({ albumId: req.params.id }).lean();
+        const photos = dbPhotos.map(p => ({ _id: p._id, photoData: p.photoData }));
+        res.json({ success: true, photos });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }
