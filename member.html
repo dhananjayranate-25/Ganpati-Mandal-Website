@@ -633,7 +633,7 @@ table {
         let currentUser = null;
 
         
-    // Online Status Ping
+        // Online Status Ping
     const sendPing = async () => {
         const userStr = localStorage.getItem('portalUser');
         if (userStr) {
@@ -651,6 +651,35 @@ table {
     };
     sendPing();
     setInterval(sendPing, 60000);
+
+    const setOffline = () => {
+        const userStr = localStorage.getItem('portalUser');
+        if (userStr) {
+            try {
+                const userObj = JSON.parse(userStr);
+                const userId = userObj.id || userObj._id;
+                if (userId) {
+                    fetch('/api/portal/offline', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ userId }),
+                        keepalive: true
+                    }).catch(e => {});
+                }
+            } catch(e) {}
+        }
+    };
+
+    window.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden') {
+            setOffline();
+        } else if (document.visibilityState === 'visible') {
+            sendPing();
+        }
+    });
+    
+    window.addEventListener('pagehide', setOffline);
+    window.addEventListener('beforeunload', setOffline);
 
     window.onload = () => {
             const userStr = localStorage.getItem('portalUser');
