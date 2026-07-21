@@ -250,7 +250,7 @@
                     
                     <!-- Albums Grid (Default View) -->
                     <div id="albumsGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 350px)); gap: 25px; justify-content: center;">
-                        <p style="text-align: center; color: white; width: 100%; grid-column: 1 / -1;">अल्बम लोड होत आहेत...</p>
+                        <div style="height: 50px;"></div>
                     </div>
 
                     <!-- Single Album Photos View (Hidden by Default) -->
@@ -374,7 +374,7 @@
     async function loadGalleryAlbums() {
         const grid = document.getElementById('albumsGrid');
         if(!grid) return;
-        grid.innerHTML = '<p style="text-align: center; color: white; width: 100%; grid-column: 1 / -1;">अल्बम लोड होत आहेत...</p>';
+        grid.innerHTML = '<div style="height: 50px;"></div>';
         try {
             const res = await fetch('/api/gallery');
             if (!res.ok) throw new Error('Server returned ' + res.status);
@@ -418,7 +418,7 @@
         document.getElementById('currentAlbumTitle').innerText = album.title;
 
         const photosGrid = document.getElementById('photosGrid');
-        photosGrid.innerHTML = '<p style="text-align: center; color: white; width: 100%; grid-column: 1 / -1;">फोटो लोड होत आहेत...</p>';
+        photosGrid.innerHTML = '<div style="height: 50px;"></div>';
         
         try {
             const res = await fetch(`/api/gallery/album/${albumId}/photos`);
