@@ -793,10 +793,17 @@ table {
         async function loadMembers() {
             try {
                 const list = document.getElementById('memberList');
-                list.innerHTML = '<div style="padding:20px;text-align:center;color:#888;"><i class="fas fa-spinner fa-spin" style="margin-bottom:10px; font-size: 24px;"></i><br>Loading members...<br><small style="font-size:10px;">(Please wait, server may be waking up)</small></div>';
+                const cached = sessionStorage.getItem('superadmin_members_cache');
+                if (cached) {
+                    const data = JSON.parse(cached);
+                    // Just a fast pass rendering logic logic
+                } else {
+                    list.innerHTML = '<div style="padding:20px;text-align:center;color:#888;"><i class="fas fa-spinner fa-spin" style="margin-bottom:10px; font-size: 24px;"></i><br>Loading members...<br><small style="font-size:10px;">(Please wait, server may be waking up)</small></div>';
+                }
                 const res = await fetch(API_URL + '/api/portal/users', { cache: 'no-store' });
                 const data = await res.json();
                 if(data.success) {
+                    sessionStorage.setItem('superadmin_members_cache', JSON.stringify(data));
                     const list = document.getElementById('memberList');
                     if(data.users.length > 0) {
                         list.innerHTML = data.users.map(u => `
@@ -865,80 +872,98 @@ table {
             document.getElementById('dashboardTitle').innerText = name + "'s Dashboard";
             document.getElementById('dashboardActions').style.display = 'flex';
             
-            // Reload sidebar to show active state
-            loadMembers();
+            // Update active state instantly without network request
+            document.querySelectorAll('.member-item').forEach(el => el.classList.remove('active'));
+            const activeItems = document.querySelectorAll(`.member-item[onclick*="${id}"]`);
+            activeItems.forEach(el => el.classList.add('active'));
+
             // Load dashboard data
             refreshMemberData();
+        }
+
+        const memberDataCache = {};
+        
+        function renderMemberDashboard(userData, tasksData, expensesData) {
+            if(userData.success) {
+                selectedMemberData = userData.user;
+                document.getElementById('statTotalFunds').innerText = '₹' + userData.user.totalFunds;
+                document.getElementById('statTotalSpent').innerText = '₹' + userData.user.totalSpent;
+                document.getElementById('statBalance').innerText = '₹' + userData.user.balance;
+                
+                document.getElementById('dashboardCreds').style.display = 'block';
+                document.getElementById('credUser').innerText = userData.user.username;
+                document.getElementById('credPass').innerText = userData.user.password;
+            }
+
+            if(tasksData.success) {
+                document.getElementById('tasksList').innerHTML = tasksData.tasks.length ? tasksData.tasks.map(t => `
+                    <div class="item-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
+                        ${t.photoData ? `<div style="text-align: center;"><img src="${t.photoData}" style="max-height: 100px; border-radius: 5px; object-fit: contain;"></div>` : ''}
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="flex: 1;">
+                                <div style="font-weight:500;">${t.title}</div>
+                                <div style="font-size:0.75rem; color:#888;">${new Date(t.date).toLocaleDateString()}</div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span class="badge ${t.status === 'Pending' ? 'pending' : (t.status==='Done' ? 'done' : 'process')}">${t.status}</span>
+                                ${t.photoData ? `<button class="btn btn-outline" style="padding: 2px 5px; font-size: 0.7rem; color: #ff9800; border-color: #ff9800;" onclick="deleteTaskPhoto('${t._id}')" title="Remove Photo"><i class="fas fa-times-circle"></i></button>` : ''}
+                                <button class="btn btn-outline" style="padding: 2px 5px; font-size: 0.7rem;" onclick="editTask('${t._id}', '${t.title.replace(/'/g, "\'")}')" title="Edit"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-outline" style="padding: 2px 5px; font-size: 0.7rem; color: #ff4444; border-color: #ff4444;" onclick="deleteTask('${t._id}')" title="Delete"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('') : '<p class="empty-state">No tasks assigned.</p>';
+            }
+
+            if(expensesData.success) {
+                document.getElementById('expensesList').innerHTML = expensesData.expenses.length ? expensesData.expenses.map(e => `
+                    <div class="item-row">
+                        <div>
+                            <div style="font-weight:500;">${e.item}</div>
+                            <div style="font-size:0.75rem; color:#888;">${new Date(e.date).toLocaleDateString()}</div>
+                        </div>
+                        <span style="color:var(--danger); font-weight:bold;">₹${e.price}</span>
+                    </div>
+                `).join('') : '<p class="empty-state">No expenses logged.</p>';
+            }
         }
 
         async function refreshMemberData() {
             if(!selectedMemberId) return;
             
-            // Set loading state
-            document.getElementById('tasksList').innerHTML = '<p class="empty-state">Loading tasks...</p>';
-            document.getElementById('expensesList').innerHTML = '<p class="empty-state">Loading expenses...</p>';
+            const currentId = selectedMemberId;
+            const cached = memberDataCache[currentId];
+            
+            if (cached) {
+                renderMemberDashboard(cached.userData, cached.tasksData, cached.expensesData);
+            } else {
+                document.getElementById('tasksList').innerHTML = '<p class="empty-state">Loading tasks...</p>';
+                document.getElementById('expensesList').innerHTML = '<p class="empty-state">Loading expenses...</p>';
+            }
             
             try {
-                // Fetch user data, tasks, and expenses concurrently for faster load
                 const [userRes, tasksRes, expensesRes] = await Promise.all([
-                    fetch(API_URL + '/api/portal/users/' + selectedMemberId, { cache: 'no-store' }),
-                    fetch(API_URL + '/api/portal/tasks/' + selectedMemberId),
-                    fetch(API_URL + '/api/portal/expenses/' + selectedMemberId)
+                    fetch(API_URL + '/api/portal/users/' + currentId, { cache: 'no-store' }),
+                    fetch(API_URL + '/api/portal/tasks/' + currentId),
+                    fetch(API_URL + '/api/portal/expenses/' + currentId)
                 ]);
 
                 const userData = await userRes.json();
                 const tasksData = await tasksRes.json();
                 const expensesData = await expensesRes.json();
 
-                // Process User Data
-                if(userData.success) {
-                    selectedMemberData = userData.user;
-                    document.getElementById('statTotalFunds').innerText = '₹' + userData.user.totalFunds;
-                    document.getElementById('statTotalSpent').innerText = '₹' + userData.user.totalSpent;
-                    document.getElementById('statBalance').innerText = '₹' + userData.user.balance;
-                    
-                    document.getElementById('dashboardCreds').style.display = 'block';
-                    document.getElementById('credUser').innerText = userData.user.username;
-                    document.getElementById('credPass').innerText = userData.user.password;
-                }
-
-                // Process Tasks Data
-                if(tasksData.success) {
-                    document.getElementById('tasksList').innerHTML = tasksData.tasks.length ? tasksData.tasks.map(t => `
-                        <div class="item-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
-                            ${t.photoData ? `<div style="text-align: center;"><img src="${t.photoData}" style="max-height: 100px; border-radius: 5px; object-fit: contain;"></div>` : ''}
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <div style="flex: 1;">
-                                    <div style="font-weight:500;">${t.title}</div>
-                                    <div style="font-size:0.75rem; color:#888;">${new Date(t.date).toLocaleDateString()}</div>
-                                </div>
-                                <div style="display: flex; align-items: center; gap: 10px;">
-                                    <span class="badge ${t.status === 'Pending' ? 'pending' : (t.status==='Done' ? 'done' : 'process')}">${t.status}</span>
-                                    ${t.photoData ? `<button class="btn btn-outline" style="padding: 2px 5px; font-size: 0.7rem; color: #ff9800; border-color: #ff9800;" onclick="deleteTaskPhoto('${t._id}')" title="Remove Photo"><i class="fas fa-times-circle"></i></button>` : ''}
-                                    <button class="btn btn-outline" style="padding: 2px 5px; font-size: 0.7rem;" onclick="editTask('${t._id}', '${t.title.replace(/'/g, "\'")}')" title="Edit"><i class="fas fa-edit"></i></button>
-                                    <button class="btn btn-outline" style="padding: 2px 5px; font-size: 0.7rem; color: #ff4444; border-color: #ff4444;" onclick="deleteTask('${t._id}')" title="Delete"><i class="fas fa-trash"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                    `).join('') : '<p class="empty-state">No tasks assigned.</p>';
-                }
-
-                // Process Expenses Data
-                if(expensesData.success) {
-                    document.getElementById('expensesList').innerHTML = expensesData.expenses.length ? expensesData.expenses.map(e => `
-                        <div class="item-row">
-                            <div>
-                                <div style="font-weight:500;">${e.item}</div>
-                                <div style="font-size:0.75rem; color:#888;">${new Date(e.date).toLocaleDateString()}</div>
-                            </div>
-                            <span style="color:var(--danger); font-weight:bold;">₹${e.price}</span>
-                        </div>
-                    `).join('') : '<p class="empty-state">No expenses logged.</p>';
+                memberDataCache[currentId] = { userData, tasksData, expensesData };
+                
+                // Only render if they haven't rapidly switched to another member
+                if (selectedMemberId === currentId) {
+                    renderMemberDashboard(userData, tasksData, expensesData);
                 }
             } catch(e) {
                 console.error('Error fetching member data concurrently:', e);
-                document.getElementById('tasksList').innerHTML = '<p class="empty-state" style="color:var(--danger)">Error loading data.</p>';
-                document.getElementById('expensesList').innerHTML = '<p class="empty-state" style="color:var(--danger)">Error loading data.</p>';
+                if (selectedMemberId === currentId && !cached) {
+                    document.getElementById('tasksList').innerHTML = '<p class="empty-state" style="color:var(--danger)">Error loading data.</p>';
+                    document.getElementById('expensesList').innerHTML = '<p class="empty-state" style="color:var(--danger)">Error loading data.</p>';
+                }
             }
         }
 
