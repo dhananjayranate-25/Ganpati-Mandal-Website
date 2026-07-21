@@ -1863,7 +1863,7 @@ table {
             try { await iframe.contentDocument.fonts.ready; } catch(e) {}
             await new Promise(r => setTimeout(r, 500));
             const canvas = await html2canvas(iframe.contentDocument.body, {
-                scale: 2, useCORS: true, backgroundColor: '#ffffff', allowTaint: true
+                scale: 1.5, useCORS: true, backgroundColor: '#ffffff', allowTaint: true
             });
             document.body.removeChild(iframe);
             const { jsPDF } = window.jspdf;
@@ -2193,7 +2193,7 @@ table {
         clone.insertAdjacentHTML('beforeend', footerHtml);
 
         const canvas = await html2canvas(clone, {
-            scale: 2,
+            scale: 1.5,
             useCORS: true,
             backgroundColor: '#1a1a1a',
             windowWidth: 1200
@@ -2387,7 +2387,7 @@ table {
         clone.insertAdjacentHTML('beforeend', footerHtml);
 
         const canvas = await html2canvas(clone, {
-            scale: 2,
+            scale: 1.5,
             useCORS: true,
             backgroundColor: '#1a1a1a',
             windowWidth: 1200
@@ -2407,7 +2407,7 @@ table {
             const canvas = await captureDonationPoster();
             const link = document.createElement('a');
             link.download = 'Donation_Poster.jpg';
-            link.href = canvas.toDataURL('image/jpeg', 0.9);
+            link.href = canvas.toDataURL('image/jpeg', 0.8);
             link.click();
             if (btn) { btn.innerHTML = originalText; btn.disabled = false; }
         } catch(err) {
@@ -2444,7 +2444,7 @@ table {
                         // Download fallback
                         const link = document.createElement('a');
                         link.download = 'Donation_Poster.jpg';
-                        link.href = canvas.toDataURL('image/jpeg', 0.9);
+                        link.href = canvas.toDataURL('image/jpeg', 0.8);
                         link.click();
                         alert('तुमच्या डिव्हाइसवर डायरेक्ट इमेज शेअरिंग सपोर्टेड नाही. इमेज डाउनलोड झाली आहे, ती तुम्ही स्वतः शेअर करू शकता.');
                     }
@@ -2453,14 +2453,14 @@ table {
                     if (shareErr.name !== 'AbortError') {
                         const link = document.createElement('a');
                         link.download = 'Donation_Poster.jpg';
-                        link.href = canvas.toDataURL('image/jpeg', 0.9);
+                        link.href = canvas.toDataURL('image/jpeg', 0.8);
                         link.click();
                         alert('तुमच्या डिव्हाइसवर डायरेक्ट शेअरिंगमध्ये तांत्रिक अडचण आली. इमेज डाउनलोड झाली आहे, ती तुम्ही मॅन्युअली शेअर करू शकता.');
                     }
                 } finally {
                     if (btn) { btn.innerHTML = originalText; btn.disabled = false; }
                 }
-            }, 'image/jpeg', 0.9);
+            }, 'image/jpeg', 0.8);
         } catch (err) {
             console.error('Error sharing image:', err);
             if (err.name === 'SecurityError' || (err.message && err.message.includes('Tainted'))) {
@@ -2527,7 +2527,7 @@ https://shivsrushti-utsav-mandal.onrender.com
                         // Download fallback
                         const link = document.createElement('a');
                         link.download = filename;
-                        link.href = canvas.toDataURL('image/jpeg', 0.9);
+                        link.href = canvas.toDataURL('image/jpeg', 0.8);
                         link.click();
                         alert('तुमच्या डिव्हाइसवर डायरेक्ट इमेज शेअरिंग सपोर्टेड नाही. इमेज डाउनलोड झाली आहे, ती तुम्ही स्वतः शेअर करू शकता.');
                     }
@@ -2537,14 +2537,14 @@ https://shivsrushti-utsav-mandal.onrender.com
                         const filename = type === 'vargani' ? 'Vargani_Aabhar.jpg' : 'Mahaprasad_Nimantran.jpg';
                         const link = document.createElement('a');
                         link.download = filename;
-                        link.href = canvas.toDataURL('image/jpeg', 0.9);
+                        link.href = canvas.toDataURL('image/jpeg', 0.8);
                         link.click();
                         alert('तुमच्या डिव्हाइसवर डायरेक्ट शेअरिंगमध्ये तांत्रिक अडचण आली. इमेज डाउनलोड झाली आहे, ती तुम्ही मॅन्युअली शेअर करू शकता.');
                     }
                 } finally {
                     if (btn) { btn.innerHTML = originalText; btn.disabled = false; }
                 }
-            }, 'image/jpeg', 0.9);
+            }, 'image/jpeg', 0.8);
         } catch (err) {
             console.error('Error sharing image:', err);
             if (err.name === 'SecurityError' || (err.message && err.message.includes('Tainted'))) {
