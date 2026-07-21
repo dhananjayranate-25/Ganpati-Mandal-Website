@@ -28,6 +28,12 @@
     <!-- Preload critical top images for faster loading -->
     <link rel="preload" as="image" href="logo/logo1.jpeg">
     <link rel="preload" as="image" href="uploads/hero_banner.jpg">
+
+    <style>
+        * {
+            touch-action: manipulation; /* Removes 300ms tap delay on mobile */
+        }
+    </style>
 </head>
 <body>
     <div id="mainContent">
@@ -1003,7 +1009,13 @@
 \\n
  + \
 \\n
-</style></head><body><div class="cover-page"><div class="cover-outer-border"></div><div class="cover-inner-border"></div><div class="cover-corner tl"></div><div class="cover-corner tr"></div><div class="cover-corner bl"></div><div class="cover-corner br"></div><div class="cover-content"><div class="cover-logo-wrap"><div class="cover-logo-glow"></div><div class="cover-logo-ring"></div><div class="cover-logo-ring2"></div><img src="' + logoSrc + '" alt="Logo" class="cover-logo" onerror="this.style.display=\'none\'"></div><div class="cover-mandal-name">' + s.orgName + '</div><div class="cover-divider"></div><div class="cover-subtitle">' + s.subtitle + '</div><div class="cover-tagline">' + s.tagline + '</div><div class="cover-year-box"><span class="cover-year-label">\u0935\u0930\u094D\u0937 / Year</span><span class="cover-year-val">' + year + '</span></div></div><div class="cover-footer"><div class="cover-footer-om">ॐ गण गणपतये नमः</div><p>Developed by | Dhananjay Ranate</p></div></div><div class="inner-page"><div class="page-header-bar"><div class="header-info"><h1>' + (s.headerOrgName || s.orgName) + '</h1><p>' + (s.headerSubtitle || s.subtitle) + ' \u2014 \u0935\u0930\u094D\u0937: ' + year + '</p></div></div><div class="page-body"><div class="summary-section"><div class="summary-title">Financial Summary</div><div class="summary-row"><div class="sum-card green"><h4>Total Cash In (+)</h4><div class="val">' + formatPDFCurrency(totalCashIn) + '</div></div><div class="sum-card red"><h4>Total Cash Out (-)</h4><div class="val">' + formatPDFCurrency(totalCashOut) + '</div></div><div class="sum-card purple"><h4>Final Balance</h4><div class="val">' + formatPDFCurrency(finalBalance) + '</div></div></div></div><div class="table-section"><div class="table-heading">Transaction Records</div><table class="data-table"><thead><tr><th class="sr-no">#</th><th class="remark">Name</th><th class="date">Date</th><th class="mode">Mode</th><th class="right-align">Cash In (+)</th><th class="right-align">Cash Out (-)</th><th class="right-align">Balance</th></tr></thead><tbody>' + rows + '</tbody></table><div style=\"height:1.5px;background:linear-gradient(90deg,#ff8c00,#ffd700,#ff8c00);margin:12px 0 8px 0;border-radius:2px;\"></div><div style=\"display:flex; justify-content:space-between; margin-top:30px; padding:0 30px;\"><div style=\"text-align:center;\"><div style=\"font-weight:800; font-size:15px; color:#5a2010; margin-bottom:5px;\">अध्यक्ष</div><div style=\"font-weight:700; font-size:16px; color:#1a1a2e;\">तेजस फटांगरे</div><div style=\"font-size:13px; color:#555555; margin-top:3px;\">मो. नं - 9370599259</div></div><div style=\"text-align:center;\"><div style=\"font-weight:800; font-size:15px; color:#5a2010; margin-bottom:5px;\">खजिनदार</div><div style=\"font-weight:700; font-size:16px; color:#1a1a2e;\">धनंजय रणाते</div><div style=\"font-size:13px; color:#555555; margin-top:3px;\">मो. नं - 9322134560</div></div></div></div><div class="page-footer" style=\"margin-top:40px; padding-bottom:20px;\"><div style=\"margin-bottom:8px; font-weight:600; font-size:13px; color:#1a1a2e; text-align:center;\">अधिकृत वेबसाईट : <a href=\"https://shivsrushti-utsav-mandal.onrender.com\" target=\"_blank\" style=\"color:#0000ee; text-decoration:none;\">https://shivsrushti-utsav-mandal.onrender.com</a></div><div class="dev" style=\"font-size:13px; color:#475569; font-weight:600; text-align:center;\">Developed by | Dhananjay Ranate</div></div></div></div></body></html>';
+</style>
+    <style>
+        * {
+            touch-action: manipulation; /* Removes 300ms tap delay on mobile */
+        }
+    </style>
+</head><body><div class="cover-page"><div class="cover-outer-border"></div><div class="cover-inner-border"></div><div class="cover-corner tl"></div><div class="cover-corner tr"></div><div class="cover-corner bl"></div><div class="cover-corner br"></div><div class="cover-content"><div class="cover-logo-wrap"><div class="cover-logo-glow"></div><div class="cover-logo-ring"></div><div class="cover-logo-ring2"></div><img src="' + logoSrc + '" alt="Logo" class="cover-logo" onerror="this.style.display=\'none\'"></div><div class="cover-mandal-name">' + s.orgName + '</div><div class="cover-divider"></div><div class="cover-subtitle">' + s.subtitle + '</div><div class="cover-tagline">' + s.tagline + '</div><div class="cover-year-box"><span class="cover-year-label">\u0935\u0930\u094D\u0937 / Year</span><span class="cover-year-val">' + year + '</span></div></div><div class="cover-footer"><div class="cover-footer-om">ॐ गण गणपतये नमः</div><p>Developed by | Dhananjay Ranate</p></div></div><div class="inner-page"><div class="page-header-bar"><div class="header-info"><h1>' + (s.headerOrgName || s.orgName) + '</h1><p>' + (s.headerSubtitle || s.subtitle) + ' \u2014 \u0935\u0930\u094D\u0937: ' + year + '</p></div></div><div class="page-body"><div class="summary-section"><div class="summary-title">Financial Summary</div><div class="summary-row"><div class="sum-card green"><h4>Total Cash In (+)</h4><div class="val">' + formatPDFCurrency(totalCashIn) + '</div></div><div class="sum-card red"><h4>Total Cash Out (-)</h4><div class="val">' + formatPDFCurrency(totalCashOut) + '</div></div><div class="sum-card purple"><h4>Final Balance</h4><div class="val">' + formatPDFCurrency(finalBalance) + '</div></div></div></div><div class="table-section"><div class="table-heading">Transaction Records</div><table class="data-table"><thead><tr><th class="sr-no">#</th><th class="remark">Name</th><th class="date">Date</th><th class="mode">Mode</th><th class="right-align">Cash In (+)</th><th class="right-align">Cash Out (-)</th><th class="right-align">Balance</th></tr></thead><tbody>' + rows + '</tbody></table><div style=\"height:1.5px;background:linear-gradient(90deg,#ff8c00,#ffd700,#ff8c00);margin:12px 0 8px 0;border-radius:2px;\"></div><div style=\"display:flex; justify-content:space-between; margin-top:30px; padding:0 30px;\"><div style=\"text-align:center;\"><div style=\"font-weight:800; font-size:15px; color:#5a2010; margin-bottom:5px;\">अध्यक्ष</div><div style=\"font-weight:700; font-size:16px; color:#1a1a2e;\">तेजस फटांगरे</div><div style=\"font-size:13px; color:#555555; margin-top:3px;\">मो. नं - 9370599259</div></div><div style=\"text-align:center;\"><div style=\"font-weight:800; font-size:15px; color:#5a2010; margin-bottom:5px;\">खजिनदार</div><div style=\"font-weight:700; font-size:16px; color:#1a1a2e;\">धनंजय रणाते</div><div style=\"font-size:13px; color:#555555; margin-top:3px;\">मो. नं - 9322134560</div></div></div></div><div class="page-footer" style=\"margin-top:40px; padding-bottom:20px;\"><div style=\"margin-bottom:8px; font-weight:600; font-size:13px; color:#1a1a2e; text-align:center;\">अधिकृत वेबसाईट : <a href=\"https://shivsrushti-utsav-mandal.onrender.com\" target=\"_blank\" style=\"color:#0000ee; text-decoration:none;\">https://shivsrushti-utsav-mandal.onrender.com</a></div><div class="dev" style=\"font-size:13px; color:#475569; font-weight:600; text-align:center;\">Developed by | Dhananjay Ranate</div></div></div></div></body></html>';
     }
 
     function renderPDFCards(from, to) {
@@ -1188,7 +1200,13 @@ table {
     }
 }
 
-</style></head><body>
+</style>
+    <style>
+        * {
+            touch-action: manipulation; /* Removes 300ms tap delay on mobile */
+        }
+    </style>
+</head><body>
 <div class="cover-page">
   <div class="cover-outer-border"></div>
   <div class="cover-inner-border"></div>

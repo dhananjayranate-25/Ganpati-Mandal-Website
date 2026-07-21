@@ -28,6 +28,12 @@
     <!-- Preload critical top images for faster loading -->
     <link rel="preload" as="image" href="logo/logo1.jpeg">
     <link rel="preload" as="image" href="uploads/hero_banner.jpg">
+
+    <style>
+        * {
+            touch-action: manipulation; /* Removes 300ms tap delay on mobile */
+        }
+    </style>
 </head>
 <body style="display: flex; flex-direction: column; min-height: 100vh; margin: 0;">
     <div id="mainContent" style="flex: 1; display: flex; flex-direction: column;">
