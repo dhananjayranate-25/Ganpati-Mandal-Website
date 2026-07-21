@@ -702,6 +702,34 @@ table {
     sendPing();
     setInterval(sendPing, 60000);
 
+    
+    // Auto-refresh statuses every 10 seconds
+    setInterval(async () => {
+        try {
+            const res = await fetch(API_URL + '/api/portal/users', { cache: 'no-store' });
+            const data = await res.json();
+            if(data.success) {
+                data.users.forEach(u => {
+                    const el = document.getElementById('status-' + u._id);
+                    if (el) {
+                        if (!u.lastSeen) {
+                            el.innerHTML = '';
+                            return;
+                        }
+                        const d = new Date(u.lastSeen);
+                        const diffMins = Math.floor((new Date() - d) / 60000);
+                        if (diffMins < 5) {
+                            el.innerHTML = '<span style="color:#4CAF50; font-size:0.75rem;"><i class="fas fa-circle" style="font-size:0.6rem;"></i> Online</span>';
+                        } else {
+                            const timeStr = d.toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit', hour12: true });
+                            el.innerHTML = `<span style="color:#9e9e9e; font-size:0.75rem;" title="${timeStr}">Last seen: ${timeStr}</span>`;
+                        }
+                    }
+                });
+            }
+        } catch(e) {}
+    }, 10000);
+
     const setOffline = () => {
         const userStr = localStorage.getItem('portalUser');
         if (userStr) {
@@ -709,12 +737,8 @@ table {
                 const userObj = JSON.parse(userStr);
                 const userId = userObj.id || userObj._id;
                 if (userId) {
-                    fetch('/api/portal/offline', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ userId }),
-                        keepalive: true
-                    }).catch(e => {});
+                    const blob = new Blob([JSON.stringify({ userId })], { type: 'application/json' });
+                    navigator.sendBeacon('/api/portal/offline', blob);
                 }
             } catch(e) {}
         }
@@ -776,8 +800,9 @@ table {
                             <div class="member-item ${u._id === selectedMemberId ? 'active' : ''}" onclick="selectMember('${u._id}', '${u.name}')">
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <h4>${u.name}</h4>
+                                    <span id="status-${u._id}">
                                     ${(() => {
-                                        if (!u.lastSeen) return '<span style="color:#9e9e9e; font-size:0.75rem;">Offline</span>';
+                                        if (!u.lastSeen) return '';
                                         const d = new Date(u.lastSeen);
                                         const diffMins = Math.floor((new Date() - d) / 60000);
                                         if (diffMins < 5) return '<span style="color:#4CAF50; font-size:0.75rem;"><i class="fas fa-circle" style="font-size:0.6rem;"></i> Online</span>';
@@ -785,6 +810,7 @@ table {
                                         const timeStr = d.toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit', hour12: true });
                                         return `<span style="color:#9e9e9e; font-size:0.75rem;" title="${timeStr}">Last seen: ${timeStr}</span>`;
                                     })()}
+                                    </span>
                                 </div>
                                 <span style="font-size:0.8rem; color:#888;">₹${u.balance} left</span>
                             </div>
