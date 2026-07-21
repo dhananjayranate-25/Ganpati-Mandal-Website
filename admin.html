@@ -1274,7 +1274,7 @@ table {
                 const imgH = (canvas.height * pgW) / canvas.width;
                 coverDoc.addImage(canvas, 'PNG', 0, 0, pgW, imgH);
                 const coverBytes = coverDoc.output('arraybuffer');
-                const resp = await fetch((typeof API_URL !== 'undefined' ? API_URL : '') + '/uploads/' + filename);
+                const resp = await fetch((typeof API_URL !== 'undefined' ? API_URL : '') + '/api/cashbook/view/' + filename);
                 const uploadBytes = await resp.arrayBuffer();
                 const { PDFDocument } = PDFLib;
                 const mergedPdf = await PDFDocument.create();

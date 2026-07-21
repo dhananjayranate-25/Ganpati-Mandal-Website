@@ -1873,7 +1873,7 @@ table {
             coverDoc.addImage(canvas.toDataURL('image/jpeg', 0.6), 'JPEG', 0, 0, pgW, imgH);
             const coverBytes = coverDoc.output('arraybuffer');
             
-            const resp = await fetch((typeof API_URL !== 'undefined' ? API_URL : '') + '/uploads/' + filename);
+            const resp = await fetch((typeof API_URL !== 'undefined' ? API_URL : '') + '/api/cashbook/view/' + filename);
             const uploadBytes = await resp.arrayBuffer();
             
             const { PDFDocument } = window.PDFLib;
