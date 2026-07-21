@@ -803,7 +803,11 @@ table {
                 const res = await fetch(API_URL + '/api/portal/users', { cache: 'no-store' });
                 const data = await res.json();
                 if(data.success) {
-                    sessionStorage.setItem('superadmin_members_cache', JSON.stringify(data));
+                    try {
+                        sessionStorage.setItem('superadmin_members_cache', JSON.stringify(data));
+                    } catch (e) {
+                        console.warn("Could not save members cache to sessionStorage:", e);
+                    }
                     const list = document.getElementById('memberList');
                     if(data.users.length > 0) {
                         list.innerHTML = data.users.map(u => `

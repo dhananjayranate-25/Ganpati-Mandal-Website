@@ -781,7 +781,7 @@ app.post('/api/portal/login', async (req, res) => {
 
 app.get('/api/portal/users', async (req, res) => {
     try {
-        const users = await PortalUser.find({ role: 'member' });
+        const users = await PortalUser.find({ role: 'member' }).select('-photoUrl');
         res.json({ success: true, users });
     } catch(err) {
         res.status(500).json({ success: false, message: err.message });
