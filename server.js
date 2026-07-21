@@ -734,6 +734,23 @@ app.delete('/api/niyojan/:id', async (req, res) => {
 // PORTAL: API ROUTES
 // ==========================================
 
+
+app.post('/api/portal/offline', express.json(), async (req, res) => {
+    try {
+        const { userId } = req.body;
+        if (userId) {
+            // Set lastSeen to 6 minutes ago so they appear offline immediately
+            const offlineTime = new Date(Date.now() - 6 * 60000);
+            await PortalUser.findByIdAndUpdate(userId, { lastSeen: offlineTime });
+            res.json({ success: true });
+        } else {
+            res.json({ success: false });
+        }
+    } catch(err) {
+        res.json({ success: false });
+    }
+});
+
 app.post('/api/portal/ping', express.json(), async (req, res) => {
     try {
         const { userId } = req.body;
