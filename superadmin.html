@@ -682,7 +682,28 @@ table {
         let selectedMemberId = null;
         let selectedMemberData = null;
 
-        // Auth Check
+        
+    // Online Status Ping
+    const sendPing = async () => {
+        const userStr = localStorage.getItem('portalUser');
+        if (userStr) {
+            try {
+                const userObj = JSON.parse(userStr);
+                if (userObj && (userObj.id || userObj._id)) {
+                    await fetch('/api/portal/ping', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ userId: userObj.id || userObj._id })
+                    });
+                }
+            } catch (e) {}
+        }
+    };
+    sendPing();
+    setInterval(sendPing, 60000);
+
+    // Auth Check
+
         window.onload = () => {
             const userStr = localStorage.getItem('portalUser');
             if(!userStr) return window.location.href = 'login.html';
@@ -719,11 +740,12 @@ table {
                                     <h4>${u.name}</h4>
                                     ${(() => {
                                         if (!u.lastSeen) return '<span style="color:#9e9e9e; font-size:0.75rem;">Offline</span>';
-                                        const diffMins = Math.floor((new Date() - new Date(u.lastSeen)) / 60000);
+                                        const d = new Date(u.lastSeen);
+                                        const diffMins = Math.floor((new Date() - d) / 60000);
                                         if (diffMins < 5) return '<span style="color:#4CAF50; font-size:0.75rem;"><i class="fas fa-circle" style="font-size:0.6rem;"></i> Online</span>';
-                                        if (diffMins < 60) return `<span style="color:#9e9e9e; font-size:0.75rem;">${diffMins}m ago</span>`;
-                                        if (diffMins < 1440) return `<span style="color:#9e9e9e; font-size:0.75rem;">${Math.floor(diffMins/60)}h ago</span>`;
-                                        return `<span style="color:#9e9e9e; font-size:0.75rem;">${Math.floor(diffMins/1440)}d ago</span>`;
+                                        
+                                        const timeStr = d.toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit', hour12: true });
+                                        return `<span style="color:#9e9e9e; font-size:0.75rem;" title="${timeStr}">Last seen: ${timeStr}</span>`;
                                     })()}
                                 </div>
                                 <span style="font-size:0.8rem; color:#888;">₹${u.balance} left</span>

@@ -632,7 +632,27 @@ table {
         const API_URL = '';
         let currentUser = null;
 
-        window.onload = () => {
+        
+    // Online Status Ping
+    const sendPing = async () => {
+        const userStr = localStorage.getItem('portalUser');
+        if (userStr) {
+            try {
+                const userObj = JSON.parse(userStr);
+                if (userObj && (userObj.id || userObj._id)) {
+                    await fetch('/api/portal/ping', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ userId: userObj.id || userObj._id })
+                    });
+                }
+            } catch (e) {}
+        }
+    };
+    sendPing();
+    setInterval(sendPing, 60000);
+
+    window.onload = () => {
             const userStr = localStorage.getItem('portalUser');
             if(!userStr) return window.location.href = 'login.html';
             currentUser = JSON.parse(userStr);
