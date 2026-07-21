@@ -1344,8 +1344,90 @@ window.downloadPDFForYear = async function(year) {
         return;
     }
 
-    // Use the native print dialog for a high-quality vector PDF (same as viewPDFForYear)
-    await viewPDFForYear(year);
+    showNotification('Generating PDF, please wait...', 'info');
+
+    try {
+        if (typeof loadPDFLibraries === 'function') {
+            await loadPDFLibraries();
+        }
+        
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('p', 'pt', 'a4');
+
+        // Load logo
+        let logoDataURL = '';
+        try {
+            if (typeof loadLogo === 'function') {
+                logoDataURL = await loadLogo();
+            }
+        } catch(e) {}
+
+        if (logoDataURL) {
+            doc.addImage(logoDataURL, 'PNG', 40, 30, 50, 50);
+        }
+        
+        doc.setFontSize(18);
+        doc.setTextColor(40);
+        doc.text("Shivsrushti Boyz Ganpati Mandal", 100, 45);
+        doc.setFontSize(12);
+        doc.text(`Cashbook Report - Year: ${yearLabel}`, 100, 65);
+        doc.text(`Generated on: ${new Date().toLocaleDateString('en-GB')}`, 100, 80);
+
+        // Helper for currency to avoid Unicode issues in basic jsPDF fonts
+        const formatPdfAmt = (amt) => {
+            if (!amt) return '-';
+            return 'Rs. ' + amt.toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+        };
+
+        let totalCashIn = 0;
+        let totalCashOut = 0;
+        let runningBalance = 0;
+
+        const tableBody = entries.map((entry, index) => {
+            runningBalance += entry.cash_in - entry.cash_out;
+            totalCashIn += entry.cash_in;
+            totalCashOut += entry.cash_out;
+            
+            return [
+                index + 1,
+                entry.name,
+                formatDate(entry.date),
+                entry.mode,
+                entry.cash_in > 0 ? formatPdfAmt(entry.cash_in) : '-',
+                entry.cash_out > 0 ? formatPdfAmt(entry.cash_out) : '-',
+                formatPdfAmt(runningBalance)
+            ];
+        });
+
+        const finalBalance = totalCashIn - totalCashOut;
+
+        doc.autoTable({
+            startY: 100,
+            head: [['Sr', 'Name / Remark', 'Date', 'Mode', 'Cash In', 'Cash Out', 'Balance']],
+            body: tableBody,
+            foot: [['', 'Total', '', '', formatPdfAmt(totalCashIn), formatPdfAmt(totalCashOut), formatPdfAmt(finalBalance)]],
+            theme: 'grid',
+            headStyles: { fillColor: [212, 175, 55], textColor: [0, 0, 0], fontStyle: 'bold' },
+            footStyles: { fillColor: [40, 40, 40], textColor: [255, 255, 255], fontStyle: 'bold' },
+            styles: { fontSize: 9, cellPadding: 4 },
+            columnStyles: {
+                0: { cellWidth: 30 },
+                1: { cellWidth: 'auto' },
+                2: { cellWidth: 60 },
+                3: { cellWidth: 40 },
+                4: { cellWidth: 60, halign: 'right' },
+                5: { cellWidth: 60, halign: 'right' },
+                6: { cellWidth: 70, halign: 'right' }
+            }
+        });
+
+        doc.save(`Shivsrushti_Cashbook_${yearLabel}.pdf`);
+        showNotification('PDF Downloaded successfully!', 'success');
+    } catch(err) {
+        console.error('Error generating PDF:', err);
+        showNotification('Failed to generate PDF directly. Trying print method...', 'error');
+        await viewPDFForYear(year);
+    }
 }
 
 window.viewPDFForYear = async function(year) {
