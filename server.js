@@ -161,7 +161,8 @@ const portalUserSchema = new mongoose.Schema({
     totalSpent: { type: Number, default: 0 },
     balance: { type: Number, default: 0 },
     photoUrl: { type: String, default: '' },
-    lastSeen: { type: Date }
+    lastSeen: { type: Date },
+    isOnline: { type: Boolean, default: false }
 });
 const PortalUser = mongoose.model('PortalUser', portalUserSchema);
 
@@ -739,9 +740,7 @@ app.post('/api/portal/offline', express.json(), async (req, res) => {
     try {
         const { userId } = req.body;
         if (userId) {
-            // Set lastSeen to 6 minutes ago so they appear offline immediately
-            const offlineTime = new Date(Date.now() - 6 * 60000);
-            await PortalUser.findByIdAndUpdate(userId, { lastSeen: offlineTime });
+            await PortalUser.findByIdAndUpdate(userId, { lastSeen: new Date(), isOnline: false });
             res.json({ success: true });
         } else {
             res.json({ success: false });
@@ -755,7 +754,7 @@ app.post('/api/portal/ping', express.json(), async (req, res) => {
     try {
         const { userId } = req.body;
         if (userId) {
-            await PortalUser.findByIdAndUpdate(userId, { lastSeen: new Date() });
+            await PortalUser.findByIdAndUpdate(userId, { lastSeen: new Date(), isOnline: true });
             res.json({ success: true });
         } else {
             res.json({ success: false });
