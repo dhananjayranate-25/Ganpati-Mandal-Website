@@ -2032,30 +2032,7 @@ table {
             </div>`;
         clone.insertAdjacentHTML('beforeend', posterTitleHtml);
 
-        // 5. Committee Members Block
-        const membersBlock = document.createElement('div');
-        membersBlock.style.display = 'flex';
-        membersBlock.style.justifyContent = 'space-between';
-        membersBlock.style.width = '90%';
-        membersBlock.style.margin = '5px auto 15px auto';
-        membersBlock.style.position = 'relative';
-        membersBlock.style.zIndex = '10';
-        
-        membersBlock.innerHTML = `
-            <div style="text-align: center; color: #fff; width: 45%;">
-                <div style="color: #ffd700; font-weight: bold; font-size: 24px; margin-bottom: 5px; font-family: 'Mukta', sans-serif;">अध्यक्ष</div>
-                <div style="font-size: 28px; font-weight: bold; font-family: 'Poppins', sans-serif;">तेजस फटांगरे</div>
-                <div style="font-size: 20px; color: #fff; margin-top: 3px; font-family: 'Poppins', sans-serif;">मो.नं 9370599259</div>
-            </div>
-            <div style="border-left: 1px solid rgba(255, 215, 0, 0.5);"></div>
-            <div style="text-align: center; color: #fff; width: 45%;">
-                <div style="color: #ffd700; font-weight: bold; font-size: 24px; margin-bottom: 5px; font-family: 'Mukta', sans-serif;">खजिनदार, समन्वयक</div>
-                <div style="font-size: 28px; font-weight: bold; font-family: 'Poppins', sans-serif;">धनंजय रणाते</div>
-                <div style="font-size: 20px; color: #fff; margin-top: 3px; font-family: 'Poppins', sans-serif;">मो.नं 9322134560</div>
-            </div>
-        `;
-        clone.appendChild(membersBlock);
-
+        // Committee Members Block removed as requested
         // 6. QR and Bank Details Two-Column Layout
         const orgName = (typeof appSettings !== 'undefined' && appSettings.pdfCustomSettings && appSettings.pdfCustomSettings.orgName) ? appSettings.pdfCustomSettings.orgName : 'शिवसृष्टी सार्वजनिक उत्सव मंडळ, संगमनेर';
         const upiId = 'dhananjayranate@ybl';
@@ -2299,30 +2276,7 @@ table {
             </div>`;
         clone.insertAdjacentHTML('beforeend', posterTitleHtml);
 
-        // 5. Committee Members Block
-        const membersBlock = document.createElement('div');
-        membersBlock.style.display = 'flex';
-        membersBlock.style.justifyContent = 'space-between';
-        membersBlock.style.width = '90%';
-        membersBlock.style.margin = '10px auto 30px auto';
-        membersBlock.style.position = 'relative';
-        membersBlock.style.zIndex = '10';
-        
-        membersBlock.innerHTML = `
-            <div style="text-align: center; color: #fff; width: 45%;">
-                <div style="color: #ffd700; font-weight: bold; font-size: 24px; margin-bottom: 5px; font-family: 'Mukta', sans-serif;">अध्यक्ष</div>
-                <div style="font-size: 28px; font-weight: bold; font-family: 'Poppins', sans-serif;">तेजस फटांगरे</div>
-                <div style="font-size: 20px; color: #fff; margin-top: 3px; font-family: 'Poppins', sans-serif;">मो.नं 9370599259</div>
-            </div>
-            <div style="border-left: 1px solid rgba(255, 215, 0, 0.5);"></div>
-            <div style="text-align: center; color: #fff; width: 45%;">
-                <div style="color: #ffd700; font-weight: bold; font-size: 24px; margin-bottom: 5px; font-family: 'Mukta', sans-serif;">खजिनदार, समन्वयक</div>
-                <div style="font-size: 28px; font-weight: bold; font-family: 'Poppins', sans-serif;">धनंजय रणाते</div>
-                <div style="font-size: 20px; color: #fff; margin-top: 3px; font-family: 'Poppins', sans-serif;">मो.नं 9322134560</div>
-            </div>
-        `;
-        clone.appendChild(membersBlock);
-
+        // Committee Members Block removed as requested
         // 6. Custom Message Content Box
         let customText = '';
           if (window.appSettings) {
