@@ -217,7 +217,7 @@
                     const data = await res.json();
                     if (data.success) {
                         sessionStorage.setItem('adminLoggedIn', 'true');
-                        window.location.href = 'admin.html';
+                        window.location.replace('admin.html');
                     } else {
                         throw new Error(data.message || 'Wrong password! Try again.');
                     }
@@ -238,9 +238,9 @@
                         localStorage.setItem('userRole', data.user.role);
                         
                         if(data.user.role === 'superadmin') {
-                            window.location.href = 'superadmin.html';
+                            window.location.replace('superadmin.html');
                         } else {
-                            window.location.href = 'member.html';
+                            window.location.replace('member.html');
                         }
                     } else {
                         throw new Error(data.message || 'Login failed');

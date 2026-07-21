@@ -685,9 +685,9 @@ table {
 
     window.onload = () => {
             const userStr = localStorage.getItem('portalUser');
-            if(!userStr) return window.location.href = 'login.html';
+            if(!userStr) return window.location.replace('index.html');
             currentUser = JSON.parse(userStr);
-            if(currentUser.role !== 'member') return window.location.href = 'login.html';
+            if(currentUser.role !== 'member') return window.location.replace('index.html');
             
             document.getElementById('welcomeName').innerText = currentUser.name;
             refreshData();
@@ -746,7 +746,7 @@ table {
                 } catch(e) {}
             }
             localStorage.removeItem('portalUser');
-            window.location.href = 'login.html';
+            window.location.replace('index.html');
         }
 
         function openModal(id) {
