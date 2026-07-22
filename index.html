@@ -2062,8 +2062,8 @@ table {
         const columnsWrapper = document.createElement('div');
         columnsWrapper.style.display = 'flex';
         columnsWrapper.style.justifyContent = 'space-between';
-        columnsWrapper.style.width = '95%';
-        columnsWrapper.style.margin = '0 auto';
+        columnsWrapper.style.width = '100%';
+        columnsWrapper.style.margin = '0';
         columnsWrapper.style.position = 'relative';
         columnsWrapper.style.zIndex = '10';
         columnsWrapper.style.gap = '20px';
@@ -2113,12 +2113,12 @@ table {
         rightCol.innerHTML = `
 
             
-            <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 2px; position: relative; z-index: 10; gap: 10px; white-space: nowrap;">
-                <div style="width: 120px; flex-shrink: 0; height: 2px; background: linear-gradient(to right, transparent, #ffd700);"></div>
+            <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 2px; position: relative; z-index: 10; gap: 10px; white-space: nowrap; width: 100%;">
+                <div style="flex-grow: 1; max-width: 60px; height: 2px; background: linear-gradient(to right, transparent, #ffd700);"></div>
                 <div style="color: #ffd700; font-size: 16px;">✧</div>
                 <div style="color: #ffd700; font-size: 24px; font-weight: bold; font-family: 'Mukta', sans-serif; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); margin: 0; line-height: 1;">बँक खात्याचा तपशील</div>
                 <div style="color: #ffd700; font-size: 16px;">✧</div>
-                <div style="width: 120px; flex-shrink: 0; height: 2px; background: linear-gradient(to left, transparent, #ffd700);"></div>
+                <div style="flex-grow: 1; max-width: 60px; height: 2px; background: linear-gradient(to left, transparent, #ffd700);"></div>
             </div>
             
             <div style="margin-bottom: 15px;">
