@@ -17,6 +17,18 @@
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
+
+    function dataURItoBlob(dataURI) {
+        var byteString = atob(dataURI.split(',')[1]);
+        var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+        var ab = new ArrayBuffer(byteString.length);
+        var ia = new Uint8Array(ab);
+        for (var i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+        return new Blob([ab], {type: mimeString});
+    }
+
     // Auto-wrap tables for mobile responsiveness
     document.addEventListener('DOMContentLoaded', function() {
         const tables = document.querySelectorAll('table');
@@ -2512,8 +2524,13 @@ table {
         try {
             let blob;
             if (window.appSettings && window.appSettings.donationPosterMode === 'custom' && window.appSettings.donationPosterImage) {
-                const res = await fetch(window.appSettings.donationPosterImage);
-                blob = await res.blob();
+                try {
+                    blob = dataURItoBlob(window.appSettings.donationPosterImage);
+                } catch(e) {
+                    console.error("Blob conversion error", e);
+                    const canvas = await captureDonationPoster();
+                    blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.8));
+                }
             } else {
                 const canvas = await captureDonationPoster();
                 blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.8));
@@ -2539,10 +2556,16 @@ table {
             const orgName = (typeof appSettings !== 'undefined' && appSettings.pdfCustomSettings && appSettings.pdfCustomSettings.orgName) ? appSettings.pdfCustomSettings.orgName : 'मंडळ';
             let customText = (typeof appSettings !== 'undefined' && appSettings.donationPosterText) ? appSettings.donationPosterText : `🌺 श्री गणेशाय नमः 🌺\n\nश्री गणेशोत्सव हा आपल्या सर्वांचा उत्सव आहे. या उत्सवाचे आयोजन अधिक भव्य, दिव्य आणि यशस्वी करण्यासाठी आपल्या सहकार्याची आम्हाला मनापासून अपेक्षा आहे.\n\nकृपया आपल्या सार्वजनिक गणेश उत्सव मंडळासाठी किमान ₹1111/- (एक हजार एकशे अकरा रुपये) वर्गणी/देणगी देऊन सहकार्य करा.\nआपण वर दिलेल्या QR कोड स्कॅन करून / UPI ID किंवा फोन नंबर द्वारे सहज देणगी देऊ शकता.\n\nआपले प्रत्येक योगदान आपल्या मंडळाचा गणेशोत्सव अधिक उत्साहाने, भक्तिभावाने आणि दिमाखात साजरा करण्यासाठी मोलाचे ठरेल. 🙏🌸\n\n॥ गणपती बाप्पा मोरया ॥\n॥ मंगलमूर्ती मोरया ॥\n॥ हर हर महादेव ॥\n\n– शिवसृष्टी सार्वजनिक उत्सव मंडळ, संगमनेर\n\n🌐 अधिक माहिती साठी अधिकृत वेबसाईट:\nhttps://shivsrushti-utsav-mandal.onrender.com\n\n===============\nउत्सव कार्यकारिणी\n===============\nतेजस फटांगरे - अध्यक्ष \nधीरज झावरे - उपाध्यक्ष / मनोरंजन व स्पर्धा प्रमुख\nआदित्य मते - सचिव / डेकोरेशन प्रमुख\nसार्थक माताडे - सहसचिव / सहसमन्वयक\nधनंजय रणाते - खजिनदार / समन्वयक\nओंकार वर्पे - सहखजिनदार\nतेजस देशमुख - सोशल मीडिया प्रमुख \nतेजस वर्पे - प्रसिद्धी प्रमुख\nवैभव सांगळे - कार्यकारी सदस्य \nनिलेश कदम - कार्यकारी सदस्य\nशुभम पेटकर - कार्यकारी सदस्य\n===============`;
 
-            if (typeof appSettings !== 'undefined' && appSettings.donationPosterMode === 'custom' && appSettings.donationPosterImage) {
-                const res = await fetch(appSettings.donationPosterImage);
-                const blob = await res.blob();
-                file = new File([blob], 'Donation_Poster.jpg', { type: 'image/jpeg' });
+            if (window.appSettings && window.appSettings.donationPosterMode === 'custom' && window.appSettings.donationPosterImage) {
+                try {
+                    const blob = dataURItoBlob(window.appSettings.donationPosterImage);
+                    file = new File([blob], 'Donation_Poster.jpg', { type: 'image/jpeg' });
+                } catch(e) {
+                    console.error("Blob conversion error", e);
+                    const canvas = await captureDonationPoster();
+                    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.8));
+                    file = new File([blob], 'Donation_Poster.jpg', { type: 'image/jpeg' });
+                }
             } else {
                 const canvas = await captureDonationPoster();
                 const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.8));
