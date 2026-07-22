@@ -838,8 +838,17 @@
                     if (document.getElementById('mahaprasadNimantranText')) {
                         document.getElementById('mahaprasadNimantranText').value = settings.mahaprasadNimantranText || '';
                     }
-                    if (document.getElementById('mahaprasadNimantranTitle')) {
+                                        if (document.getElementById('mahaprasadNimantranTitle')) {
                         document.getElementById('mahaprasadNimantranTitle').value = settings.mahaprasadNimantranTitle || '';
+                    }
+                    if (document.getElementById('donationPosterMode')) {
+                        document.getElementById('donationPosterMode').value = settings.donationPosterMode || 'generated';
+                    }
+                    if (document.getElementById('donationPosterBtnName')) {
+                        document.getElementById('donationPosterBtnName').value = settings.donationPosterBtnName || '';
+                    }
+                    if (document.getElementById('donationPosterText')) {
+                        document.getElementById('donationPosterText').value = settings.donationPosterText || '';
                     }
                 }
             } catch(e) {
