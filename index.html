@@ -2172,43 +2172,105 @@ table {
         committeeListBlock.style.position = 'relative';
         committeeListBlock.style.zIndex = '10';
         
-        committeeListBlock.innerHTML = `
-              <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 2px; position: relative; z-index: 10; gap: 10px; white-space: nowrap;">
-                  <div style="width: 120px; flex-shrink: 0; height: 2px; background: linear-gradient(to right, transparent, #ffd700);"></div>
-                  <div style="color: #ffd700; font-size: 20px;">✧</div>
-                  <div style="color: #ffd700; font-size: 30px; font-weight: bold; font-family: 'Mukta', sans-serif; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); margin: 0; line-height: 1;">उत्सव कार्यकारिणी</div>
-                  <div style="color: #ffd700; font-size: 20px;">✧</div>
-                  <div style="width: 120px; flex-shrink: 0; height: 2px; background: linear-gradient(to left, transparent, #ffd700);"></div>
+        committeeListBlock.innerHTML = `              <div style="text-align: center; margin-bottom: 25px; position: relative; z-index: 10;">
+                  <div style="display: inline-block; padding: 5px 35px; border: 2px solid rgba(255, 215, 0, 0.4); border-radius: 50px; background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(255,215,0,0.15) 50%, rgba(0,0,0,0) 100%); box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
+                      <span style="color: #ffd700; font-size: 28px; font-weight: bold; font-family: 'Mukta', sans-serif; text-shadow: 2px 2px 4px rgba(0,0,0,0.9); letter-spacing: 1px;">✧ उत्सव कार्यकारिणी ✧</span>
+                  </div>
               </div>
-              <div style="display: flex; justify-content: space-between; padding: 5px 0; margin-top: 5px;">
+              <div style="display: flex; justify-content: space-between; padding: 0 10px;">
                   <!-- Column 1 (4 Names) -->
-                  <div style="width: 37%; color: #fff; font-family: 'Mukta', sans-serif; font-size: 15px; line-height: 1.8; white-space: nowrap; letter-spacing: 0.2px;">
-                      <div style="display: flex;"><span style="color: #ffd700; margin-right: 6px;">➤</span> <div style="flex:1"><span style="font-weight: bold;">तेजस फटांगरे</span> &nbsp;<span style="color: #ffd700;">-</span>&nbsp; अध्यक्ष</div></div>
-                      <div style="display: flex;"><span style="color: #ffd700; margin-right: 6px;">➤</span> <div style="flex:1"><span style="font-weight: bold;">धीरज झावरे</span> &nbsp;<span style="color: #ffd700;">-</span>&nbsp; उपाध्यक्ष / मनोरंजन व स्पर्धा प्रमुख</div></div>
-                      <div style="display: flex;"><span style="color: #ffd700; margin-right: 6px;">➤</span> <div style="flex:1"><span style="font-weight: bold;">आदित्य मते</span> &nbsp;<span style="color: #ffd700;">-</span>&nbsp; सचिव / डेकोरेशन प्रमुख</div></div>
-                      <div style="display: flex;"><span style="color: #ffd700; margin-right: 6px;">➤</span> <div style="flex:1"><span style="font-weight: bold;">सार्थक माताडे</span> &nbsp;<span style="color: #ffd700;">-</span>&nbsp; सहसचिव / सहसमन्वयक</div></div>
+                  <div style="width: 32%; color: #fff; font-family: 'Mukta', sans-serif; white-space: normal;">
+                      <div style="display: flex; margin-bottom: 15px;">
+                          <span style="color: #ffd700; margin-right: 8px; margin-top: 2px; font-size: 14px;">➤</span>
+                          <div style="flex:1; display: flex; flex-direction: column;">
+                              <span style="font-weight: bold; font-size: 17px; color: #fff; line-height: 1.2; letter-spacing: 0.5px;">तेजस फटांगरे</span>
+                              <span style="color: #ffd700; font-size: 12px; margin-top: 3px; font-family: 'Poppins', sans-serif;">अध्यक्ष</span>
+                          </div>
+                      </div>
+                      <div style="display: flex; margin-bottom: 15px;">
+                          <span style="color: #ffd700; margin-right: 8px; margin-top: 2px; font-size: 14px;">➤</span>
+                          <div style="flex:1; display: flex; flex-direction: column;">
+                              <span style="font-weight: bold; font-size: 17px; color: #fff; line-height: 1.2; letter-spacing: 0.5px;">धीरज झावरे</span>
+                              <span style="color: #ffd700; font-size: 12px; margin-top: 3px; font-family: 'Poppins', sans-serif;">उपाध्यक्ष / मनोरंजन व स्पर्धा प्रमुख</span>
+                          </div>
+                      </div>
+                      <div style="display: flex; margin-bottom: 15px;">
+                          <span style="color: #ffd700; margin-right: 8px; margin-top: 2px; font-size: 14px;">➤</span>
+                          <div style="flex:1; display: flex; flex-direction: column;">
+                              <span style="font-weight: bold; font-size: 17px; color: #fff; line-height: 1.2; letter-spacing: 0.5px;">आदित्य मते</span>
+                              <span style="color: #ffd700; font-size: 12px; margin-top: 3px; font-family: 'Poppins', sans-serif;">सचिव / डेकोरेशन प्रमुख</span>
+                          </div>
+                      </div>
+                      <div style="display: flex; margin-bottom: 15px;">
+                          <span style="color: #ffd700; margin-right: 8px; margin-top: 2px; font-size: 14px;">➤</span>
+                          <div style="flex:1; display: flex; flex-direction: column;">
+                              <span style="font-weight: bold; font-size: 17px; color: #fff; line-height: 1.2; letter-spacing: 0.5px;">सार्थक माताडे</span>
+                              <span style="color: #ffd700; font-size: 12px; margin-top: 3px; font-family: 'Poppins', sans-serif;">सहसचिव / सहसमन्वयक</span>
+                          </div>
+                      </div>
                   </div>
                   
-                  <div style="width: 1px; background: rgba(255, 215, 0, 0.4);"></div>
+                  <div style="width: 1px; background: linear-gradient(to bottom, transparent, rgba(255, 215, 0, 0.4), transparent);"></div>
                   
                   <!-- Column 2 (4 Names) -->
-                  <div style="width: 32%; color: #fff; font-family: 'Mukta', sans-serif; font-size: 15px; line-height: 1.8; white-space: nowrap; letter-spacing: 0.2px;">
-                      <div style="display: flex;"><span style="color: #ffd700; margin-right: 6px;">➤</span> <div style="flex:1"><span style="font-weight: bold;">धनंजय रणाते</span> &nbsp;<span style="color: #ffd700;">-</span>&nbsp; खजिनदार / समन्वयक</div></div>
-                      <div style="display: flex;"><span style="color: #ffd700; margin-right: 6px;">➤</span> <div style="flex:1"><span style="font-weight: bold;">ओंकार वर्पे</span> &nbsp;<span style="color: #ffd700;">-</span>&nbsp; सहखजिनदार</div></div>
-                      <div style="display: flex;"><span style="color: #ffd700; margin-right: 6px;">➤</span> <div style="flex:1"><span style="font-weight: bold;">तेजस देशमुख</span> &nbsp;<span style="color: #ffd700;">-</span>&nbsp; सोशल मीडिया प्रमुख</div></div>
-                      <div style="display: flex;"><span style="color: #ffd700; margin-right: 6px;">➤</span> <div style="flex:1"><span style="font-weight: bold;">तेजस वर्पे</span> &nbsp;<span style="color: #ffd700;">-</span>&nbsp; प्रसिद्धी प्रमुख</div></div>
+                  <div style="width: 32%; color: #fff; font-family: 'Mukta', sans-serif; white-space: normal;">
+                      <div style="display: flex; margin-bottom: 15px;">
+                          <span style="color: #ffd700; margin-right: 8px; margin-top: 2px; font-size: 14px;">➤</span>
+                          <div style="flex:1; display: flex; flex-direction: column;">
+                              <span style="font-weight: bold; font-size: 17px; color: #fff; line-height: 1.2; letter-spacing: 0.5px;">धनंजय रणाते</span>
+                              <span style="color: #ffd700; font-size: 12px; margin-top: 3px; font-family: 'Poppins', sans-serif;">खजिनदार / समन्वयक</span>
+                          </div>
+                      </div>
+                      <div style="display: flex; margin-bottom: 15px;">
+                          <span style="color: #ffd700; margin-right: 8px; margin-top: 2px; font-size: 14px;">➤</span>
+                          <div style="flex:1; display: flex; flex-direction: column;">
+                              <span style="font-weight: bold; font-size: 17px; color: #fff; line-height: 1.2; letter-spacing: 0.5px;">ओंकार वर्पे</span>
+                              <span style="color: #ffd700; font-size: 12px; margin-top: 3px; font-family: 'Poppins', sans-serif;">सहखजिनदार</span>
+                          </div>
+                      </div>
+                      <div style="display: flex; margin-bottom: 15px;">
+                          <span style="color: #ffd700; margin-right: 8px; margin-top: 2px; font-size: 14px;">➤</span>
+                          <div style="flex:1; display: flex; flex-direction: column;">
+                              <span style="font-weight: bold; font-size: 17px; color: #fff; line-height: 1.2; letter-spacing: 0.5px;">तेजस देशमुख</span>
+                              <span style="color: #ffd700; font-size: 12px; margin-top: 3px; font-family: 'Poppins', sans-serif;">सोशल मीडिया प्रमुख</span>
+                          </div>
+                      </div>
+                      <div style="display: flex; margin-bottom: 15px;">
+                          <span style="color: #ffd700; margin-right: 8px; margin-top: 2px; font-size: 14px;">➤</span>
+                          <div style="flex:1; display: flex; flex-direction: column;">
+                              <span style="font-weight: bold; font-size: 17px; color: #fff; line-height: 1.2; letter-spacing: 0.5px;">तेजस वर्पे</span>
+                              <span style="color: #ffd700; font-size: 12px; margin-top: 3px; font-family: 'Poppins', sans-serif;">प्रसिद्धी प्रमुख</span>
+                          </div>
+                      </div>
                   </div>
                   
-                  <div style="width: 1px; background: rgba(255, 215, 0, 0.4);"></div>
+                  <div style="width: 1px; background: linear-gradient(to bottom, transparent, rgba(255, 215, 0, 0.4), transparent);"></div>
                   
                   <!-- Column 3 (3 Names) -->
-                  <div style="width: 27%; color: #fff; font-family: 'Mukta', sans-serif; font-size: 15px; line-height: 1.8; white-space: nowrap; letter-spacing: 0.2px;">
-                      <div style="display: flex;"><span style="color: #ffd700; margin-right: 6px;">➤</span> <div style="flex:1"><span style="font-weight: bold;">वैभव सांगळे</span> &nbsp;<span style="color: #ffd700;">-</span>&nbsp; कार्यकारी सदस्य</div></div>
-                      <div style="display: flex;"><span style="color: #ffd700; margin-right: 6px;">➤</span> <div style="flex:1"><span style="font-weight: bold;">निलेश कदम</span> &nbsp;<span style="color: #ffd700;">-</span>&nbsp; कार्यकारी सदस्य</div></div>
-                      <div style="display: flex;"><span style="color: #ffd700; margin-right: 6px;">➤</span> <div style="flex:1"><span style="font-weight: bold;">शुभम पेटकर</span> &nbsp;<span style="color: #ffd700;">-</span>&nbsp; कार्यकारी सदस्य</div></div>
+                  <div style="width: 30%; color: #fff; font-family: 'Mukta', sans-serif; white-space: normal;">
+                      <div style="display: flex; margin-bottom: 15px;">
+                          <span style="color: #ffd700; margin-right: 8px; margin-top: 2px; font-size: 14px;">➤</span>
+                          <div style="flex:1; display: flex; flex-direction: column;">
+                              <span style="font-weight: bold; font-size: 17px; color: #fff; line-height: 1.2; letter-spacing: 0.5px;">वैभव सांगळे</span>
+                              <span style="color: #ffd700; font-size: 12px; margin-top: 3px; font-family: 'Poppins', sans-serif;">कार्यकारी सदस्य</span>
+                          </div>
+                      </div>
+                      <div style="display: flex; margin-bottom: 15px;">
+                          <span style="color: #ffd700; margin-right: 8px; margin-top: 2px; font-size: 14px;">➤</span>
+                          <div style="flex:1; display: flex; flex-direction: column;">
+                              <span style="font-weight: bold; font-size: 17px; color: #fff; line-height: 1.2; letter-spacing: 0.5px;">निलेश कदम</span>
+                              <span style="color: #ffd700; font-size: 12px; margin-top: 3px; font-family: 'Poppins', sans-serif;">कार्यकारी सदस्य</span>
+                          </div>
+                      </div>
+                      <div style="display: flex; margin-bottom: 15px;">
+                          <span style="color: #ffd700; margin-right: 8px; margin-top: 2px; font-size: 14px;">➤</span>
+                          <div style="flex:1; display: flex; flex-direction: column;">
+                              <span style="font-weight: bold; font-size: 17px; color: #fff; line-height: 1.2; letter-spacing: 0.5px;">शुभम पेटकर</span>
+                              <span style="color: #ffd700; font-size: 12px; margin-top: 3px; font-family: 'Poppins', sans-serif;">कार्यकारी सदस्य</span>
+                          </div>
+                      </div>
                   </div>
-              </div>
-          `;
+              </div>`;
         clone.appendChild(committeeListBlock);
 
         // Footer Section
@@ -2385,43 +2447,105 @@ table {
         committeeListBlockCustom.style.position = 'relative';
         committeeListBlockCustom.style.zIndex = '10';
         
-        committeeListBlockCustom.innerHTML = `
-              <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 2px; position: relative; z-index: 10; gap: 10px; white-space: nowrap;">
-                  <div style="width: 120px; flex-shrink: 0; height: 2px; background: linear-gradient(to right, transparent, #ffd700);"></div>
-                  <div style="color: #ffd700; font-size: 20px;">✧</div>
-                  <div style="color: #ffd700; font-size: 30px; font-weight: bold; font-family: 'Mukta', sans-serif; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); margin: 0; line-height: 1;">उत्सव कार्यकारिणी</div>
-                  <div style="color: #ffd700; font-size: 20px;">✧</div>
-                  <div style="width: 120px; flex-shrink: 0; height: 2px; background: linear-gradient(to left, transparent, #ffd700);"></div>
+        committeeListBlockCustom.innerHTML = `              <div style="text-align: center; margin-bottom: 25px; position: relative; z-index: 10;">
+                  <div style="display: inline-block; padding: 5px 35px; border: 2px solid rgba(255, 215, 0, 0.4); border-radius: 50px; background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(255,215,0,0.15) 50%, rgba(0,0,0,0) 100%); box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
+                      <span style="color: #ffd700; font-size: 28px; font-weight: bold; font-family: 'Mukta', sans-serif; text-shadow: 2px 2px 4px rgba(0,0,0,0.9); letter-spacing: 1px;">✧ उत्सव कार्यकारिणी ✧</span>
+                  </div>
               </div>
-              <div style="display: flex; justify-content: space-between; padding: 5px 0; margin-top: 5px;">
+              <div style="display: flex; justify-content: space-between; padding: 0 10px;">
                   <!-- Column 1 (4 Names) -->
-                  <div style="width: 37%; color: #fff; font-family: 'Mukta', sans-serif; font-size: 15px; line-height: 1.8; white-space: nowrap; letter-spacing: 0.2px;">
-                      <div style="display: flex;"><span style="color: #ffd700; margin-right: 6px;">➤</span> <div style="flex:1"><span style="font-weight: bold;">तेजस फटांगरे</span> &nbsp;<span style="color: #ffd700;">-</span>&nbsp; अध्यक्ष</div></div>
-                      <div style="display: flex;"><span style="color: #ffd700; margin-right: 6px;">➤</span> <div style="flex:1"><span style="font-weight: bold;">धीरज झावरे</span> &nbsp;<span style="color: #ffd700;">-</span>&nbsp; उपाध्यक्ष / मनोरंजन व स्पर्धा प्रमुख</div></div>
-                      <div style="display: flex;"><span style="color: #ffd700; margin-right: 6px;">➤</span> <div style="flex:1"><span style="font-weight: bold;">आदित्य मते</span> &nbsp;<span style="color: #ffd700;">-</span>&nbsp; सचिव / डेकोरेशन प्रमुख</div></div>
-                      <div style="display: flex;"><span style="color: #ffd700; margin-right: 6px;">➤</span> <div style="flex:1"><span style="font-weight: bold;">सार्थक माताडे</span> &nbsp;<span style="color: #ffd700;">-</span>&nbsp; सहसचिव / सहसमन्वयक</div></div>
+                  <div style="width: 32%; color: #fff; font-family: 'Mukta', sans-serif; white-space: normal;">
+                      <div style="display: flex; margin-bottom: 15px;">
+                          <span style="color: #ffd700; margin-right: 8px; margin-top: 2px; font-size: 14px;">➤</span>
+                          <div style="flex:1; display: flex; flex-direction: column;">
+                              <span style="font-weight: bold; font-size: 17px; color: #fff; line-height: 1.2; letter-spacing: 0.5px;">तेजस फटांगरे</span>
+                              <span style="color: #ffd700; font-size: 12px; margin-top: 3px; font-family: 'Poppins', sans-serif;">अध्यक्ष</span>
+                          </div>
+                      </div>
+                      <div style="display: flex; margin-bottom: 15px;">
+                          <span style="color: #ffd700; margin-right: 8px; margin-top: 2px; font-size: 14px;">➤</span>
+                          <div style="flex:1; display: flex; flex-direction: column;">
+                              <span style="font-weight: bold; font-size: 17px; color: #fff; line-height: 1.2; letter-spacing: 0.5px;">धीरज झावरे</span>
+                              <span style="color: #ffd700; font-size: 12px; margin-top: 3px; font-family: 'Poppins', sans-serif;">उपाध्यक्ष / मनोरंजन व स्पर्धा प्रमुख</span>
+                          </div>
+                      </div>
+                      <div style="display: flex; margin-bottom: 15px;">
+                          <span style="color: #ffd700; margin-right: 8px; margin-top: 2px; font-size: 14px;">➤</span>
+                          <div style="flex:1; display: flex; flex-direction: column;">
+                              <span style="font-weight: bold; font-size: 17px; color: #fff; line-height: 1.2; letter-spacing: 0.5px;">आदित्य मते</span>
+                              <span style="color: #ffd700; font-size: 12px; margin-top: 3px; font-family: 'Poppins', sans-serif;">सचिव / डेकोरेशन प्रमुख</span>
+                          </div>
+                      </div>
+                      <div style="display: flex; margin-bottom: 15px;">
+                          <span style="color: #ffd700; margin-right: 8px; margin-top: 2px; font-size: 14px;">➤</span>
+                          <div style="flex:1; display: flex; flex-direction: column;">
+                              <span style="font-weight: bold; font-size: 17px; color: #fff; line-height: 1.2; letter-spacing: 0.5px;">सार्थक माताडे</span>
+                              <span style="color: #ffd700; font-size: 12px; margin-top: 3px; font-family: 'Poppins', sans-serif;">सहसचिव / सहसमन्वयक</span>
+                          </div>
+                      </div>
                   </div>
                   
-                  <div style="width: 1px; background: rgba(255, 215, 0, 0.4);"></div>
+                  <div style="width: 1px; background: linear-gradient(to bottom, transparent, rgba(255, 215, 0, 0.4), transparent);"></div>
                   
                   <!-- Column 2 (4 Names) -->
-                  <div style="width: 32%; color: #fff; font-family: 'Mukta', sans-serif; font-size: 15px; line-height: 1.8; white-space: nowrap; letter-spacing: 0.2px;">
-                      <div style="display: flex;"><span style="color: #ffd700; margin-right: 6px;">➤</span> <div style="flex:1"><span style="font-weight: bold;">धनंजय रणाते</span> &nbsp;<span style="color: #ffd700;">-</span>&nbsp; खजिनदार / समन्वयक</div></div>
-                      <div style="display: flex;"><span style="color: #ffd700; margin-right: 6px;">➤</span> <div style="flex:1"><span style="font-weight: bold;">ओंकार वर्पे</span> &nbsp;<span style="color: #ffd700;">-</span>&nbsp; सहखजिनदार</div></div>
-                      <div style="display: flex;"><span style="color: #ffd700; margin-right: 6px;">➤</span> <div style="flex:1"><span style="font-weight: bold;">तेजस देशमुख</span> &nbsp;<span style="color: #ffd700;">-</span>&nbsp; सोशल मीडिया प्रमुख</div></div>
-                      <div style="display: flex;"><span style="color: #ffd700; margin-right: 6px;">➤</span> <div style="flex:1"><span style="font-weight: bold;">तेजस वर्पे</span> &nbsp;<span style="color: #ffd700;">-</span>&nbsp; प्रसिद्धी प्रमुख</div></div>
+                  <div style="width: 32%; color: #fff; font-family: 'Mukta', sans-serif; white-space: normal;">
+                      <div style="display: flex; margin-bottom: 15px;">
+                          <span style="color: #ffd700; margin-right: 8px; margin-top: 2px; font-size: 14px;">➤</span>
+                          <div style="flex:1; display: flex; flex-direction: column;">
+                              <span style="font-weight: bold; font-size: 17px; color: #fff; line-height: 1.2; letter-spacing: 0.5px;">धनंजय रणाते</span>
+                              <span style="color: #ffd700; font-size: 12px; margin-top: 3px; font-family: 'Poppins', sans-serif;">खजिनदार / समन्वयक</span>
+                          </div>
+                      </div>
+                      <div style="display: flex; margin-bottom: 15px;">
+                          <span style="color: #ffd700; margin-right: 8px; margin-top: 2px; font-size: 14px;">➤</span>
+                          <div style="flex:1; display: flex; flex-direction: column;">
+                              <span style="font-weight: bold; font-size: 17px; color: #fff; line-height: 1.2; letter-spacing: 0.5px;">ओंकार वर्पे</span>
+                              <span style="color: #ffd700; font-size: 12px; margin-top: 3px; font-family: 'Poppins', sans-serif;">सहखजिनदार</span>
+                          </div>
+                      </div>
+                      <div style="display: flex; margin-bottom: 15px;">
+                          <span style="color: #ffd700; margin-right: 8px; margin-top: 2px; font-size: 14px;">➤</span>
+                          <div style="flex:1; display: flex; flex-direction: column;">
+                              <span style="font-weight: bold; font-size: 17px; color: #fff; line-height: 1.2; letter-spacing: 0.5px;">तेजस देशमुख</span>
+                              <span style="color: #ffd700; font-size: 12px; margin-top: 3px; font-family: 'Poppins', sans-serif;">सोशल मीडिया प्रमुख</span>
+                          </div>
+                      </div>
+                      <div style="display: flex; margin-bottom: 15px;">
+                          <span style="color: #ffd700; margin-right: 8px; margin-top: 2px; font-size: 14px;">➤</span>
+                          <div style="flex:1; display: flex; flex-direction: column;">
+                              <span style="font-weight: bold; font-size: 17px; color: #fff; line-height: 1.2; letter-spacing: 0.5px;">तेजस वर्पे</span>
+                              <span style="color: #ffd700; font-size: 12px; margin-top: 3px; font-family: 'Poppins', sans-serif;">प्रसिद्धी प्रमुख</span>
+                          </div>
+                      </div>
                   </div>
                   
-                  <div style="width: 1px; background: rgba(255, 215, 0, 0.4);"></div>
+                  <div style="width: 1px; background: linear-gradient(to bottom, transparent, rgba(255, 215, 0, 0.4), transparent);"></div>
                   
                   <!-- Column 3 (3 Names) -->
-                  <div style="width: 27%; color: #fff; font-family: 'Mukta', sans-serif; font-size: 15px; line-height: 1.8; white-space: nowrap; letter-spacing: 0.2px;">
-                      <div style="display: flex;"><span style="color: #ffd700; margin-right: 6px;">➤</span> <div style="flex:1"><span style="font-weight: bold;">वैभव सांगळे</span> &nbsp;<span style="color: #ffd700;">-</span>&nbsp; कार्यकारी सदस्य</div></div>
-                      <div style="display: flex;"><span style="color: #ffd700; margin-right: 6px;">➤</span> <div style="flex:1"><span style="font-weight: bold;">निलेश कदम</span> &nbsp;<span style="color: #ffd700;">-</span>&nbsp; कार्यकारी सदस्य</div></div>
-                      <div style="display: flex;"><span style="color: #ffd700; margin-right: 6px;">➤</span> <div style="flex:1"><span style="font-weight: bold;">शुभम पेटकर</span> &nbsp;<span style="color: #ffd700;">-</span>&nbsp; कार्यकारी सदस्य</div></div>
+                  <div style="width: 30%; color: #fff; font-family: 'Mukta', sans-serif; white-space: normal;">
+                      <div style="display: flex; margin-bottom: 15px;">
+                          <span style="color: #ffd700; margin-right: 8px; margin-top: 2px; font-size: 14px;">➤</span>
+                          <div style="flex:1; display: flex; flex-direction: column;">
+                              <span style="font-weight: bold; font-size: 17px; color: #fff; line-height: 1.2; letter-spacing: 0.5px;">वैभव सांगळे</span>
+                              <span style="color: #ffd700; font-size: 12px; margin-top: 3px; font-family: 'Poppins', sans-serif;">कार्यकारी सदस्य</span>
+                          </div>
+                      </div>
+                      <div style="display: flex; margin-bottom: 15px;">
+                          <span style="color: #ffd700; margin-right: 8px; margin-top: 2px; font-size: 14px;">➤</span>
+                          <div style="flex:1; display: flex; flex-direction: column;">
+                              <span style="font-weight: bold; font-size: 17px; color: #fff; line-height: 1.2; letter-spacing: 0.5px;">निलेश कदम</span>
+                              <span style="color: #ffd700; font-size: 12px; margin-top: 3px; font-family: 'Poppins', sans-serif;">कार्यकारी सदस्य</span>
+                          </div>
+                      </div>
+                      <div style="display: flex; margin-bottom: 15px;">
+                          <span style="color: #ffd700; margin-right: 8px; margin-top: 2px; font-size: 14px;">➤</span>
+                          <div style="flex:1; display: flex; flex-direction: column;">
+                              <span style="font-weight: bold; font-size: 17px; color: #fff; line-height: 1.2; letter-spacing: 0.5px;">शुभम पेटकर</span>
+                              <span style="color: #ffd700; font-size: 12px; margin-top: 3px; font-family: 'Poppins', sans-serif;">कार्यकारी सदस्य</span>
+                          </div>
+                      </div>
                   </div>
-              </div>
-          `;
+              </div>`;
         clone.appendChild(committeeListBlockCustom);
 
         // Footer Section
