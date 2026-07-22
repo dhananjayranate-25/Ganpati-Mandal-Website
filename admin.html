@@ -835,11 +835,17 @@
                     if (document.getElementById('varganiAabharTitle')) {
                         document.getElementById('varganiAabharTitle').value = settings.varganiAabharTitle || '';
                     }
-                    if (document.getElementById('mahaprasadNimantranText')) {
+                                        if (document.getElementById('mahaprasadNimantranText')) {
                         document.getElementById('mahaprasadNimantranText').value = settings.mahaprasadNimantranText || '';
                     }
-                                        if (document.getElementById('mahaprasadNimantranTitle')) {
+                    if (document.getElementById('mahaprasadNimantranTitle')) {
                         document.getElementById('mahaprasadNimantranTitle').value = settings.mahaprasadNimantranTitle || '';
+                    }
+                    if (document.getElementById('aagmanSohalaText')) {
+                        document.getElementById('aagmanSohalaText').value = settings.aagmanSohalaText || '';
+                    }
+                    if (document.getElementById('aagmanSohalaTitle')) {
+                        document.getElementById('aagmanSohalaTitle').value = settings.aagmanSohalaTitle || '';
                     }
                     if (document.getElementById('donationPosterMode')) {
                         document.getElementById('donationPosterMode').value = settings.donationPosterMode || 'generated';
@@ -866,8 +872,10 @@
             const navbarTitle = document.getElementById('appNavbarTitle').value;
             const varganiAabharTitle = document.getElementById('varganiAabharTitle').value;
             const varganiAabharText = document.getElementById('varganiAabharText').value;
-            const mahaprasadNimantranTitle = document.getElementById('mahaprasadNimantranTitle').value;
+                        const mahaprasadNimantranTitle = document.getElementById('mahaprasadNimantranTitle').value;
             const mahaprasadNimantranText = document.getElementById('mahaprasadNimantranText').value;
+            const aagmanSohalaTitle = document.getElementById('aagmanSohalaTitle').value;
+            const aagmanSohalaText = document.getElementById('aagmanSohalaText').value;
             
             const donationPosterMode = document.getElementById('donationPosterMode').value;
             const donationPosterBtnName = document.getElementById('donationPosterBtnName').value;
@@ -884,8 +892,10 @@
                     { key: 'navbarTitle', value: navbarTitle },
                     { key: 'varganiAabharTitle', value: varganiAabharTitle },
                     { key: 'varganiAabharText', value: varganiAabharText },
-                    { key: 'mahaprasadNimantranTitle', value: mahaprasadNimantranTitle },
+                                        { key: 'mahaprasadNimantranTitle', value: mahaprasadNimantranTitle },
                     { key: 'mahaprasadNimantranText', value: mahaprasadNimantranText },
+                    { key: 'aagmanSohalaTitle', value: aagmanSohalaTitle },
+                    { key: 'aagmanSohalaText', value: aagmanSohalaText },,
                     { key: 'donationPosterMode', value: donationPosterMode },
                     { key: 'donationPosterBtnName', value: donationPosterBtnName },
                     { key: 'donationPosterText', value: donationPosterText },

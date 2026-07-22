@@ -185,11 +185,14 @@
                         </button>
                     </div>
                     <div class="donation-actions" id="customPosterActions" style="margin-top: 15px;">
-                        <button id="varganiBtn" onclick="shareCustomPoster('vargani', this)" class="donation-action-btn" style="background: linear-gradient(135deg, #10b981, #059669); color: white;">
+                                                <button id="varganiBtn" onclick="shareCustomPoster('vargani', this)" class="donation-action-btn" style="background: linear-gradient(135deg, #10b981, #059669); color: white;">
                             <i class="fas fa-share-alt"></i> <span id="varganiBtnText">वर्गणी आभार</span>
                         </button>
                         <button id="mahaprasadBtn" onclick="shareCustomPoster('mahaprasad', this)" class="donation-action-btn" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white;">
                             <i class="fas fa-share-alt"></i> <span id="mahaprasadBtnText">महाप्रसाद निमंत्रण</span>
+                        </button>
+                        <button id="aagmanBtn" onclick="shareCustomPoster('aagman', this)" class="donation-action-btn" style="background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; margin-top: 15px; width: 100%;">
+                            <i class="fas fa-share-alt"></i> <span id="aagmanBtnText">आगमन सोहळा पोस्टर</span>
                         </button>
                     </div>
                     
@@ -960,6 +963,14 @@
                 } else if (settings.varganiAabharTitle) {
                     const vBtnText = document.getElementById('varganiBtnText');
                     if (vBtnText) vBtnText.textContent = settings.varganiAabharTitle;
+                }
+                
+                if (settings.aagmanPosterBtnName) {
+                    const aBtnText = document.getElementById('aagmanBtnText');
+                    if (aBtnText) aBtnText.textContent = settings.aagmanPosterBtnName;
+                } else if (settings.aagmanSohalaTitle) {
+                    const aBtnText = document.getElementById('aagmanBtnText');
+                    if (aBtnText) aBtnText.textContent = settings.aagmanSohalaTitle;
                 }
                 
                 if (settings.mahaprasadPosterBtnName) {
@@ -1952,7 +1963,7 @@ table {
     <!-- Donation Poster Script -->
     <script>
     let cachedDonationCanvas = null;
-    let cachedCustomCanvases = { vargani: null, mahaprasad: null };
+    let cachedCustomCanvases = { vargani: null, mahaprasad: null, aagman: null };
 
     async function captureDonationPoster() {
         if (cachedDonationCanvas) return cachedDonationCanvas;
@@ -2347,12 +2358,14 @@ table {
         clone.appendChild(headerWrapper);
 
         // 2. Custom Title with Inline Lines
-        const defaultTitle = type === 'vargani' ? 'वर्गणी आभार' : 'महाप्रसाद निमंत्रण';
+        const defaultTitle = type === 'vargani' ? 'वर्गणी आभार' : (type === 'mahaprasad' ? 'महाप्रसाद निमंत्रण' : 'आगमन सोहळा');
         let userTitle = defaultTitle;
         if (window.appSettings) {
             userTitle = type === 'vargani' 
                 ? (window.appSettings.varganiAabharTitle || defaultTitle)
-                : (window.appSettings.mahaprasadNimantranTitle || defaultTitle);
+                : (type === 'mahaprasad' 
+                    ? (window.appSettings.mahaprasadNimantranTitle || defaultTitle) 
+                    : (window.appSettings.aagmanSohalaTitle || defaultTitle));
         }
         
         const posterTitleHtml = `
@@ -2572,11 +2585,11 @@ table {
             const canvas = await captureCustomPoster(type);
             canvas.toBlob(async (blob) => {
                 try {
-                    const filename = type === 'vargani' ? 'Vargani_Aabhar.jpg' : 'Mahaprasad_Nimantran.jpg';
+                    const filename = type === 'vargani' ? 'Vargani_Aabhar.jpg' : (type === 'mahaprasad' ? 'Mahaprasad_Nimantran.jpg' : 'Aagman_Sohala.jpg');
                     const file = new File([blob], filename, { type: 'image/jpeg' });
                     
                     const orgName = (typeof appSettings !== 'undefined' && appSettings.pdfCustomSettings && appSettings.pdfCustomSettings.orgName) ? appSettings.pdfCustomSettings.orgName : 'मंडळ';
-                    const titleStr = type === 'vargani' ? 'वर्गणी आभार' : 'महाप्रसाद निमंत्रण';
+                    const titleStr = type === 'vargani' ? 'वर्गणी आभार' : (type === 'mahaprasad' ? 'महाप्रसाद निमंत्रण' : 'आगमन सोहळा');
                     let customText = '';
           if (window.appSettings) {
               customText = type === 'vargani' 
@@ -2626,7 +2639,7 @@ https://shivsrushti-utsav-mandal.onrender.com
                 } catch (shareErr) {
                     console.log('Share action was cancelled or failed:', shareErr);
                     if (shareErr.name !== 'AbortError') {
-                        const filename = type === 'vargani' ? 'Vargani_Aabhar.jpg' : 'Mahaprasad_Nimantran.jpg';
+                        const filename = type === 'vargani' ? 'Vargani_Aabhar.jpg' : (type === 'mahaprasad' ? 'Mahaprasad_Nimantran.jpg' : 'Aagman_Sohala.jpg');
                         const link = document.createElement('a');
                         link.download = filename;
                         link.href = canvas.toDataURL('image/jpeg', 0.8);
