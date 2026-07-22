@@ -207,18 +207,7 @@
                         <h4 style="color: #ff8c00; margin-bottom: 10px; margin-top: 0;">2. Vargani Aabhar Poster (वर्गणी आभार)</h4>
                         
                         <div class="form-group">
-                            <label style="color: var(--text-primary); margin-bottom: 5px; display: block;">Poster Mode:</label>
-                            <select id="varganiPosterMode" class="form-control" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.5); color: white; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px;">
-                                <option value="generated">Use System Generated Poster (Default)</option>
-                                <option value="custom">Use Custom Uploaded Photo Poster</option>
-                            </select>
                             
-                            <label style="color: var(--text-secondary); font-size: 12px; display: block; margin-bottom: 5px;">Upload Custom Poster Image</label>
-                            <input type="file" id="varganiPosterInput" accept="image/*" style="padding: 8px; border-radius: 10px; background: var(--bg-card); border: 2px dashed var(--glass-border); color: var(--text-primary); cursor: pointer; width: 100%; margin-bottom: 15px;">
-                            <img id="varganiPosterPreview" style="max-width: 100%; max-height: 150px; display: none; margin-bottom: 15px; border-radius: 8px;" />
-                            
-                            <label style="color: var(--text-primary); margin-bottom: 5px; display: block;">Home Page Button Name</label>
-                            <input type="text" id="varganiPosterBtnName" class="form-control" placeholder="e.g. Share Vargani Poster" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.5); color: white; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px;">
                             
                             <label style="color: var(--text-primary); margin-bottom: 5px; display: block;">Generated Poster Title (used only if mode is Generated)</label>
                             <input type="text" id="varganiAabharTitle" class="form-control" placeholder="उदा. वर्गणी आभार" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.5); color: white; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px;">
@@ -233,18 +222,7 @@
                         <h4 style="color: #ff8c00; margin-bottom: 10px; margin-top: 0;">3. Mahaprasad Nimantran Poster (महाप्रसाद)</h4>
                         
                         <div class="form-group">
-                            <label style="color: var(--text-primary); margin-bottom: 5px; display: block;">Poster Mode:</label>
-                            <select id="mahaprasadPosterMode" class="form-control" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.5); color: white; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px;">
-                                <option value="generated">Use System Generated Poster (Default)</option>
-                                <option value="custom">Use Custom Uploaded Photo Poster</option>
-                            </select>
                             
-                            <label style="color: var(--text-secondary); font-size: 12px; display: block; margin-bottom: 5px;">Upload Custom Poster Image</label>
-                            <input type="file" id="mahaprasadPosterInput" accept="image/*" style="padding: 8px; border-radius: 10px; background: var(--bg-card); border: 2px dashed var(--glass-border); color: var(--text-primary); cursor: pointer; width: 100%; margin-bottom: 15px;">
-                            <img id="mahaprasadPosterPreview" style="max-width: 100%; max-height: 150px; display: none; margin-bottom: 15px; border-radius: 8px;" />
-                            
-                            <label style="color: var(--text-primary); margin-bottom: 5px; display: block;">Home Page Button Name</label>
-                            <input type="text" id="mahaprasadPosterBtnName" class="form-control" placeholder="e.g. Share Mahaprasad Poster" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.5); color: white; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px;">
                             
                             <label style="color: var(--text-primary); margin-bottom: 5px; display: block;">Generated Poster Title (used only if mode is Generated)</label>
                             <input type="text" id="mahaprasadNimantranTitle" class="form-control" placeholder="उदा. महाप्रसाद निमंत्रण" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.5); color: white; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px;">
@@ -886,11 +864,7 @@
             const donationPosterBtnName = document.getElementById('donationPosterBtnName').value;
             const donationPosterText = document.getElementById('donationPosterText').value;
             
-            const varganiPosterMode = document.getElementById('varganiPosterMode').value;
-            const varganiPosterBtnName = document.getElementById('varganiPosterBtnName').value;
             
-            const mahaprasadPosterMode = document.getElementById('mahaprasadPosterMode').value;
-            const mahaprasadPosterBtnName = document.getElementById('mahaprasadPosterBtnName').value;
             
             try {
                 // Save texts
@@ -906,10 +880,10 @@
                     { key: 'donationPosterMode', value: donationPosterMode },
                     { key: 'donationPosterBtnName', value: donationPosterBtnName },
                     { key: 'donationPosterText', value: donationPosterText },
-                    { key: 'varganiPosterMode', value: varganiPosterMode },
-                    { key: 'varganiPosterBtnName', value: varganiPosterBtnName },
-                    { key: 'mahaprasadPosterMode', value: mahaprasadPosterMode },
-                    { key: 'mahaprasadPosterBtnName', value: mahaprasadPosterBtnName }
+                    
+                    
+                    
+                    
                 ];
                 
                 // Function to convert file to base64
@@ -929,18 +903,7 @@
                     settingsToSave.push({ key: 'donationPosterImage', value: b64 });
                     donInput.value = '';
                 }
-                const varInput = document.getElementById('varganiPosterInput');
-                if (varInput.files && varInput.files.length > 0) {
-                    const b64 = await fileToBase64(varInput.files[0]);
-                    settingsToSave.push({ key: 'varganiPosterImage', value: b64 });
-                    varInput.value = '';
-                }
-                const mahaInput = document.getElementById('mahaprasadPosterInput');
-                if (mahaInput.files && mahaInput.files.length > 0) {
-                    const b64 = await fileToBase64(mahaInput.files[0]);
-                    settingsToSave.push({ key: 'mahaprasadPosterImage', value: b64 });
-                    mahaInput.value = '';
-                }
+                
 
                 // Upload Banner as Base64 to MongoDB if selected
                 const fileInput = document.getElementById('heroBannerInput');
