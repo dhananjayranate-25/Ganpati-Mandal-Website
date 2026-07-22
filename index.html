@@ -1939,6 +1939,10 @@ table {
     async function captureDonationPoster() {
         if (cachedDonationCanvas) return cachedDonationCanvas;
         
+        if (typeof html2canvas === 'undefined') {
+            await loadPDFLibraries();
+        }
+        
         const clone = document.createElement('div');
         clone.style.position = 'absolute';
         clone.style.left = '-9999px';
@@ -2223,6 +2227,10 @@ table {
 
     async function captureCustomPoster(type) {
         if (cachedCustomCanvases[type]) return cachedCustomCanvases[type];
+        
+        if (typeof html2canvas === 'undefined') {
+            await loadPDFLibraries();
+        }
         
         const clone = document.createElement('div');
         clone.style.position = 'absolute';
