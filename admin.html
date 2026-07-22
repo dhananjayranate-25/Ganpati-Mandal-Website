@@ -821,6 +821,16 @@
             const mahaprasadNimantranTitle = document.getElementById('mahaprasadNimantranTitle').value;
             const mahaprasadNimantranText = document.getElementById('mahaprasadNimantranText').value;
             
+            const donationPosterMode = document.getElementById('donationPosterMode').value;
+            const donationPosterBtnName = document.getElementById('donationPosterBtnName').value;
+            const donationPosterText = document.getElementById('donationPosterText').value;
+            
+            const varganiPosterMode = document.getElementById('varganiPosterMode').value;
+            const varganiPosterBtnName = document.getElementById('varganiPosterBtnName').value;
+            
+            const mahaprasadPosterMode = document.getElementById('mahaprasadPosterMode').value;
+            const mahaprasadPosterBtnName = document.getElementById('mahaprasadPosterBtnName').value;
+            
             try {
                 // Save texts
                 const settingsToSave = [
@@ -831,9 +841,46 @@
                     { key: 'varganiAabharTitle', value: varganiAabharTitle },
                     { key: 'varganiAabharText', value: varganiAabharText },
                     { key: 'mahaprasadNimantranTitle', value: mahaprasadNimantranTitle },
-                    { key: 'mahaprasadNimantranText', value: mahaprasadNimantranText }
+                    { key: 'mahaprasadNimantranText', value: mahaprasadNimantranText },
+                    { key: 'donationPosterMode', value: donationPosterMode },
+                    { key: 'donationPosterBtnName', value: donationPosterBtnName },
+                    { key: 'donationPosterText', value: donationPosterText },
+                    { key: 'varganiPosterMode', value: varganiPosterMode },
+                    { key: 'varganiPosterBtnName', value: varganiPosterBtnName },
+                    { key: 'mahaprasadPosterMode', value: mahaprasadPosterMode },
+                    { key: 'mahaprasadPosterBtnName', value: mahaprasadPosterBtnName }
                 ];
                 
+                // Function to convert file to base64
+                const fileToBase64 = (file) => {
+                    return new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onload = () => resolve(reader.result);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(file);
+                    });
+                };
+
+                // Upload Custom Posters as Base64 if selected
+                const donInput = document.getElementById('donationPosterInput');
+                if (donInput.files && donInput.files.length > 0) {
+                    const b64 = await fileToBase64(donInput.files[0]);
+                    settingsToSave.push({ key: 'donationPosterImage', value: b64 });
+                    donInput.value = '';
+                }
+                const varInput = document.getElementById('varganiPosterInput');
+                if (varInput.files && varInput.files.length > 0) {
+                    const b64 = await fileToBase64(varInput.files[0]);
+                    settingsToSave.push({ key: 'varganiPosterImage', value: b64 });
+                    varInput.value = '';
+                }
+                const mahaInput = document.getElementById('mahaprasadPosterInput');
+                if (mahaInput.files && mahaInput.files.length > 0) {
+                    const b64 = await fileToBase64(mahaInput.files[0]);
+                    settingsToSave.push({ key: 'mahaprasadPosterImage', value: b64 });
+                    mahaInput.value = '';
+                }
+
                 // Upload Banner as Base64 to MongoDB if selected
                 const fileInput = document.getElementById('heroBannerInput');
                 if (fileInput.files && fileInput.files.length > 0) {

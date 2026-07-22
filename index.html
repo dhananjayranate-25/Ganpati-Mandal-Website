@@ -954,13 +954,29 @@
                 }
                 
                 // Custom Posters Titles on Buttons
-                if (settings.varganiAabharTitle) {
+                if (settings.varganiPosterBtnName) {
+                    const vBtnText = document.getElementById('varganiBtnText');
+                    if (vBtnText) vBtnText.textContent = settings.varganiPosterBtnName;
+                } else if (settings.varganiAabharTitle) {
                     const vBtnText = document.getElementById('varganiBtnText');
                     if (vBtnText) vBtnText.textContent = settings.varganiAabharTitle;
                 }
-                if (settings.mahaprasadNimantranTitle) {
+                
+                if (settings.mahaprasadPosterBtnName) {
+                    const mBtnText = document.getElementById('mahaprasadBtnText');
+                    if (mBtnText) mBtnText.textContent = settings.mahaprasadPosterBtnName;
+                } else if (settings.mahaprasadNimantranTitle) {
                     const mBtnText = document.getElementById('mahaprasadBtnText');
                     if (mBtnText) mBtnText.textContent = settings.mahaprasadNimantranTitle;
+                }
+                
+                // Donation buttons
+                if (settings.donationPosterBtnName) {
+                    const donShareBtns = document.querySelectorAll('.donation-share-btn');
+                    donShareBtns.forEach(btn => btn.innerHTML = '<i class="fas fa-share-alt"></i> ' + settings.donationPosterBtnName);
+                    
+                    const donDownloadBtns = document.querySelectorAll('.donation-download-btn');
+                    donDownloadBtns.forEach(btn => btn.innerHTML = '<i class="fas fa-download"></i> ' + settings.donationPosterBtnName.replace('Share', 'Download').replace('शेअर', 'डाउनलोड'));
                 }
                 
                 // Load Aarti Media
@@ -2437,73 +2453,26 @@ table {
         if (btn) { btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> कृपया थांबा...'; btn.disabled = true; }
         
         try {
-            const canvas = await captureDonationPoster();
+            let blob;
+            if (window.appSettings && window.appSettings.donationPosterMode === 'custom' && window.appSettings.donationPosterImage) {
+                const res = await fetch(window.appSettings.donationPosterImage);
+                blob = await res.blob();
+            } else {
+                const canvas = await captureDonationPoster();
+                blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.8));
+            }
             const link = document.createElement('a');
             link.download = 'Donation_Poster.jpg';
-            link.href = canvas.toDataURL('image/jpeg', 0.8);
+            link.href = URL.createObjectURL(blob);
             link.click();
-            if (btn) { btn.innerHTML = originalText; btn.disabled = false; }
-        } catch(err) {
-            console.error('Error generating image:', err);
-            if (err.name === 'SecurityError' || (err.message && err.message.includes('Tainted'))) {
-                alert('सिक्युरिटी एरर: तुम्ही ही फाईल थेट फोल्डरमधून (file://) उघडली आहे, त्यामुळे ब्राउझर पोस्टर तयार करू शकत नाही. कृपया होस्ट केलेल्या लिंकवरून किंवा लोकल सर्व्हरवरून वेबसाईट उघडा.');
-            } else {
-                alert('इमेज तयार करताना त्रुटी आली: ' + (err.message || err));
-            }
+        } catch (error) {
+            console.error('Error downloading image:', error);
+            alert('पोस्टर तयार करताना त्रुटी आली. कृपया पुन्हा प्रयत्न करा.');
+        } finally {
             if (btn) { btn.innerHTML = originalText; btn.disabled = false; }
         }
     }
 
-    async function shareDonationImage(btn) {
-        let originalText = btn ? btn.innerHTML : '';
-        if (btn) { btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> कृपया थांबा...'; btn.disabled = true; }
-        
-        try {
-            const canvas = await captureDonationPoster();
-            canvas.toBlob(async (blob) => {
-                try {
-                    const file = new File([blob], 'Donation_Poster.jpg', { type: 'image/jpeg' });
-                    
-                    const orgName = (typeof appSettings !== 'undefined' && appSettings.pdfCustomSettings && appSettings.pdfCustomSettings.orgName) ? appSettings.pdfCustomSettings.orgName : 'मंडळ';
-                    const shareData = {
-                        title: orgName + ' - देणगी',
-                        text: `🌺 श्री गणेशाय नमः 🌺\n\nश्री गणेशोत्सव हा आपल्या सर्वांचा उत्सव आहे. या उत्सवाचे आयोजन अधिक भव्य, दिव्य आणि यशस्वी करण्यासाठी आपल्या सहकार्याची आम्हाला मनापासून अपेक्षा आहे.\n\nकृपया आपल्या सार्वजनिक गणेश उत्सव मंडळासाठी किमान ₹1111/- (एक हजार एकशे अकरा रुपये) वर्गणी/देणगी देऊन सहकार्य करा.\nआपण वर दिलेल्या QR कोड स्कॅन करून / UPI ID किंवा फोन नंबर द्वारे सहज देणगी देऊ शकता.\n\nआपले प्रत्येक योगदान आपल्या मंडळाचा गणेशोत्सव अधिक उत्साहाने, भक्तिभावाने आणि दिमाखात साजरा करण्यासाठी मोलाचे ठरेल. 🙏🌸\n\n॥ गणपती बाप्पा मोरया ॥\n॥ मंगलमूर्ती मोरया ॥\n॥ हर हर महादेव ॥\n\n– शिवसृष्टी सार्वजनिक उत्सव मंडळ, संगमनेर\n\n🌐 अधिक माहिती साठी अधिकृत वेबसाईट:\nhttps://shivsrushti-utsav-mandal.onrender.com\n\n===============\nउत्सव कार्यकारिणी\n===============\nतेजस फटांगरे - अध्यक्ष \nधीरज झावरे - उपाध्यक्ष / मनोरंजन व स्पर्धा प्रमुख\nआदित्य मते - सचिव / डेकोरेशन प्रमुख\nसार्थक माताडे - सहसचिव / सहसमन्वयक\nधनंजय रणाते - खजिनदार / समन्वयक\nओंकार वर्पे - सहखजिनदार\nतेजस देशमुख - सोशल मीडिया प्रमुख \nतेजस वर्पे - प्रसिद्धी प्रमुख\nवैभव सांगळे - कार्यकारी सदस्य \nनिलेश कदम - कार्यकारी सदस्य\nशुभम पेटकर - कार्यकारी सदस्य\n===============`,
-                        files: [file]
-                    };
-
-                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                        await navigator.share(shareData);
-                    } else {
-                        // Download fallback
-                        const link = document.createElement('a');
-                        link.download = 'Donation_Poster.jpg';
-                        link.href = canvas.toDataURL('image/jpeg', 0.8);
-                        link.click();
-                        alert('तुमच्या डिव्हाइसवर डायरेक्ट इमेज शेअरिंग सपोर्टेड नाही. इमेज डाउनलोड झाली आहे, ती तुम्ही स्वतः शेअर करू शकता.');
-                    }
-                } catch (shareErr) {
-                    console.log('Share action was cancelled or failed:', shareErr);
-                    if (shareErr.name !== 'AbortError') {
-                        const link = document.createElement('a');
-                        link.download = 'Donation_Poster.jpg';
-                        link.href = canvas.toDataURL('image/jpeg', 0.8);
-                        link.click();
-                        alert('तुमच्या डिव्हाइसवर डायरेक्ट शेअरिंगमध्ये तांत्रिक अडचण आली. इमेज डाउनलोड झाली आहे, ती तुम्ही मॅन्युअली शेअर करू शकता.');
-                    }
-                } finally {
-                    if (btn) { btn.innerHTML = originalText; btn.disabled = false; }
-                }
-            }, 'image/jpeg', 0.8);
-        } catch (err) {
-            console.error('Error sharing image:', err);
-            if (err.name === 'SecurityError' || (err.message && err.message.includes('Tainted'))) {
-                alert('सिक्युरिटी एरर: तुम्ही ही फाईल थेट फोल्डरमधून (file://) उघडली आहे, त्यामुळे ब्राउझर पोस्टर तयार करू शकत नाही. कृपया होस्ट केलेल्या लिंकवरून किंवा लोकल सर्व्हरवरून वेबसाईट उघडा.');
-            } else {
-                alert('शेअर करताना त्रुटी आली: ' + (err.message || err));
-            }
-            if (btn) { btn.innerHTML = originalText; btn.disabled = false; }
-        }
-    }
     
     async function shareCustomPoster(type, btn) {
         let originalText = btn ? btn.innerHTML : '';
