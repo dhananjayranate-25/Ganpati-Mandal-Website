@@ -171,26 +171,87 @@
 
                     </div>
                     
-                    <div class="section-header" style="margin-top: 25px;">
+                    <div class="section-header" style="margin-top: 35px;">
                         <div class="header-line"></div>
-                        <h3 style="font-size: 18px; color: var(--text-primary);">Custom Posters (वर्गणी आभार / महाप्रसाद)</h3>
+                        <h3 style="font-size: 20px; color: #ffd700;">Custom Posters & Sharing Configurations</h3>
                         <div class="header-line"></div>
                     </div>
                     
-                    <div class="form-group" style="margin-top: 15px;">
-                        <label style="color: var(--text-primary); margin-bottom: 5px; display: block;">वर्गणी आभार शीर्षक (Title)</label>
-                        <input type="text" id="varganiAabharTitle" class="form-control" placeholder="उदा. वर्गणी आभार" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.5); color: white; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px;">
-                        
-                        <label style="color: var(--text-primary); margin-bottom: 5px; display: block;">वर्गणी आभार संदेश (Vargani Aabhar Text)</label>
-                        <textarea id="varganiAabharText" class="form-control" rows="4" placeholder="येथे वर्गणी आभार संदेश टाईप करा..." style="width: 100%; padding: 10px; background: rgba(0,0,0,0.5); color: white; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);"></textarea>
-                    </div>
-                    
-                    <div class="form-group" style="margin-top: 15px;">
-                        <label style="color: var(--text-primary); margin-bottom: 5px; display: block;">महाप्रसाद निमंत्रण शीर्षक (Title)</label>
-                        <input type="text" id="mahaprasadNimantranTitle" class="form-control" placeholder="उदा. महाप्रसाद निमंत्रण" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.5); color: white; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px;">
+                    <p style="color: #aaa; font-size: 14px; margin-bottom: 15px;">Configure whether to use the system generated posters or upload your own custom photo posters. You can also configure the Share Text and Button Names here.</p>
 
-                        <label style="color: var(--text-primary); margin-bottom: 5px; display: block;">महाप्रसाद निमंत्रण संदेश (Mahaprasad Nimantran Text)</label>
-                        <textarea id="mahaprasadNimantranText" class="form-control" rows="4" placeholder="येथे महाप्रसाद निमंत्रण संदेश टाईप करा..." style="width: 100%; padding: 10px; background: rgba(0,0,0,0.5); color: white; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);"></textarea>
+                    <!-- Donation Poster Config -->
+                    <div style="background: rgba(0,0,0,0.4); padding: 15px; border-radius: 10px; border: 1px solid rgba(255,215,0,0.3); margin-bottom: 20px;">
+                        <h4 style="color: #ff8c00; margin-bottom: 10px; margin-top: 0;">1. Donation Poster (देणगी)</h4>
+                        
+                        <div class="form-group">
+                            <label style="color: var(--text-primary); margin-bottom: 5px; display: block;">Poster Mode:</label>
+                            <select id="donationPosterMode" class="form-control" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.5); color: white; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px;">
+                                <option value="generated">Use System Generated Poster (Default)</option>
+                                <option value="custom">Use Custom Uploaded Photo Poster</option>
+                            </select>
+                            
+                            <label style="color: var(--text-secondary); font-size: 12px; display: block; margin-bottom: 5px;">Upload Custom Poster Image (Used if mode is Custom)</label>
+                            <input type="file" id="donationPosterInput" accept="image/*" style="padding: 8px; border-radius: 10px; background: var(--bg-card); border: 2px dashed var(--glass-border); color: var(--text-primary); cursor: pointer; width: 100%; margin-bottom: 15px;">
+                            <img id="donationPosterPreview" style="max-width: 100%; max-height: 150px; display: none; margin-bottom: 15px; border-radius: 8px;" />
+                            
+                            <label style="color: var(--text-primary); margin-bottom: 5px; display: block;">Home Page Button Name (Leave blank for default)</label>
+                            <input type="text" id="donationPosterBtnName" class="form-control" placeholder="e.g. Share Donation Poster" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.5); color: white; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px;">
+                            
+                            <label style="color: var(--text-primary); margin-bottom: 5px; display: block;">WhatsApp Share Text (Caption)</label>
+                            <textarea id="donationPosterText" class="form-control" rows="3" placeholder="Enter text to be sent with the poster..." style="width: 100%; padding: 10px; background: rgba(0,0,0,0.5); color: white; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Vargani Poster Config -->
+                    <div style="background: rgba(0,0,0,0.4); padding: 15px; border-radius: 10px; border: 1px solid rgba(255,215,0,0.3); margin-bottom: 20px;">
+                        <h4 style="color: #ff8c00; margin-bottom: 10px; margin-top: 0;">2. Vargani Aabhar Poster (वर्गणी आभार)</h4>
+                        
+                        <div class="form-group">
+                            <label style="color: var(--text-primary); margin-bottom: 5px; display: block;">Poster Mode:</label>
+                            <select id="varganiPosterMode" class="form-control" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.5); color: white; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px;">
+                                <option value="generated">Use System Generated Poster (Default)</option>
+                                <option value="custom">Use Custom Uploaded Photo Poster</option>
+                            </select>
+                            
+                            <label style="color: var(--text-secondary); font-size: 12px; display: block; margin-bottom: 5px;">Upload Custom Poster Image</label>
+                            <input type="file" id="varganiPosterInput" accept="image/*" style="padding: 8px; border-radius: 10px; background: var(--bg-card); border: 2px dashed var(--glass-border); color: var(--text-primary); cursor: pointer; width: 100%; margin-bottom: 15px;">
+                            <img id="varganiPosterPreview" style="max-width: 100%; max-height: 150px; display: none; margin-bottom: 15px; border-radius: 8px;" />
+                            
+                            <label style="color: var(--text-primary); margin-bottom: 5px; display: block;">Home Page Button Name</label>
+                            <input type="text" id="varganiPosterBtnName" class="form-control" placeholder="e.g. Share Vargani Poster" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.5); color: white; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px;">
+                            
+                            <label style="color: var(--text-primary); margin-bottom: 5px; display: block;">Generated Poster Title (used only if mode is Generated)</label>
+                            <input type="text" id="varganiAabharTitle" class="form-control" placeholder="उदा. वर्गणी आभार" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.5); color: white; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px;">
+                            
+                            <label style="color: var(--text-primary); margin-bottom: 5px; display: block;">WhatsApp Share Text (Caption)</label>
+                            <textarea id="varganiAabharText" class="form-control" rows="3" placeholder="येथे वर्गणी आभार संदेश टाईप करा..." style="width: 100%; padding: 10px; background: rgba(0,0,0,0.5); color: white; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Mahaprasad Poster Config -->
+                    <div style="background: rgba(0,0,0,0.4); padding: 15px; border-radius: 10px; border: 1px solid rgba(255,215,0,0.3); margin-bottom: 20px;">
+                        <h4 style="color: #ff8c00; margin-bottom: 10px; margin-top: 0;">3. Mahaprasad Nimantran Poster (महाप्रसाद)</h4>
+                        
+                        <div class="form-group">
+                            <label style="color: var(--text-primary); margin-bottom: 5px; display: block;">Poster Mode:</label>
+                            <select id="mahaprasadPosterMode" class="form-control" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.5); color: white; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px;">
+                                <option value="generated">Use System Generated Poster (Default)</option>
+                                <option value="custom">Use Custom Uploaded Photo Poster</option>
+                            </select>
+                            
+                            <label style="color: var(--text-secondary); font-size: 12px; display: block; margin-bottom: 5px;">Upload Custom Poster Image</label>
+                            <input type="file" id="mahaprasadPosterInput" accept="image/*" style="padding: 8px; border-radius: 10px; background: var(--bg-card); border: 2px dashed var(--glass-border); color: var(--text-primary); cursor: pointer; width: 100%; margin-bottom: 15px;">
+                            <img id="mahaprasadPosterPreview" style="max-width: 100%; max-height: 150px; display: none; margin-bottom: 15px; border-radius: 8px;" />
+                            
+                            <label style="color: var(--text-primary); margin-bottom: 5px; display: block;">Home Page Button Name</label>
+                            <input type="text" id="mahaprasadPosterBtnName" class="form-control" placeholder="e.g. Share Mahaprasad Poster" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.5); color: white; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px;">
+                            
+                            <label style="color: var(--text-primary); margin-bottom: 5px; display: block;">Generated Poster Title (used only if mode is Generated)</label>
+                            <input type="text" id="mahaprasadNimantranTitle" class="form-control" placeholder="उदा. महाप्रसाद निमंत्रण" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.5); color: white; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px;">
+
+                            <label style="color: var(--text-primary); margin-bottom: 5px; display: block;">WhatsApp Share Text (Caption)</label>
+                            <textarea id="mahaprasadNimantranText" class="form-control" rows="3" placeholder="येथे महाप्रसाद निमंत्रण संदेश टाईप करा..." style="width: 100%; padding: 10px; background: rgba(0,0,0,0.5); color: white; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);"></textarea>
+                        </div>
                     </div>
                 
                 <div style="margin-top: 15px;">
