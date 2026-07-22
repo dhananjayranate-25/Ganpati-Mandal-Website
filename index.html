@@ -2027,7 +2027,7 @@ table {
 
         // 2. Donation Title with Inline Lines
         const posterTitleHtml = `
-            <div style="display: flex; justify-content: center; align-items: center; margin: 0; padding: 2px 0; position: relative; z-index: 10; gap: 10px; white-space: nowrap;">
+            <div style="display: flex; justify-content: center; align-items: center; margin: 20px 0; padding: 2px 0; position: relative; z-index: 10; gap: 10px; white-space: nowrap;">
                   <div style="width: 120px; flex-shrink: 0; height: 2px; background: linear-gradient(to right, transparent, #ffd700);"></div>
                   <div style="color: #ffd700; font-size: 20px;">✧</div>
                   <div style="color: #ffd700; font-size: 30px; font-weight: bold; font-family: 'Mukta', sans-serif; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); margin: 0; line-height: 1;">देणगी</div>
@@ -2062,7 +2062,8 @@ table {
         const columnsWrapper = document.createElement('div');
         columnsWrapper.style.display = 'flex';
         columnsWrapper.style.justifyContent = 'space-between';
-        columnsWrapper.style.width = '100%';
+        columnsWrapper.style.width = '90%';
+        columnsWrapper.style.margin = '0 auto';
         columnsWrapper.style.position = 'relative';
         columnsWrapper.style.zIndex = '10';
         columnsWrapper.style.gap = '20px';
@@ -2324,7 +2325,7 @@ table {
         }
         
         const posterTitleHtml = `
-            <div style="display: flex; justify-content: center; align-items: center; margin: 0; padding: 2px 0; position: relative; z-index: 10; gap: 10px; white-space: nowrap;">
+            <div style="display: flex; justify-content: center; align-items: center; margin: 20px 0; padding: 2px 0; position: relative; z-index: 10; gap: 10px; white-space: nowrap;">
                   <div style="width: 120px; flex-shrink: 0; height: 2px; background: linear-gradient(to right, transparent, #ffd700);"></div>
                   <div style="color: #ffd700; font-size: 20px;">✧</div>
                   <div style="color: #ffd700; font-size: 30px; font-weight: bold; font-family: 'Mukta', sans-serif; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); margin: 0; line-height: 1;">${userTitle}</div>
@@ -2347,7 +2348,8 @@ table {
           }
 
           const textContainerWrapper = document.createElement('div');
-        textContainerWrapper.style.width = '100%';
+        textContainerWrapper.style.width = '90%';
+          textContainerWrapper.style.margin = '0 auto';
         textContainerWrapper.style.border = '1px solid #ffd700';
         textContainerWrapper.style.borderRadius = '15px';
         textContainerWrapper.style.padding = '40px';
