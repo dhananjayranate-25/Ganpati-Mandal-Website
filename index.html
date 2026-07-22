@@ -2066,11 +2066,11 @@ table {
         columnsWrapper.style.margin = '0 auto';
         columnsWrapper.style.position = 'relative';
         columnsWrapper.style.zIndex = '10';
-        columnsWrapper.style.gap = '20px';
+        columnsWrapper.style.gap = '30px';
 
         // Left Column (QR)
         const leftCol = document.createElement('div');
-        leftCol.style.flex = '1';
+        leftCol.style.flex = '0.42';
         leftCol.style.border = '1px solid #ffd700';
         leftCol.style.borderRadius = '15px';
         leftCol.style.padding = '20px';
@@ -2079,11 +2079,7 @@ table {
         leftCol.style.flexDirection = 'column';
         leftCol.style.alignItems = 'center';
         leftCol.innerHTML = `
-            <!-- Corner Decorations -->
-            <div style="position: absolute; top: 0; left: 0; width: 10px; height: 10px; border-top: 2px solid #ffd700; border-left: 2px solid #ffd700; border-top-left-radius: 15px;"></div>
-            <div style="position: absolute; top: 0; right: 0; width: 10px; height: 10px; border-top: 2px solid #ffd700; border-right: 2px solid #ffd700; border-top-right-radius: 15px;"></div>
-            <div style="position: absolute; bottom: 0; left: 0; width: 10px; height: 10px; border-bottom: 2px solid #ffd700; border-left: 2px solid #ffd700; border-bottom-left-radius: 15px;"></div>
-            <div style="position: absolute; bottom: 0; right: 0; width: 10px; height: 10px; border-bottom: 2px solid #ffd700; border-right: 2px solid #ffd700; border-bottom-right-radius: 15px;"></div>
+
             
             <div style="background: #fff; padding: 10px; border-radius: 10px; margin-bottom: 20px;">
                 <img src="${qrDataUrl}" style="width: 100%; max-width: 180px; display: block;">
@@ -2107,7 +2103,7 @@ table {
 
         // Right Column (Bank Details)
         const rightCol = document.createElement('div');
-        rightCol.style.flex = '1';
+        rightCol.style.flex = '0.58';
         rightCol.style.border = '1px solid #ffd700';
         rightCol.style.borderRadius = '15px';
         rightCol.style.padding = '20px';
@@ -2115,11 +2111,7 @@ table {
         rightCol.style.display = 'flex';
         rightCol.style.flexDirection = 'column';
         rightCol.innerHTML = `
-            <!-- Corner Decorations -->
-            <div style="position: absolute; top: 0; left: 0; width: 10px; height: 10px; border-top: 2px solid #ffd700; border-left: 2px solid #ffd700; border-top-left-radius: 15px;"></div>
-            <div style="position: absolute; top: 0; right: 0; width: 10px; height: 10px; border-top: 2px solid #ffd700; border-right: 2px solid #ffd700; border-top-right-radius: 15px;"></div>
-            <div style="position: absolute; bottom: 0; left: 0; width: 10px; height: 10px; border-bottom: 2px solid #ffd700; border-left: 2px solid #ffd700; border-bottom-left-radius: 15px;"></div>
-            <div style="position: absolute; bottom: 0; right: 0; width: 10px; height: 10px; border-bottom: 2px solid #ffd700; border-right: 2px solid #ffd700; border-bottom-right-radius: 15px;"></div>
+
             
             <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 2px; position: relative; z-index: 10; gap: 10px; white-space: nowrap;">
                 <div style="width: 120px; flex-shrink: 0; height: 2px; background: linear-gradient(to right, transparent, #ffd700);"></div>
