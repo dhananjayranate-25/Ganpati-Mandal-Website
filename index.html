@@ -972,11 +972,13 @@
                 
                 // Donation buttons
                 if (settings.donationPosterBtnName) {
-                    const donShareBtns = document.querySelectorAll('.donation-share-btn');
-                    donShareBtns.forEach(btn => btn.innerHTML = '<i class="fas fa-share-alt"></i> ' + settings.donationPosterBtnName);
-                    
+                    // First button (Download) gets the custom name
                     const donDownloadBtns = document.querySelectorAll('.donation-download-btn');
-                    donDownloadBtns.forEach(btn => btn.innerHTML = '<i class="fas fa-download"></i> ' + settings.donationPosterBtnName.replace('Share', 'Download').replace('शेअर', 'डाउनलोड'));
+                    donDownloadBtns.forEach(btn => btn.innerHTML = '<i class="fas fa-download"></i> ' + settings.donationPosterBtnName);
+                    
+                    // Second button (Share) always stays "शेअर करा"
+                    const donShareBtns = document.querySelectorAll('.donation-share-btn');
+                    donShareBtns.forEach(btn => btn.innerHTML = '<i class="fas fa-share-alt"></i> शेअर करा');
                 }
                 
                 // Load Aarti Media
@@ -2472,6 +2474,52 @@ table {
             if (btn) { btn.innerHTML = originalText; btn.disabled = false; }
         }
     }
+
+    async function shareDonationImage(btn) {
+        let originalText = btn ? btn.innerHTML : '';
+        if (btn) { btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> कृपया थांबा...'; btn.disabled = true; }
+        
+        try {
+            let file;
+            const orgName = (typeof appSettings !== 'undefined' && appSettings.pdfCustomSettings && appSettings.pdfCustomSettings.orgName) ? appSettings.pdfCustomSettings.orgName : 'मंडळ';
+            let customText = (typeof appSettings !== 'undefined' && appSettings.donationPosterText) ? appSettings.donationPosterText : `🌺 श्री गणेशाय नमः 🌺\n\nश्री गणेशोत्सव हा आपल्या सर्वांचा उत्सव आहे. या उत्सवाचे आयोजन अधिक भव्य, दिव्य आणि यशस्वी करण्यासाठी आपल्या सहकार्याची आम्हाला मनापासून अपेक्षा आहे.\n\nकृपया आपल्या सार्वजनिक गणेश उत्सव मंडळासाठी किमान ₹1111/- (एक हजार एकशे अकरा रुपये) वर्गणी/देणगी देऊन सहकार्य करा.\nआपण वर दिलेल्या QR कोड स्कॅन करून / UPI ID किंवा फोन नंबर द्वारे सहज देणगी देऊ शकता.\n\nआपले प्रत्येक योगदान आपल्या मंडळाचा गणेशोत्सव अधिक उत्साहाने, भक्तिभावाने आणि दिमाखात साजरा करण्यासाठी मोलाचे ठरेल. 🙏🌸\n\n॥ गणपती बाप्पा मोरया ॥\n॥ मंगलमूर्ती मोरया ॥\n॥ हर हर महादेव ॥\n\n– शिवसृष्टी सार्वजनिक उत्सव मंडळ, संगमनेर\n\n🌐 अधिक माहिती साठी अधिकृत वेबसाईट:\nhttps://shivsrushti-utsav-mandal.onrender.com\n\n===============\nउत्सव कार्यकारिणी\n===============\nतेजस फटांगरे - अध्यक्ष \nधीरज झावरे - उपाध्यक्ष / मनोरंजन व स्पर्धा प्रमुख\nआदित्य मते - सचिव / डेकोरेशन प्रमुख\nसार्थक माताडे - सहसचिव / सहसमन्वयक\nधनंजय रणाते - खजिनदार / समन्वयक\nओंकार वर्पे - सहखजिनदार\nतेजस देशमुख - सोशल मीडिया प्रमुख \nतेजस वर्पे - प्रसिद्धी प्रमुख\nवैभव सांगळे - कार्यकारी सदस्य \nनिलेश कदम - कार्यकारी सदस्य\nशुभम पेटकर - कार्यकारी सदस्य\n===============`;
+
+            if (typeof appSettings !== 'undefined' && appSettings.donationPosterMode === 'custom' && appSettings.donationPosterImage) {
+                const res = await fetch(appSettings.donationPosterImage);
+                const blob = await res.blob();
+                file = new File([blob], 'Donation_Poster.jpg', { type: 'image/jpeg' });
+            } else {
+                const canvas = await captureDonationPoster();
+                const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.8));
+                file = new File([blob], 'Donation_Poster.jpg', { type: 'image/jpeg' });
+            }
+
+            const shareData = {
+                title: orgName + ' - देणगी',
+                text: customText,
+                files: [file]
+            };
+
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share(shareData);
+            } else {
+                // Download fallback
+                const link = document.createElement('a');
+                link.download = 'Donation_Poster.jpg';
+                link.href = URL.createObjectURL(file);
+                link.click();
+                alert('तुमच्या डिव्हाइसवर डायरेक्ट इमेज शेअरिंग सपोर्टेड नाही. इमेज डाउनलोड झाली आहे, ती तुम्ही स्वतः शेअर करू शकता.');
+            }
+        } catch (shareErr) {
+            console.log('Share action was cancelled or failed:', shareErr);
+            if (shareErr.name !== 'AbortError') {
+                alert('तुमच्या डिव्हाइसवर डायरेक्ट शेअरिंगमध्ये तांत्रिक अडचण आली. कृपया डाउनलोड बटण वापरा.');
+            }
+        } finally {
+            if (btn) { btn.innerHTML = originalText; btn.disabled = false; }
+        }
+    }
+
 
     
     async function shareCustomPoster(type, btn) {
