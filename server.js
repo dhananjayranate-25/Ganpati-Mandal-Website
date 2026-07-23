@@ -485,8 +485,7 @@ app.post('/api/gallery/album/:id/photos', uploadCloudinary.array('photos', 20), 
         
         const newPhotos = [];
         for (const file of req.files) {
-            const base64Data = file.buffer.toString('base64');
-            const dataUri = `data:${file.mimetype};base64,${base64Data}`;
+            const dataUri = file.path;
             const photo = new GalleryPhoto({ albumId: album._id, photoData: dataUri });
             await photo.save();
             newPhotos.push(photo);
@@ -537,10 +536,7 @@ app.post('/api/committee', (req, res, next) => {
         if (designation !== undefined) updateData.designation = designation;
         
         if (req.file) {
-            // Convert buffer to base64
-            const base64Data = req.file.buffer.toString('base64');
-            const mimeType = req.file.mimetype;
-            updateData.photoUrl = `data:${mimeType};base64,${base64Data}`;
+            updateData.photoUrl = req.file.path;
         }
 
         const member = await CommitteeMember.findOneAndUpdate(
@@ -1010,9 +1006,7 @@ app.post('/api/portal/tasks', uploadCloudinary.single('photo'), async (req, res)
         const { userId, title } = req.body;
         let photoData = null;
         if (req.file) {
-            const mimeType = req.file.mimetype;
-            const base64Data = req.file.buffer.toString('base64');
-            photoData = `data:${mimeType};base64,${base64Data}`;
+            photoData = req.file.path;
         }
         const newTask = new PortalTask({ userId, title, photoData, status: 'Pending' });
         await newTask.save();
@@ -1110,10 +1104,7 @@ app.post('/api/users/:id/photo', uploadCloudinary.single('photo'), async (req, r
     try {
         if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
         
-        // Convert buffer to base64 Data URL to save in DB directly
-        const base64Data = req.file.buffer.toString('base64');
-        const mimeType = req.file.mimetype;
-        const photoUrl = `data:${mimeType};base64,${base64Data}`;
+        const photoUrl = req.file.path;
         
         const user = await PortalUser.findByIdAndUpdate(req.params.id, { photoUrl }, { new: true });
         if (!user) return res.status(404).json({ error: 'User not found' });
@@ -1173,9 +1164,7 @@ app.post('/api/upload-hero', uploadCloudinary.single('banner'), async (req, res)
         if (!req.file) {
             return res.status(400).json({ success: false, error: 'Banner image file required' });
         }
-        const mimeType = req.file.mimetype;
-        const base64Data = req.file.buffer.toString('base64');
-        const dataUri = `data:${mimeType};base64,${base64Data}`;
+        const dataUri = req.file.path;
         
         await AppSetting.findOneAndUpdate(
             { key: 'heroBannerImage' },
