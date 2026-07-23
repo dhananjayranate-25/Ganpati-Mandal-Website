@@ -38,7 +38,25 @@ app.use(express.static(path.join(__dirname), {
     }
 }));
 
-const uploadMemory = multer({ storage: multer.memoryStorage(), limits: { fileSize: 50 * 1024 * 1024 } });
+
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'shivsrushti_boyz',
+    resource_type: 'auto'
+  },
+});
+const uploadCloudinary = multer({ storage: storage, limits: { fileSize: 50 * 1024 * 1024 } });
+
 
 
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -302,6 +320,14 @@ app.get('/api/settings', async (req, res) => {
     }
 });
 
+app.post('/api/upload-image', uploadCloudinary.single('image'), async (req, res) => {
+    try {
+        if (!req.file) return res.status(400).json({ success: false, error: 'No image uploaded' });
+        res.json({ success: true, url: req.file.path });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
 app.post('/api/settings', async (req, res) => {
     try {
         const { key, value } = req.body;
@@ -318,18 +344,16 @@ app.post('/api/settings', async (req, res) => {
 });
 
 // Upload Aarti Media Endpoint
-app.post('/api/settings/aarti-media', uploadMemory.fields([{ name: 'aarti_audio', maxCount: 1 }, { name: 'aarti_pdf', maxCount: 1 }]), async (req, res) => {
+app.post('/api/settings/aarti-media', uploadCloudinary.fields([{ name: 'aarti_audio', maxCount: 1 }, { name: 'aarti_pdf', maxCount: 1 }]), async (req, res) => {
     try {
         if (req.files['aarti_audio']) {
             const f = req.files['aarti_audio'][0];
-            const base64Data = f.buffer.toString('base64');
-            const dataUri = `data:${f.mimetype};base64,${base64Data}`;
+            const dataUri = f.path;
             await AppSetting.findOneAndUpdate({ key: 'aartiAudioPath' }, { value: dataUri }, { upsert: true });
         }
         if (req.files['aarti_pdf']) {
             const f = req.files['aarti_pdf'][0];
-            const base64Data = f.buffer.toString('base64');
-            const dataUri = `data:${f.mimetype};base64,${base64Data}`;
+            const dataUri = f.path;
             await AppSetting.findOneAndUpdate({ key: 'aartiPdfPath' }, { value: dataUri }, { upsert: true });
         }
         res.json({ success: true, message: 'Media uploaded successfully' });
@@ -452,7 +476,7 @@ app.delete('/api/gallery/album/:id', async (req, res) => {
 });
 
 // Upload photos to album
-app.post('/api/gallery/album/:id/photos', uploadMemory.array('photos', 20), async (req, res) => {
+app.post('/api/gallery/album/:id/photos', uploadCloudinary.array('photos', 20), async (req, res) => {
     try {
         console.log(`Gallery Upload request received for album ${req.params.id}. Files count:`, req.files ? req.files.length : 0);
         const album = await GalleryAlbum.findById(req.params.id);
@@ -495,7 +519,7 @@ app.get('/api/committee', async (req, res) => {
 });
 
 app.post('/api/committee', (req, res, next) => {
-    uploadMemory.single('photo')(req, res, function (err) {
+    uploadCloudinary.single('photo')(req, res, function (err) {
         if (err) {
             return res.status(400).json({ success: false, error: err.message || 'File upload failed' });
         }
@@ -981,7 +1005,7 @@ app.get('/api/portal/tasks/:userId', async (req, res) => {
 
 // Delete expense
 
-app.post('/api/portal/tasks', uploadMemory.single('photo'), async (req, res) => {
+app.post('/api/portal/tasks', uploadCloudinary.single('photo'), async (req, res) => {
     try {
         const { userId, title } = req.body;
         let photoData = null;
@@ -1082,7 +1106,7 @@ app.post('/api/portal/expenses', async (req, res) => {
 
 
 // Add Endpoint for User Profile Photo
-app.post('/api/users/:id/photo', uploadMemory.single('photo'), async (req, res) => {
+app.post('/api/users/:id/photo', uploadCloudinary.single('photo'), async (req, res) => {
     try {
         if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
         
@@ -1113,7 +1137,7 @@ app.listen(PORT, () => {
 });
 
 
-app.post('/api/upload-pdf', uploadMemory.single('pdf'), async (req, res) => {
+app.post('/api/upload-pdf', uploadCloudinary.single('pdf'), async (req, res) => {
     try {
         const { year, subtitle, tagline, orgName } = req.body;
         if (!year || !req.file) {
@@ -1144,7 +1168,7 @@ app.post('/api/upload-pdf', uploadMemory.single('pdf'), async (req, res) => {
 });
 
 // Upload Hero Banner API
-app.post('/api/upload-hero', uploadMemory.single('banner'), async (req, res) => {
+app.post('/api/upload-hero', uploadCloudinary.single('banner'), async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({ success: false, error: 'Banner image file required' });

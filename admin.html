@@ -914,21 +914,24 @@
                     
                 ];
                 
-                // Function to convert file to base64
-                const fileToBase64 = (file) => {
-                    return new Promise((resolve, reject) => {
-                        const reader = new FileReader();
-                        reader.onload = () => resolve(reader.result);
-                        reader.onerror = reject;
-                        reader.readAsDataURL(file);
+                // Function to upload file and get URL
+                const uploadFile = async (file) => {
+                    const formData = new FormData();
+                    formData.append('image', file);
+                    const response = await fetch('/api/upload-image', {
+                        method: 'POST',
+                        body: formData
                     });
+                    const result = await response.json();
+                    if (!result.success) throw new Error(result.error);
+                    return result.url;
                 };
 
                 // Upload Custom Posters as Base64 if selected
                 const donInput = document.getElementById('donationPosterInput');
                 if (donInput.files && donInput.files.length > 0) {
-                    const b64 = await fileToBase64(donInput.files[0]);
-                    settingsToSave.push({ key: 'donationPosterImage', value: b64 });
+                    const url = await uploadFile(donInput.files[0]);
+                    settingsToSave.push({ key: 'donationPosterImage', value: url });
                     donInput.value = '';
                 }
                 
@@ -937,13 +940,8 @@
                 const fileInput = document.getElementById('heroBannerInput');
                 if (fileInput.files && fileInput.files.length > 0) {
                     const file = fileInput.files[0];
-                    const base64 = await new Promise((resolve, reject) => {
-                        const reader = new FileReader();
-                        reader.onload = () => resolve(reader.result);
-                        reader.onerror = reject;
-                        reader.readAsDataURL(file);
-                    });
-                    settingsToSave.push({ key: 'heroBannerImage', value: base64 });
+                    const url = await uploadFile(file);
+                    settingsToSave.push({ key: 'heroBannerImage', value: url });
                     fileInput.value = '';
                 }
 
@@ -985,13 +983,8 @@
                 const fileInput = document.getElementById('donateQRInput');
                 if (fileInput.files && fileInput.files.length > 0) {
                     const file = fileInput.files[0];
-                    const base64 = await new Promise((resolve, reject) => {
-                        const reader = new FileReader();
-                        reader.onload = () => resolve(reader.result);
-                        reader.onerror = reject;
-                        reader.readAsDataURL(file);
-                    });
-                    settingsToSave.push({ key: 'donateQRCode', value: base64 });
+                    const url = await uploadFile(file);
+                    settingsToSave.push({ key: 'donateQRCode', value: url });
                     fileInput.value = '';
                 }
 
