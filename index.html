@@ -1904,7 +1904,7 @@ table {
             try { await iframe.contentDocument.fonts.ready; } catch(e) {}
             await new Promise(r => setTimeout(r, 500));
             const canvas = await html2canvas(iframe.contentDocument.body, {
-                scale: 1.5, useCORS: true, backgroundColor: '#ffffff', allowTaint: true
+                scale: 3, useCORS: true, backgroundColor: '#ffffff', allowTaint: true
             });
             document.body.removeChild(iframe);
             const { jsPDF } = window.jspdf;
@@ -2269,7 +2269,7 @@ table {
         clone.insertAdjacentHTML('beforeend', footerHtml);
 
         const canvas = await html2canvas(clone, {
-            scale: 1.5,
+            scale: 3,
             useCORS: true,
             backgroundColor: '#1a1a1a',
             windowWidth: 1200
@@ -2505,7 +2505,7 @@ table {
         clone.insertAdjacentHTML('beforeend', footerHtml);
 
         const canvas = await html2canvas(clone, {
-            scale: 1.5,
+            scale: 3,
             useCORS: true,
             backgroundColor: '#1a1a1a',
             windowWidth: 1200
@@ -2529,11 +2529,11 @@ table {
                 } catch(e) {
                     console.error("Blob conversion error", e);
                     const canvas = await captureDonationPoster();
-                    blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.8));
+                    blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 1.0));
                 }
             } else {
                 const canvas = await captureDonationPoster();
-                blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.8));
+                blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 1.0));
             }
             const link = document.createElement('a');
             link.download = 'Donation_Poster.jpg';
@@ -2582,12 +2582,12 @@ table {
                 } catch(e) {
                     console.error("Blob conversion error", e);
                     const canvas = await captureDonationPoster();
-                    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.8));
+                    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 1.0));
                     file = new File([blob], 'Donation_Poster.jpg', { type: 'image/jpeg' });
                 }
             } else {
                 const canvas = await captureDonationPoster();
-                const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.8));
+                const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 1.0));
                 file = new File([blob], 'Donation_Poster.jpg', { type: 'image/jpeg' });
             }
 
@@ -2672,7 +2672,7 @@ table {
                         // Download fallback
                         const link = document.createElement('a');
                         link.download = filename;
-                        link.href = canvas.toDataURL('image/jpeg', 0.8);
+                        link.href = canvas.toDataURL('image/jpeg', 1.0);
                         link.click();
                         alert('तुमच्या डिव्हाइसवर डायरेक्ट इमेज शेअरिंग सपोर्टेड नाही. इमेज डाउनलोड झाली आहे, ती तुम्ही स्वतः शेअर करू शकता.');
                     }
@@ -2682,14 +2682,14 @@ table {
                         const filename = type === 'vargani' ? 'Vargani_Aabhar.jpg' : (type === 'mahaprasad' ? 'Mahaprasad_Nimantran.jpg' : 'Aagman_Sohala.jpg');
                         const link = document.createElement('a');
                         link.download = filename;
-                        link.href = canvas.toDataURL('image/jpeg', 0.8);
+                        link.href = canvas.toDataURL('image/jpeg', 1.0);
                         link.click();
                         alert('तुमच्या डिव्हाइसवर डायरेक्ट शेअरिंगमध्ये तांत्रिक अडचण आली. इमेज डाउनलोड झाली आहे, ती तुम्ही मॅन्युअली शेअर करू शकता.');
                     }
                 } finally {
                     if (btn) { btn.innerHTML = originalText; btn.disabled = false; }
                 }
-            }, 'image/jpeg', 0.8);
+            }, 'image/jpeg', 1.0);
         } catch (err) {
             console.error('Error sharing image:', err);
             if (err.name === 'SecurityError' || (err.message && err.message.includes('Tainted'))) {
