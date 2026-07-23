@@ -2047,13 +2047,7 @@ table {
         await new Promise((resolve) => {
             mandalPoster.onload = resolve;
             mandalPoster.onerror = resolve;
-            mandalPoster.crossOrigin = "anonymous";
-            const heroBanner = document.getElementById('heroBannerImg');
-            let posterSrc = 'https://res.cloudinary.com/vu0ccgsm/image/upload/v1784816361/shivsrushti_boyz_migration/vna1qxssl6nw7asg9nc4.jpg';
-            if (heroBanner && heroBanner.src) {
-                posterSrc = heroBanner.src;
-            }
-            mandalPoster.src = posterSrc + (posterSrc.includes('?') ? '&' : '?') + 'not-from-cache-please';
+            mandalPoster.src = 'logo/Receipt.jpeg'; 
             headerWrapper.appendChild(mandalPoster);
         });
         
@@ -2357,13 +2351,7 @@ table {
         await new Promise((resolve) => {
             mandalPoster.onload = resolve;
             mandalPoster.onerror = resolve;
-            mandalPoster.crossOrigin = "anonymous";
-            const heroBanner = document.getElementById('heroBannerImg');
-            let posterSrc = 'https://res.cloudinary.com/vu0ccgsm/image/upload/v1784816361/shivsrushti_boyz_migration/vna1qxssl6nw7asg9nc4.jpg';
-            if (heroBanner && heroBanner.src) {
-                posterSrc = heroBanner.src;
-            }
-            mandalPoster.src = posterSrc + (posterSrc.includes('?') ? '&' : '?') + 'not-from-cache-please';
+            mandalPoster.src = 'logo/Receipt.jpeg'; 
             headerWrapper.appendChild(mandalPoster);
         });
         
