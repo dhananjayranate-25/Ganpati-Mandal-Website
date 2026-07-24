@@ -559,12 +559,15 @@ app.delete('/api/committee/:role', async (req, res) => {
     }
 });
 
+let cachedAdminPassword = null;
 app.post('/api/login', async (req, res) => {
     try {
         const { password } = req.body;
-        const setting = await AppSetting.findOne({ key: 'adminPassword' });
-        const storedPassword = setting && setting.value ? setting.value : 'admin123';
-        if (password === storedPassword) {
+        if (!cachedAdminPassword) {
+            const setting = await AppSetting.findOne({ key: 'adminPassword' });
+            cachedAdminPassword = setting && setting.value ? setting.value : 'admin123';
+        }
+        if (password === cachedAdminPassword) {
             res.json({ success: true });
         } else {
             res.status(401).json({ success: false, error: 'Invalid password' });
@@ -587,6 +590,7 @@ app.post('/api/change-password', async (req, res) => {
             { value: newPassword },
             { upsert: true, new: true }
         );
+        cachedAdminPassword = newPassword;
         res.json({ success: true });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
