@@ -69,6 +69,9 @@
             touch-action: manipulation; /* Removes 300ms tap delay on mobile */
         }
     </style>
+    <link rel="prefetch" href="admin.html?v=2">
+    <link rel="prefetch" href="superadmin.html?v=2">
+    <link rel="prefetch" href="member.html?v=2">
 </head>
 <body>
     <div id="loginContainer" class="container" style="max-width: 700px; margin-top: 40px;">
@@ -166,14 +169,14 @@ const API_URL = ''; // Leave empty if same domain
         function showLoginForm(role) {
             // Check if already authenticated for this specific role
             if (role === 'websiteadmin' && sessionStorage.getItem('adminLoggedIn') === 'true') {
-                return window.location.replace('admin.html');
+                return window.location.replace('admin.html?v=2');
             }
             const userStr = localStorage.getItem('portalUser');
             if (userStr) {
                 try {
                     const user = JSON.parse(userStr);
-                    if (role === 'superadmin' && user.role === 'superadmin') return window.location.replace('superadmin.html');
-                    if (role === 'member' && user.role === 'member') return window.location.replace('member.html');
+                    if (role === 'superadmin' && user.role === 'superadmin') return window.location.replace('superadmin.html?v=2');
+                    if (role === 'member' && user.role === 'member') return window.location.replace('member.html?v=2');
                 } catch(e) {}
             }
 
@@ -231,7 +234,7 @@ const API_URL = ''; // Leave empty if same domain
                     const data = await res.json();
                     if (data.success) {
                         sessionStorage.setItem('adminLoggedIn', 'true');
-                        window.location.replace('admin.html');
+                        window.location.replace('admin.html?v=' + new Date().getTime());
                     } else {
                         throw new Error(data.message || 'Wrong password! Try again.');
                     }
@@ -252,9 +255,9 @@ const API_URL = ''; // Leave empty if same domain
                         localStorage.setItem('userRole', data.user.role);
                         
                         if(data.user.role === 'superadmin') {
-                            window.location.replace('superadmin.html');
+                            window.location.replace('superadmin.html?v=' + new Date().getTime());
                         } else {
-                            window.location.replace('member.html');
+                            window.location.replace('member.html?v=' + new Date().getTime());
                         }
                     } else {
                         throw new Error(data.message || 'Login failed');

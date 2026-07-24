@@ -32,12 +32,26 @@
             touch-action: manipulation; /* Removes 300ms tap delay on mobile */
         }
     </style>
+
+    <style>
+        #loginContainer { display: none !important; }
+        #adminPanel { display: none !important; }
+        html.show-login #loginContainer { display: flex !important; }
+        html.show-admin #adminPanel { display: block !important; }
+    </style>
+    <script>
+        if (sessionStorage.getItem('adminLoggedIn') === 'true') {
+            document.documentElement.classList.add('show-admin');
+        } else {
+            document.documentElement.classList.add('show-login');
+        }
+    </script>
 </head>
 <body>
     <div class="particles" id="particles"></div>
     
     <!-- Login Form -->
-    <div id="loginContainer" class="container" style="max-width: 700px; margin-top: 40px;">
+    <div id="loginContainer" class="container" style="display: none; max-width: 700px; margin-top: 40px;">
         <header class="animate-fade-down">
             <div class="header-content">
                 <div class="ganpati-image-container">
