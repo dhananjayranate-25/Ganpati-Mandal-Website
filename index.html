@@ -1040,85 +1040,79 @@
     
     
 
-    async function loadCommitteeDataHome() {
-        try {
-            const response = await fetch('/api/committee');
-            const result = await response.json();
-            if (result.success && result.data.length > 0) {
-                const grid = document.querySelector('.committee-grid');
-                if (!grid) return;
+        async function loadCommitteeDataHome() {
+        // Function to render committee HTML
+        const renderCommittee = (data) => {
+            const grid = document.querySelector('.committee-grid');
+            if (!grid) return;
+            
+            grid.innerHTML = '';
+            
+            const topRoles = ['president', 'treasurer'];
+            const topMembers = data.filter(m => topRoles.includes(m.role));
+            const otherMembers = data.filter(m => !topRoles.includes(m.role));
+            
+            let html = '';
+            
+            const generateMemberHTML = (member) => {
+                let roleName = member.designation;
+                if (!roleName) {
+                    roleName = 'सदस्य';
+                    if (member.role === 'president') roleName = 'अध्यक्ष';
+                    else if (member.role === 'treasurer') roleName = 'खजिनदार';
+                }
                 
-                grid.innerHTML = '';
+                let photoUrl = member.photoUrl;
+                if (!photoUrl) {
+                    photoUrl = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23e0e0e0'/%3E%3Ccircle cx='50' cy='40' r='20' fill='%23bdbdbd'/%3E%3Cpath d='M20,90 Q50,50 80,90' stroke='%23bdbdbd' stroke-width='10' fill='none'/%3E%3C/svg%3E";
+                }
+                const mobileHtml = member.mobile ? `<p class="member-phone">मो.नं ${member.mobile}</p>` : '<p class="member-phone" style="display:none;"></p>';
+                const memberName = member.name || 'नाव टाका';
                 
-                // Separate President/Treasurer from others
-                const topRoles = ['president', 'treasurer'];
-                const topMembers = result.data.filter(m => topRoles.includes(m.role));
-                const otherMembers = result.data.filter(m => !topRoles.includes(m.role));
-                
-                let html = '';
-                
-                const generateMemberHTML = (member) => {
-                    let roleName = member.designation;
-                    if (!roleName) {
-                        roleName = 'सदस्य';
-                        if (member.role === 'president') roleName = 'अध्यक्ष';
-                        else if (member.role === 'treasurer') roleName = 'खजिनदार';
-                    }
-                    
-                    let photoUrl = member.photoUrl;
-                    if (!photoUrl) {
-                        photoUrl = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23e0e0e0'/%3E%3Ccircle cx='50' cy='40' r='20' fill='%23bdbdbd'/%3E%3Cpath d='M20,90 Q50,50 80,90' stroke='%23bdbdbd' stroke-width='10' fill='none'/%3E%3C/svg%3E";
-                    }
-                    const mobileHtml = member.mobile ? `<p class="member-phone">मो.नं ${member.mobile}</p>` : '<p class="member-phone" style="display:none;"></p>';
-                    const memberName = member.name || 'नाव टाका';
-                    
-                    return `
-                    <div class="committee-member" onclick="openLightbox('${photoUrl}')" style="cursor: pointer;">
-                        <div class="member-photo-frame">
-                            <img src="${photoUrl}" alt="${roleName}" class="member-photo" ${member.role === 'president' ? 'style="object-position: center 10%;"' : ''}>
-                        </div>
-                        <h3 class="member-role">${roleName}</h3>
-                        <p class="member-name">${memberName}</p>
-                        ${mobileHtml}
+                return `
+                <div class="committee-member" onclick="openLightbox('${photoUrl}')" style="cursor: pointer;">
+                    <div class="member-photo-frame">
+                        <img src="${photoUrl}" alt="${roleName}" class="member-photo" ${member.role === 'president' ? 'style="object-position: center 10%;"' : ''}>
                     </div>
-                    `;
-                };
-                
-                // Top row
-                if (topMembers.length > 0) {
-                    html += '<div class="committee-row-2">';
-                    topMembers.forEach(member => {
-                        html += generateMemberHTML(member);
-                    });
-                    html += '</div>';
-                }
-                
-                // Other members in one wrapper
-                if (otherMembers.length > 0) {
-                    html += '<div class="committee-members-wrap">';
-                    otherMembers.forEach(member => {
-                        html += generateMemberHTML(member);
-                    });
-                    html += '</div>';
-                }
-                
-                grid.innerHTML = html;
-                
-                // Sync with Contact Section
-                const defaultPhoto = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23e0e0e0'/%3E%3Ccircle cx='50' cy='40' r='20' fill='%23bdbdbd'/%3E%3Cpath d='M20,90 Q50,50 80,90' stroke='%23bdbdbd' stroke-width='10' fill='none'/%3E%3C/svg%3E";
-                
-                // Reset Contact Cards First (hide them if they don't exist)
-                if (document.getElementById('contact-card-president')) document.getElementById('contact-card-president').style.display = 'none';
-                if (document.getElementById('contact-card-treasurer')) document.getElementById('contact-card-treasurer').style.display = 'none';
-                
+                    <h3 class="member-role">${roleName}</h3>
+                    <p class="member-name">${memberName}</p>
+                    ${mobileHtml}
+                </div>
+                `;
+            };
+            
+            if (topMembers.length > 0) {
+                html += '<div class="committee-row-2">';
                 topMembers.forEach(member => {
-                    if (member.role === 'president') {
+                    html += generateMemberHTML(member);
+                });
+                html += '</div>';
+            }
+            
+            if (otherMembers.length > 0) {
+                html += '<div class="committee-members-wrap">';
+                otherMembers.forEach(member => {
+                    html += generateMemberHTML(member);
+                });
+                html += '</div>';
+            }
+            
+            grid.innerHTML = html;
+            
+            const defaultPhoto = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23e0e0e0'/%3E%3Ccircle cx='50' cy='40' r='20' fill='%23bdbdbd'/%3E%3Cpath d='M20,90 Q50,50 80,90' stroke='%23bdbdbd' stroke-width='10' fill='none'/%3E%3C/svg%3E";
+            
+            if (document.getElementById('contact-card-president')) document.getElementById('contact-card-president').style.display = 'none';
+            if (document.getElementById('contact-card-treasurer')) document.getElementById('contact-card-treasurer').style.display = 'none';
+            
+            topMembers.forEach(member => {
+                if (member.role === 'president') {
+                    if (document.getElementById('contact-card-president')) {
                         document.getElementById('contact-card-president').style.display = 'flex';
                         document.getElementById('contact-president-name').textContent = member.name || 'नाव टाका';
                         document.getElementById('contact-president-mobile').textContent = member.mobile ? `मो.नं ${member.mobile}` : '';
                         
                         let pPhoto = member.photoUrl;
-                        if (pPhoto && !pPhoto.startsWith('data:')) pPhoto += '?t=' + new Date().getTime();
+                        if (pPhoto && !pPhoto.startswith('data:')) pPhoto += '?t=' + new Date().getTime();
                         document.getElementById('contact-president-photo').src = pPhoto || defaultPhoto;
                         
                         const waLink = document.getElementById('contact-president-wa');
@@ -1128,7 +1122,9 @@
                         } else {
                             waLink.style.display = 'none';
                         }
-                    } else if (member.role === 'treasurer') {
+                    }
+                } else if (member.role === 'treasurer') {
+                    if (document.getElementById('contact-card-treasurer')) {
                         document.getElementById('contact-card-treasurer').style.display = 'flex';
                         document.getElementById('contact-treasurer-name').textContent = member.name || 'नाव टाका';
                         document.getElementById('contact-treasurer-mobile').textContent = member.mobile ? `मो.नं ${member.mobile}` : '';
@@ -1145,10 +1141,40 @@
                             waLink.style.display = 'none';
                         }
                     }
-                });
+                }
+            });
+        };
+
+        // 1. Try to load from localStorage cache first
+        try {
+            const cachedData = localStorage.getItem('committeeCache');
+            if (cachedData) {
+                const parsedCache = JSON.parse(cachedData);
+                if (parsedCache && parsedCache.length > 0) {
+                    renderCommittee(parsedCache);
+                }
+            }
+        } catch (e) {
+            console.error('Failed to parse committee cache', e);
+        }
+
+        // 2. Fetch fresh data from API
+        try {
+            const response = await fetch('/api/committee');
+            const result = await response.json();
+            if (result.success && result.data.length > 0) {
+                // Check if data changed
+                const newDataStr = JSON.stringify(result.data);
+                if (localStorage.getItem('committeeCache') !== newDataStr) {
+                    localStorage.setItem('committeeCache', newDataStr);
+                    renderCommittee(result.data); // re-render with new data
+                } else if (!localStorage.getItem('committeeCache')) {
+                    localStorage.setItem('committeeCache', newDataStr);
+                    renderCommittee(result.data);
+                }
             }
         } catch(e) {
-            console.error('Failed to load committee', e);
+            console.error('Failed to load committee from API', e);
         }
     }
 
