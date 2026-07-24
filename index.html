@@ -56,6 +56,8 @@
             touch-action: manipulation; /* Removes 300ms tap delay on mobile */
         }
     </style>
+    <link rel="prefetch" href="login.html">
+    <style> a, button { touch-action: manipulation; } </style>
 </head>
 <body>
     <div id="mainContent">
@@ -85,7 +87,7 @@
                     <a href="javascript:void(0)" id="nav-gallery" onclick="navLinks.classList.remove('active'); window.location.href='gallery.html'; return false;" style="display: block !important;">गणपती छायाचित्रे</a>
                     <a href="javascript:void(0)" id="nav-contact" onclick="switchTab('contact'); navLinks.classList.remove('active'); return false;" style="display: block !important;">संपर्क</a>
                     <a href="javascript:void(0)" id="nav-donate" class="nav-donate-btn" onclick="switchTab('donate'); navLinks.classList.remove('active'); return false;" style="display: block !important;">देणगी</a>
-                <a href="login.html" id="nav-login" class="nav-donate-btn" style="display: block !important; background-color: #3b82f6; margin-left: 10px;">Login</a>
+                <a href="login.html" id="nav-login" class="nav-donate-btn" style="display: block !important; background-color: #3b82f6; margin-left: 10px;" onclick="this.innerHTML='Please wait...'; this.style.opacity='0.7';">Login</a>
                 </div>
             </nav>
         </header>
