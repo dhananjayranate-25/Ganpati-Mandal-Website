@@ -57,7 +57,26 @@
         }
     </style>
     <link rel="prefetch" href="login.html">
-    <style> a, button { touch-action: manipulation; } </style>
+    <style> 
+    a, button { touch-action: manipulation; } 
+    @media (max-width: 768px) {
+        #nav-login {
+            margin-left: 0 !important;
+            margin-top: 5px !important;
+            width: 100%;
+        }
+        #nav-donate {
+            width: 100%;
+        }
+        .nav-links {
+            align-items: center;
+        }
+        .nav-donate-btn {
+            width: 90% !important;
+            margin: 5px auto !important;
+        }
+    }
+</style>
 </head>
 <body>
     <div id="mainContent">
